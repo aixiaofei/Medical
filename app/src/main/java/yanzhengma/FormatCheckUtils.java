@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-public class PhoneFormatCheckUtils {
+public class FormatCheckUtils {
     /**
      * 大陆号码或香港号码均可
      */
@@ -15,6 +15,17 @@ public class PhoneFormatCheckUtils {
         return isChinaPhoneLegal(str) || isHKPhoneLegal(str);
     }
 
+    public static boolean isPassword(String str) throws  PatternSyntaxException{
+        boolean isLength= false;
+        String regExp = "^[A-Za-z0-9]+$";
+        Pattern p = Pattern.compile(regExp);
+        Matcher m = p.matcher(str);
+        boolean a= m.matches();
+        if(str.length()<=15 && str.length()>=6){
+            isLength=true;
+        }
+        return a&&isLength;
+    }
     /**
      * 大陆手机号码11位数，匹配格式：前三位固定格式+后8位任意数
      * 此方法中前三位格式有：

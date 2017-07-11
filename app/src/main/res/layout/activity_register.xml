@@ -4,13 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ai.dtest.register">
+    tools:context="com.example.ai.dtest.Register">
 
     <LinearLayout
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="250dp"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
 
