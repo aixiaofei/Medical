@@ -6,23 +6,19 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
-
 import java.io.IOException;
-
 import commen.TUserlogininfo;
-import yanzhengma.HttpUtils;
+import commen.HttpUtils;
 import yanzhengma.FormatCheckUtils;
 
-public class Register extends AppCompatActivity implements View.OnClickListener{
+public class Register extends BaseActivity implements View.OnClickListener{
 
     Button send_message; //发送验证码按钮
 
@@ -90,7 +86,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
                     Toast.makeText(Register.this,"注册失败",Toast.LENGTH_SHORT).show();
                     break;
                 case REGISTERSUCESS:
-                    Toast.makeText(Register.this,"注册成功,转向登录页面",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this,"注册成功,转向主页",Toast.LENGTH_SHORT).show();
 //                    Intent intent =new Intent(Register.this,Login.class);
                     break;
                 default:
@@ -128,6 +124,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener{
                 final AlertDialog.Builder builder= new AlertDialog.Builder(Register.this);
                 builder.setMessage("请确认您要向手机号"+phone+"发送验证码")
                         .setTitle("提示")
+                        .setIcon(R.drawable.alert)
                     .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

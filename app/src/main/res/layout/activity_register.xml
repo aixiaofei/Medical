@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -7,10 +7,11 @@
     tools:context="com.example.ai.dtest.Register">
 
     <LinearLayout
+        android:id="@+id/user_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="250dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="220dp"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
 
@@ -38,33 +39,35 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/password_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/user_Line"
+        android:layout_alignRight="@+id/user_Line"
         android:layout_marginTop="15dp"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
-            <ImageView
-                android:id="@+id/yanzhengma"
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/yanzhengma" />
+        <ImageView
+            android:id="@+id/yanzhengma"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/yanzhengma" />
 
-            <EditText
-                android:id="@+id/user_yanzhengma"
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:background="@drawable/none_border_background"
-                android:gravity="center_vertical"
-                android:hint="输入短信验证码"
-                android:inputType="number"
-                android:textColor="@color/origin_text_color"
-                android:textSize="16sp" />
+        <EditText
+            android:id="@+id/user_yanzhengma"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/none_border_background"
+            android:gravity="center_vertical"
+            android:hint="输入短信验证码"
+            android:inputType="number"
+            android:textColor="@color/origin_text_color"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/send_meassage"
@@ -78,9 +81,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/yanzhengma_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center"
+        android:layout_below="@+id/password_Line"
+        android:layout_alignLeft="@+id/password_Line"
         android:layout_marginTop="15dp"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
@@ -113,7 +118,8 @@
         android:id="@+id/register"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/yanzhengma_Line"
+        android:layout_alignRight="@id/password_Line"
         android:layout_marginTop="50dp"
         android:background="@drawable/rigster_login_background"
         android:text="注册"
@@ -128,7 +134,8 @@
         android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/register"
+        android:layout_centerHorizontal="true"
         android:gravity="center"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.ai.dtest.Register">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/user_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="250dp"
+        android:layout_centerInParent="true"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
 
@@ -32,16 +29,17 @@
             android:background="@drawable/none_border_background"
             android:gravity="center_vertical"
             android:hint="手机号码/用户名"
-            android:inputType="number"
             android:textColor="@color/origin_text_color"
             android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/password_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center"
+        android:layout_below="@id/user_Line"
         android:layout_marginTop="15dp"
+        android:layout_alignLeft="@+id/user_Line"
         android:background="@drawable/account_password_background"
         android:orientation="horizontal">
 
@@ -66,6 +64,50 @@
             android:textColor="@color/origin_text_color"
             android:textSize="16sp"
             android:layout_marginEnd="10dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/checkbox_Line"
+        android:layout_width="300dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/password_Line"
+        android:layout_alignRight="@+id/password_Line">
+
+        <CheckBox
+            android:id="@+id/hold_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:checked="false"
+            android:gravity="center"/>
+
+        <TextView
+            android:text="记住密码"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"/>
+
+        <CheckBox
+            android:id="@+id/hold_autoLogin"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:checked="false"
+            android:gravity="center"/>
+
+        <TextView
+            android:text="自动登录"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"/>
 
     </LinearLayout>
 
@@ -73,12 +115,24 @@
         android:id="@+id/login"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/rigster_login_background"
         android:text="登陆"
         android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_below="@id/checkbox_Line"
+        android:layout_alignRight="@+id/password_Line"/>
+
+    <TextView
+        android:id="@+id/forget_password"
+        android:text="忘记密码?"
+        android:textSize="14sp"
+        android:layout_marginTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:layout_below="@+id/login"
+        android:layout_alignRight="@+id/user_Line"/>
 
     <TextView
         android:id="@+id/return_register"
@@ -87,8 +141,9 @@
         android:textColor="#00BFFF"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"/>
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:layout_below="@id/forget_password"
+        android:layout_centerHorizontal="true"/>
 
-</LinearLayout>
+</RelativeLayout>
