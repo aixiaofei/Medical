@@ -5,7 +5,7 @@ import java.util.Date;
 public class TUserinfo {
     private Integer userid;
 
-    private String name;
+    private String username;
 
     private String usermale;
 
@@ -49,12 +49,12 @@ public class TUserinfo {
         this.userid = userid;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
     }
 
     public String getUsermale() {

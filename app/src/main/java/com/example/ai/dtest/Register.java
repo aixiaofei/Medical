@@ -7,15 +7,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import java.io.IOException;
 import commen.TUserlogininfo;
 import commen.HttpUtils;
+import dalvik.system.InMemoryDexClassLoader;
 import yanzhengma.FormatCheckUtils;
 
 public class Register extends BaseActivity implements View.OnClickListener{
@@ -28,6 +35,8 @@ public class Register extends BaseActivity implements View.OnClickListener{
 
     EditText user_yanzhengma;  // 验证码文本框
 
+    ImageView eye;
+
     EditText user_password;   // 密码文本框
 
     TextView return_Login;  //返回登陆
@@ -36,17 +45,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
 
     private static final int TIME= 1000;  //配合上面参数，倒计时
 
-    private static final int SENDFAILURE=1;  //请求验证码失败标识
-
-    private static final int SENDSUCCESS=2; // 请求验证码成功标识
-
-    private static final int CHECKFAILURE=3; //检验失败标识
-
-    private static final int CHECKSUCESS=4; // 检验成功标识
-
-    private static final int REGISTERFAILURE=5;
-
-    private static final int REGISTERSUCESS=6;
+    private static boolean isShow= false;
 
     //实现倒计时
     CountDownTimer countDownTimer=new CountDownTimer(SUM_TIME,TIME) {
@@ -68,29 +67,58 @@ public class Register extends BaseActivity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case SENDFAILURE:
+                case HttpUtils.SENDFAILURE:
                     Toast.makeText(Register.this,"发送失败，请稍后重试",Toast.LENGTH_SHORT).show();
                     break;
-                case SENDSUCCESS:
+                case HttpUtils.SENDSUCCESS:
                     Toast.makeText(Register.this,"发送成功",Toast.LENGTH_SHORT).show();
                     break;
-                case CHECKFAILURE:
+                case HttpUtils.CHECKFAILURE:
 //                    Log.d("ai","11");
                     Toast.makeText(Register.this,"验证码不正确",Toast.LENGTH_SHORT).show();
                     break;
-                case CHECKSUCESS:
+                case HttpUtils.CHECKSUCESS:
 //                    Log.d("ai","22");
                     register();
                     break;
-                case REGISTERFAILURE:
+                case HttpUtils.REGISTERFAILURE:
                     Toast.makeText(Register.this,"注册失败",Toast.LENGTH_SHORT).show();
                     break;
-                case REGISTERSUCESS:
+                case HttpUtils.REGISTERSUCESS:
                     Toast.makeText(Register.this,"注册成功,转向主页",Toast.LENGTH_SHORT).show();
 //                    Intent intent =new Intent(Register.this,Login.class);
                     break;
                 default:
                     break;
+            }
+        }
+    };
+
+    public static boolean isShow() {
+        return isShow;
+    }
+
+    public static void setIsShow(boolean isShow) {
+        Register.isShow = isShow;
+    }
+
+    TextWatcher watcher= new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if(charSequence.length()>0){
+                eye.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(editable.length()==0){
+                eye.setVisibility(View.GONE);
             }
         }
     };
@@ -104,7 +132,10 @@ public class Register extends BaseActivity implements View.OnClickListener{
         register= (Button) findViewById(R.id.register);
         user_name= (EditText) findViewById(R.id.user_name);
         user_yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);
+        eye= (ImageView) findViewById(R.id.eye);
+        eye.setOnClickListener(this);
         user_password= (EditText) findViewById(R.id.user_password);
+        user_password.addTextChangedListener(watcher);
         return_Login= (TextView) findViewById(R.id.return_login);
         send_message.setOnClickListener(this);
         register.setOnClickListener(this);
@@ -114,6 +145,20 @@ public class Register extends BaseActivity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.eye:
+                if(!Register.isShow){
+                    setIsShow(true);
+                    eye.setImageResource(R.drawable.eye_open);
+                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    user_password.setSelection(user_password.getText().length());
+                }
+                else {
+                    setIsShow(false);
+                    eye.setImageResource(R.drawable.eye_close);
+                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+                    user_password.setSelection(user_password.getText().length());
+                }
+                break;
             case R.id.send_meassage:
                 String phone = user_name.getText().toString();
                 //正则判断手机号是否有效
@@ -121,7 +166,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
                     Toast.makeText(Register.this, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                final AlertDialog.Builder builder= new AlertDialog.Builder(Register.this);
+                AlertDialog.Builder builder= new AlertDialog.Builder(Register.this);
                 builder.setMessage("请确认您要向手机号"+phone+"发送验证码")
                         .setTitle("提示")
                         .setIcon(R.drawable.alert)
@@ -190,8 +235,8 @@ public class Register extends BaseActivity implements View.OnClickListener{
         String phone = user_name.getText().toString();
         String password= user_password.getText().toString();
         TUserlogininfo userlogininfo= new TUserlogininfo();
-        userlogininfo.setUsername(phone);
-        userlogininfo.setUserpassword(password);
+        userlogininfo.setUserloginusername(phone);
+        userlogininfo.setUserloginpassword(password);
         Gson gson= new Gson();
         String buf= gson.toJson(userlogininfo);
         try {

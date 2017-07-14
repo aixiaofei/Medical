@@ -3,67 +3,60 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp">
+                <TextView
+                    android:id="@+id/docter_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/docter_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/docter_keshi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"/>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-        <TextView
-            android:id="@+id/docter_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/docter_age"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/docter_keshi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/docter_hosipital"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="center_vertical"
+            android:textSize="14sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
             android:maxLines="2"
             android:gravity="center"/>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/docter_specialty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_gravity="center_vertical"
+            android:textSize="14sp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
             android:maxLines="3"
             android:gravity="center"/>
-    </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="10dp"/>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="10dp"/>-->
 
 </LinearLayout>

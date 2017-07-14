@@ -5,29 +5,37 @@ import java.util.Date;
 public class TUserlogininfo {
     private Integer userloginid;
 
-    private String username;
+    private String userloginusername;
 
-    private String userpassword;
+    private String userloginpassword;
 
-    private String usertoken;
+    private String userlogintoken;
 
-    private Date userlastlogintime;
+    private Long userlogindeadline;
 
-    private String userlastloginlocation;
+    private String userloginlongitude;
+
+    private String userloginlatitude;
+
+    private Date userloginlastlogintime;
+
+    private String userloginlastloginlocation;
 
     private String userlogindevice;
 
-    private String userbrowserversion;
+    private String userloginbrowserversion;
 
-    private String userphonemodel;
+    private String userloginphonemodel;
 
-    private String userphoneversion;
+    private String userloginphoneversion;
 
-    private String usermac;
+    private String userloginmac;
 
-    private String userip;
+    private String userloginip;
 
-    private Integer usertype;
+    private Integer userlogintype;
+
+    private Integer uesrid;
 
     public Integer getUserloginid() {
         return userloginid;
@@ -37,44 +45,68 @@ public class TUserlogininfo {
         this.userloginid = userloginid;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserloginusername() {
+        return userloginusername;
     }
 
-    public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+    public void setUserloginusername(String userloginusername) {
+        this.userloginusername = userloginusername == null ? null : userloginusername.trim();
     }
 
-    public String getUserpassword() {
-        return userpassword;
+    public String getUserloginpassword() {
+        return userloginpassword;
     }
 
-    public void setUserpassword(String userpassword) {
-        this.userpassword = userpassword == null ? null : userpassword.trim();
+    public void setUserloginpassword(String userloginpassword) {
+        this.userloginpassword = userloginpassword == null ? null : userloginpassword.trim();
     }
 
-    public String getUsertoken() {
-        return usertoken;
+    public String getUserlogintoken() {
+        return userlogintoken;
     }
 
-    public void setUsertoken(String usertoken) {
-        this.usertoken = usertoken == null ? null : usertoken.trim();
+    public void setUserlogintoken(String userlogintoken) {
+        this.userlogintoken = userlogintoken == null ? null : userlogintoken.trim();
     }
 
-    public Date getUserlastlogintime() {
-        return userlastlogintime;
+    public Long getUserlogindeadline() {
+        return userlogindeadline;
     }
 
-    public void setUserlastlogintime(Date userlastlogintime) {
-        this.userlastlogintime = userlastlogintime;
+    public void setUserlogindeadline(Long userlogindeadline) {
+        this.userlogindeadline = userlogindeadline;
     }
 
-    public String getUserlastloginlocation() {
-        return userlastloginlocation;
+    public String getUserloginlongitude() {
+        return userloginlongitude;
     }
 
-    public void setUserlastloginlocation(String userlastloginlocation) {
-        this.userlastloginlocation = userlastloginlocation == null ? null : userlastloginlocation.trim();
+    public void setUserloginlongitude(String userloginlongitude) {
+        this.userloginlongitude = userloginlongitude == null ? null : userloginlongitude.trim();
+    }
+
+    public String getUserloginlatitude() {
+        return userloginlatitude;
+    }
+
+    public void setUserloginlatitude(String userloginlatitude) {
+        this.userloginlatitude = userloginlatitude == null ? null : userloginlatitude.trim();
+    }
+
+    public Date getUserloginlastlogintime() {
+        return userloginlastlogintime;
+    }
+
+    public void setUserloginlastlogintime(Date userloginlastlogintime) {
+        this.userloginlastlogintime = userloginlastlogintime;
+    }
+
+    public String getUserloginlastloginlocation() {
+        return userloginlastloginlocation;
+    }
+
+    public void setUserloginlastloginlocation(String userloginlastloginlocation) {
+        this.userloginlastloginlocation = userloginlastloginlocation == null ? null : userloginlastloginlocation.trim();
     }
 
     public String getUserlogindevice() {
@@ -85,51 +117,59 @@ public class TUserlogininfo {
         this.userlogindevice = userlogindevice == null ? null : userlogindevice.trim();
     }
 
-    public String getUserbrowserversion() {
-        return userbrowserversion;
+    public String getUserloginbrowserversion() {
+        return userloginbrowserversion;
     }
 
-    public void setUserbrowserversion(String userbrowserversion) {
-        this.userbrowserversion = userbrowserversion == null ? null : userbrowserversion.trim();
+    public void setUserloginbrowserversion(String userloginbrowserversion) {
+        this.userloginbrowserversion = userloginbrowserversion == null ? null : userloginbrowserversion.trim();
     }
 
-    public String getUserphonemodel() {
-        return userphonemodel;
+    public String getUserloginphonemodel() {
+        return userloginphonemodel;
     }
 
-    public void setUserphonemodel(String userphonemodel) {
-        this.userphonemodel = userphonemodel == null ? null : userphonemodel.trim();
+    public void setUserloginphonemodel(String userloginphonemodel) {
+        this.userloginphonemodel = userloginphonemodel == null ? null : userloginphonemodel.trim();
     }
 
-    public String getUserphoneversion() {
-        return userphoneversion;
+    public String getUserloginphoneversion() {
+        return userloginphoneversion;
     }
 
-    public void setUserphoneversion(String userphoneversion) {
-        this.userphoneversion = userphoneversion == null ? null : userphoneversion.trim();
+    public void setUserloginphoneversion(String userloginphoneversion) {
+        this.userloginphoneversion = userloginphoneversion == null ? null : userloginphoneversion.trim();
     }
 
-    public String getUsermac() {
-        return usermac;
+    public String getUserloginmac() {
+        return userloginmac;
     }
 
-    public void setUsermac(String usermac) {
-        this.usermac = usermac == null ? null : usermac.trim();
+    public void setUserloginmac(String userloginmac) {
+        this.userloginmac = userloginmac == null ? null : userloginmac.trim();
     }
 
-    public String getUserip() {
-        return userip;
+    public String getUserloginip() {
+        return userloginip;
     }
 
-    public void setUserip(String userip) {
-        this.userip = userip == null ? null : userip.trim();
+    public void setUserloginip(String userloginip) {
+        this.userloginip = userloginip == null ? null : userloginip.trim();
     }
 
-    public Integer getUsertype() {
-        return usertype;
+    public Integer getUserlogintype() {
+        return userlogintype;
     }
 
-    public void setUsertype(Integer usertype) {
-        this.usertype = usertype;
+    public void setUserlogintype(Integer userlogintype) {
+        this.userlogintype = userlogintype;
+    }
+
+    public Integer getUesrid() {
+        return uesrid;
+    }
+
+    public void setUesrid(Integer uesrid) {
+        this.uesrid = uesrid;
     }
 }

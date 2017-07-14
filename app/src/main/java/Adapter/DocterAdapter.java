@@ -8,7 +8,8 @@ import android.widget.TextView;
 import com.example.ai.dtest.R;
 import java.util.List;
 
-import commen.Docter;
+import commen.TDoctorCustom;
+import commen.TDoctorinfo;
 
 /**
  * Created by ai on 2017/7/9.
@@ -16,9 +17,9 @@ import commen.Docter;
 
 public class DocterAdapter extends RecyclerView.Adapter<DocterAdapter.ViewHolder>{
 
-    private List<Docter> mList;
+    private List<TDoctorCustom> mList;
 
-    public DocterAdapter(List<Docter> mList){
+    public DocterAdapter(List<TDoctorCustom> mList){
         this.mList=mList;
     }
 
@@ -50,12 +51,12 @@ public class DocterAdapter extends RecyclerView.Adapter<DocterAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Docter docter= mList.get(position);
-        holder.docter_name.setText(docter.getName());
-        holder.docter_age.setText(Integer.toString(docter.getAge()));
-        holder.docter_keshi.setText(docter.getKeshi());
-        holder.docter_hosipital.setText(docter.getHospital());
-        holder.docter_specialty.setText(docter.getSpecialty());
+        TDoctorCustom docter= mList.get(position);
+        holder.docter_name.setText(docter.getDocname());
+        holder.docter_age.setText(docter.getDocage().toString());
+        holder.docter_keshi.setText(docter.getDocdepartment());
+        holder.docter_hosipital.setText(docter.getHospitaladdress());
+        holder.docter_specialty.setText(docter.getDocexpert());
     }
 
     @Override
