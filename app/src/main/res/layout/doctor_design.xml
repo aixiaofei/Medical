@@ -82,8 +82,8 @@
 
     <FrameLayout
         android:id="@+id/main"
-        android:layout_below="@+id/top_first"
-        android:layout_above="@+id/buttom"
+        android:layout_below="@id/top_first"
+        android:layout_above="@id/buttom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <fragment
