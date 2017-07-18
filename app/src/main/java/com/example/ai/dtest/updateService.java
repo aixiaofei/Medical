@@ -15,8 +15,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 
-import commen.TDoctorCustom;
-import commen.TDoctorinfo;
+import commen.DoctorCustom;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -86,6 +85,6 @@ public class updateService extends Service{
     }
     private class docterList{
         public String state;
-        public List<TDoctorCustom> result;
+        public List<DoctorCustom> result;
     }
 }

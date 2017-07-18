@@ -19,7 +19,7 @@ public class TestDatabase {
             System.out.println(i.getUserName());
             System.out.println(i.getPassWord());
             System.out.println(i.getLastLoginTime());
-            System.out.println(i.isAutoLogin());
+            System.out.println(i.getIsAutoLogin());
         }
     }
 }

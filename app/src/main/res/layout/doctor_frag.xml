@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    /*分界面*/
+    <LinearLayout
+        android:id="@+id/select"
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+        <TextView
+            android:id="@+id/recommend_doctor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="推荐医生"
+            android:textSize="16sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/offices"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="科室"
+            android:textSize="16sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="日期"
+            android:textSize="16sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text="城市"
+            android:textSize="16sp"
+            android:gravity="center"/>
+    </LinearLayout>
+    /*分界面*/
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/doctor_list"
+        android:layout_below="@+id/select"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        />
+
+</RelativeLayout>

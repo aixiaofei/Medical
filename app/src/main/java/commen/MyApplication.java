@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.baidu.location.LocationClient;
+import com.baidu.mapapi.SDKInitializer;
 
 import org.litepal.LitePalApplication;
 
@@ -17,13 +18,12 @@ public class MyApplication extends Application{
 
     private static String userName=null;
 
-    private static LocationClient client;
     @Override
     public void onCreate() {
         super.onCreate();
         context= getApplicationContext();
         LitePalApplication.initialize(context);
-        client= new LocationClient(context);
+        SDKInitializer.initialize(context);
     }
 
     public static String getUserName(){
@@ -36,13 +36,5 @@ public class MyApplication extends Application{
 
     public static Context getContext(){
         return context;
-    }
-
-    public static LocationClient getClient() {
-        return client;
-    }
-
-    public static void setClient(LocationClient client) {
-        MyApplication.client = client;
     }
 }

@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.ai.dtest.R;
 import java.util.List;
-
-import commen.TDoctorCustom;
-import commen.TDoctorinfo;
+import commen.DoctorCustom;
 
 /**
  * Created by ai on 2017/7/9.
@@ -17,9 +15,9 @@ import commen.TDoctorinfo;
 
 public class DocterAdapter extends RecyclerView.Adapter<DocterAdapter.ViewHolder>{
 
-    private List<TDoctorCustom> mList;
+    private List<DoctorCustom> mList;
 
-    public DocterAdapter(List<TDoctorCustom> mList){
+    public DocterAdapter(List<DoctorCustom> mList){
         this.mList=mList;
     }
 
@@ -44,18 +42,18 @@ public class DocterAdapter extends RecyclerView.Adapter<DocterAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.docter_item,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info,parent,false);
         final ViewHolder viewHolder= new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TDoctorCustom docter= mList.get(position);
+        DoctorCustom docter= mList.get(position);
         holder.docter_name.setText(docter.getDocname());
         holder.docter_age.setText(docter.getDocage().toString());
-        holder.docter_keshi.setText(docter.getDocdepartment());
-        holder.docter_hosipital.setText(docter.getHospitaladdress());
+        holder.docter_keshi.setText(docter.getDocdept());
+        holder.docter_hosipital.setText(docter.getHospname());
         holder.docter_specialty.setText(docter.getDocexpert());
     }
 

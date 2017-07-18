@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,9 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import java.io.IOException;
-import commen.TUserlogininfo;
+import commen.ActivityCollector;
+import commen.MD5;
 import commen.HttpUtils;
-import dalvik.system.InMemoryDexClassLoader;
+import commen.Userlogininfo;
 import yanzhengma.FormatCheckUtils;
 
 public class Register extends BaseActivity implements View.OnClickListener{
@@ -41,11 +40,15 @@ public class Register extends BaseActivity implements View.OnClickListener{
 
     TextView return_Login;  //返回登陆
 
+    private String saveUserName=null;
+
+    private String savePassword=null;
+
     private static final int SUM_TIME= 60000;  // 验证码按钮重新发送间隔时间
 
     private static final int TIME= 1000;  //配合上面参数，倒计时
 
-    private static boolean isShow= false;
+    private boolean isShow= false;
 
     //实现倒计时
     CountDownTimer countDownTimer=new CountDownTimer(SUM_TIME,TIME) {
@@ -85,8 +88,15 @@ public class Register extends BaseActivity implements View.OnClickListener{
                     Toast.makeText(Register.this,"注册失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.REGISTERSUCESS:
-                    Toast.makeText(Register.this,"注册成功,转向主页",Toast.LENGTH_SHORT).show();
-//                    Intent intent =new Intent(Register.this,Login.class);
+                    Toast.makeText(Register.this,"注册成功,转向登陆",Toast.LENGTH_SHORT).show();
+                    Login.actionStart(Register.this,saveUserName,savePassword);
+                    break;
+                case HttpUtils.CANREGISTER:
+                    Toast.makeText(Register.this,"该手机号可以注册",Toast.LENGTH_SHORT).show();
+                    break;
+                case HttpUtils.NOCANREGISTER:
+                    Toast.makeText(Register.this,"该手机号已被注册",Toast.LENGTH_SHORT).show();
+                    user_name.setText("");
                     break;
                 default:
                     break;
@@ -94,15 +104,38 @@ public class Register extends BaseActivity implements View.OnClickListener{
         }
     };
 
-    public static boolean isShow() {
-        return isShow;
+    TextWatcher watcher_user= new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(FormatCheckUtils.isPhoneLegal(editable.toString())){
+                Gson gson= new Gson();
+                User user= new User();
+                user.user= editable.toString();
+                String buf= gson.toJson(user);
+                try {
+                    HttpUtils.canRegister(buf,handler);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private class User{
+        String user;
     }
 
-    public static void setIsShow(boolean isShow) {
-        Register.isShow = isShow;
-    }
-
-    TextWatcher watcher= new TextWatcher() {
+    TextWatcher watcher_password= new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -131,11 +164,12 @@ public class Register extends BaseActivity implements View.OnClickListener{
         send_message= (Button) findViewById(R.id.send_meassage);
         register= (Button) findViewById(R.id.register);
         user_name= (EditText) findViewById(R.id.user_name);
+        user_name.addTextChangedListener(watcher_user);
         user_yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);
         eye= (ImageView) findViewById(R.id.eye);
         eye.setOnClickListener(this);
         user_password= (EditText) findViewById(R.id.user_password);
-        user_password.addTextChangedListener(watcher);
+        user_password.addTextChangedListener(watcher_password);
         return_Login= (TextView) findViewById(R.id.return_login);
         send_message.setOnClickListener(this);
         register.setOnClickListener(this);
@@ -143,17 +177,23 @@ public class Register extends BaseActivity implements View.OnClickListener{
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCollector.finishAll();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.eye:
-                if(!Register.isShow){
-                    setIsShow(true);
+                if(!isShow){
+                    isShow=true;
                     eye.setImageResource(R.drawable.eye_open);
                     user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     user_password.setSelection(user_password.getText().length());
                 }
                 else {
-                    setIsShow(false);
+                    isShow=false;
                     eye.setImageResource(R.drawable.eye_close);
                     user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
                     user_password.setSelection(user_password.getText().length());
@@ -211,32 +251,38 @@ public class Register extends BaseActivity implements View.OnClickListener{
     }
 
     private void try_rerister(){
-        String phone = user_name.getText().toString();
+        saveUserName = user_name.getText().toString();
         String yanzhengma = user_yanzhengma.getText().toString();
-        String password= user_password.getText().toString();
+        savePassword = user_password.getText().toString();
+
         //同
-        if (!FormatCheckUtils.isPhoneLegal(phone)) {
+        if (!FormatCheckUtils.isPhoneLegal(saveUserName)) {
             Toast.makeText(Register.this, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(!FormatCheckUtils.isPassword(password)){
+        if(!FormatCheckUtils.isPassword(savePassword)){
             Toast.makeText(Register.this, "密码格式不正确", Toast.LENGTH_SHORT).show();
             return;
         }
         //检验验证码
         try {
-            HttpUtils.checkMsg(phone,yanzhengma,handler);
+            HttpUtils.checkMsg(saveUserName,yanzhengma,handler);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void register(){
-        String phone = user_name.getText().toString();
-        String password= user_password.getText().toString();
-        TUserlogininfo userlogininfo= new TUserlogininfo();
-        userlogininfo.setUserloginusername(phone);
-        userlogininfo.setUserloginpassword(password);
+        String phone = saveUserName;
+        String password= null;
+        try {
+            password = MD5.get_Md5(savePassword);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Userlogininfo userlogininfo= new Userlogininfo();
+        userlogininfo.setUserloginname(phone);
+        userlogininfo.setUserloginpwd(password);
         Gson gson= new Gson();
         String buf= gson.toJson(userlogininfo);
         try {

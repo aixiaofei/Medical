@@ -10,7 +10,7 @@ public class OffLineUser extends DataSupport{
     private String userName;
     private String passWord;
     private String Token;
-    private boolean isAutoLogin;
+    private int isAutoLogin;
     private String lastLoginTime;
 
     public String getUserName() {
@@ -37,12 +37,12 @@ public class OffLineUser extends DataSupport{
         Token = token;
     }
 
-    public boolean isAutoLogin() {
+    public int getIsAutoLogin() {
         return isAutoLogin;
     }
 
-    public void setAutoLogin(boolean autoLogin) {
-        isAutoLogin = autoLogin;
+    public void setIsAutoLogin(int isAutoLogin) {
+        this.isAutoLogin = isAutoLogin;
     }
 
     public String getLastLoginTime() {

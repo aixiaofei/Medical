@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-public class TDoctorinfo {
+public class Doctorinfo {
     private Integer docid;
 
     private String docname;
@@ -16,23 +16,23 @@ public class TDoctorinfo {
 
     private Integer docage;
 
-    private String docidnum;
+    private String doccardnum;
 
-    private String docidphoto;
+    private String doccardphoto;
 
     private Date docbirthdate;
 
     private String docnation;
 
-    private Integer hospitalid;
+    private Integer hospid;
 
-    private String docdepartment;
+    private String docdept;
 
-    private String docqualificationpho;
+    private String docqualifphoto;
 
-    private String docworkcardpho;
+    private String docworkcardphoto;
 
-    private String doctrainingpho;
+    private String doctrainphoto;
 
     private String docexpert;
 
@@ -70,20 +70,20 @@ public class TDoctorinfo {
         this.docage = docage;
     }
 
-    public String getDocidnum() {
-        return docidnum;
+    public String getDoccardnum() {
+        return doccardnum;
     }
 
-    public void setDocidnum(String docidnum) {
-        this.docidnum = docidnum == null ? null : docidnum.trim();
+    public void setDoccardnum(String doccardnum) {
+        this.doccardnum = doccardnum == null ? null : doccardnum.trim();
     }
 
-    public String getDocidphoto() {
-        return docidphoto;
+    public String getDoccardphoto() {
+        return doccardphoto;
     }
 
-    public void setDocidphoto(String docidphoto) {
-        this.docidphoto = docidphoto == null ? null : docidphoto.trim();
+    public void setDoccardphoto(String doccardphoto) {
+        this.doccardphoto = doccardphoto == null ? null : doccardphoto.trim();
     }
 
     public Date getDocbirthdate() {
@@ -102,44 +102,44 @@ public class TDoctorinfo {
         this.docnation = docnation == null ? null : docnation.trim();
     }
 
-    public Integer getHospitalid() {
-        return hospitalid;
+    public Integer getHospid() {
+        return hospid;
     }
 
-    public void setHospitalid(Integer hospitalid) {
-        this.hospitalid = hospitalid;
+    public void setHospid(Integer hospid) {
+        this.hospid = hospid;
     }
 
-    public String getDocdepartment() {
-        return docdepartment;
+    public String getDocdept() {
+        return docdept;
     }
 
-    public void setDocdepartment(String docdepartment) {
-        this.docdepartment = docdepartment == null ? null : docdepartment.trim();
+    public void setDocdept(String docdept) {
+        this.docdept = docdept == null ? null : docdept.trim();
     }
 
-    public String getDocqualificationpho() {
-        return docqualificationpho;
+    public String getDocqualifphoto() {
+        return docqualifphoto;
     }
 
-    public void setDocqualificationpho(String docqualificationpho) {
-        this.docqualificationpho = docqualificationpho == null ? null : docqualificationpho.trim();
+    public void setDocqualifphoto(String docqualifphoto) {
+        this.docqualifphoto = docqualifphoto == null ? null : docqualifphoto.trim();
     }
 
-    public String getDocworkcardpho() {
-        return docworkcardpho;
+    public String getDocworkcardphoto() {
+        return docworkcardphoto;
     }
 
-    public void setDocworkcardpho(String docworkcardpho) {
-        this.docworkcardpho = docworkcardpho == null ? null : docworkcardpho.trim();
+    public void setDocworkcardphoto(String docworkcardphoto) {
+        this.docworkcardphoto = docworkcardphoto == null ? null : docworkcardphoto.trim();
     }
 
-    public String getDoctrainingpho() {
-        return doctrainingpho;
+    public String getDoctrainphoto() {
+        return doctrainphoto;
     }
 
-    public void setDoctrainingpho(String doctrainingpho) {
-        this.doctrainingpho = doctrainingpho == null ? null : doctrainingpho.trim();
+    public void setDoctrainphoto(String doctrainphoto) {
+        this.doctrainphoto = doctrainphoto == null ? null : doctrainphoto.trim();
     }
 
     public String getDocexpert() {
@@ -157,7 +157,8 @@ public class TDoctorinfo {
     public void setDocotherphoto(String docotherphoto) {
         this.docotherphoto = docotherphoto == null ? null : docotherphoto.trim();
     }
-    public Object deepCopy() throws IOException, ClassNotFoundException{
+
+    public Object deepCopy() throws IOException, ClassNotFoundException {
         //字节数组输出流，暂存到内存中
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         //序列化
