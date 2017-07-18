@@ -43,8 +43,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private String tryAutoLoginUser=null;
 
-    private List<DoctorCustom> mList;
-
     private LocationClient client;
 
     private Handler handler=new Handler(){
@@ -80,7 +78,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         map_fig.setOnClickListener(this);
         map_text.setOnClickListener(this);
         List<String> permissionList = new ArrayList<>();
-        mList= new ArrayList<>();
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
@@ -176,7 +173,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     }
                 });
         builder.create().show();
-
     }
 
     private void init(){

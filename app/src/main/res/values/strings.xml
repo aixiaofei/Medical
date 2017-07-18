@@ -17,4 +17,89 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="sex_choose">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+
+    <string-array name="offices">
+        <item>科室</item>
+        <item>内科</item>
+        <item>外科</item>
+        <item>妇科</item>
+        <item>骨科</item>
+    </string-array>
+
+    <string-array name="cities">
+        <item>城市</item>
+        <item>北京</item>
+        <item>上海</item>
+        <item>广州</item>
+        <item>深圳</item>
+    </string-array>
+
+    <string-array name="age_choose">
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+    </string-array>
+
+    <string-array name="relation_choose">
+        <item>本人</item>
+        <item>父子</item>
+        <item>父女</item>
+        <item>母子</item>
+        <item>母女</item>
+        <item>兄弟</item>
+        <item>姐妹</item>
+        <item>爷孙</item>
+        <item>叔侄</item>
+    </string-array>
+
+    <string name="release_illness_hint_remind">
+        请描述以下情况：\n
+        1.症状发生的时间、症状、部位、持续时间、有无伴随症状\n
+        2.患者就诊时间\n
+        3.如就诊过，提供医生诊断、治疗经过\n
+        4.慢性患者：饮食、睡眠、大小便、体重变化情况\n
+        5.既往病史\n
+        6.过敏史\n
+        </string>
+
+    <string name="add_picture_remind">
+        就诊过程中可提供诊断、报告照片供医生参考（限4张）
+    </string>
+
+    <string name="pesonnal_information_remind">
+        普通用户注册，只需填写：姓名、性别、年龄和手机号，若预约挂号用户需填写完整，可提高预约审核效率
+    </string>
 </resources>

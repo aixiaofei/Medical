@@ -1,0 +1,375 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_select_background">
+
+    /*标题栏设置*/
+    <RelativeLayout
+        android:id="@+id/information_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorButton_background"
+        android:layout_alignParentTop="true"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/design_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/back_white"
+                android:layout_alignParentLeft="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="返回"
+                android:textColor="@color/colorWhite"
+                android:layout_gravity="center"
+                android:layout_toRightOf="@id/design_back"
+                android:textSize="18dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="155dp"
+            android:layout_height="30dp"
+            android:text="个人信息"
+            android:textColor="@color/colorWhite"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    /*标题栏设置*/
+
+    /*提醒*/
+    <TextView
+        android:id="@+id/remind"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="@string/pesonnal_information_remind"
+        android:gravity="center_vertical"
+        android:textSize="11dp"
+        android:background="@color/colorWhite"
+        android:layout_below="@+id/information_top"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    /*提醒*/
+
+    /*姓名设置*/
+    <LinearLayout
+        android:id="@+id/addition_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/remind"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="姓名"/>
+
+        <EditText
+            android:id="@+id/enter_name"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:hint="请输入真实姓名"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+    </LinearLayout>
+    /*姓名设置*/
+
+    /*身份证设置*/
+    <LinearLayout
+        android:id="@+id/addition_identify"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_name"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="身份证"/>
+
+        <EditText
+            android:id="@+id/enter_identify"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:hint="请输入真实身份证号"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+    </LinearLayout>
+
+    /*身份证设置*/
+
+    /*性别设置*/
+    <LinearLayout
+        android:id="@+id/addition_sex"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_identify"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="性别"/>
+
+        <Spinner
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="15dp"
+            android:id="@+id/select_sex"
+            android:entries="@array/sex_choose"
+            android:dropDownVerticalOffset="40dp"/>
+    </LinearLayout>
+    /*性别设置*/
+
+    /*年龄设置*/
+    <LinearLayout
+        android:id="@+id/addition_age"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_sex"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="年龄"
+            android:textSize="15dp" />
+
+        <Spinner
+            android:id="@+id/select_age"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:entries="@array/age_choose"
+            android:dropDownVerticalOffset="40dp"/>
+    </LinearLayout>
+    /*年龄设置*/
+
+    /*地址设置*/
+    <LinearLayout
+        android:id="@+id/addition_address"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_age"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="地址"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:hint="请选择常住地址"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/more"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"/>
+    </LinearLayout>
+    /*地址设置*/
+
+    /*手机号设置*/
+    <LinearLayout
+        android:id="@+id/addition_phone_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_address"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="手机号"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:hint="用于接收预约或接收短信"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+    </LinearLayout>
+    /*手机号设置*/
+
+    /*住址设置*/
+    <LinearLayout
+        android:id="@+id/addition_address_detail"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_phone_name"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="住址"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:background="@null"
+            android:hint="请填写具体住址"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+    </LinearLayout>
+    /*住址设置*/
+
+    /*手机号设置*/
+    <LinearLayout
+        android:id="@+id/addition_relation"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_address_detail"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="关系"/>
+
+        <TextView
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="请输入关系"
+            android:layout_marginRight="15dp"
+            android:id="@+id/select_relation"
+            android:entries="@array/relation_choose"/>
+    </LinearLayout>
+    /*手机号设置*/
+
+    /*默认设置*/
+    <LinearLayout
+        android:id="@+id/addition_button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_relation"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="是否设为默认"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:textSize="15dp"
+            android:textColor="@color/color_remind"/>
+
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:background="@drawable/button_close"
+            android:layout_gravity="center"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"
+            />
+    </LinearLayout>
+    /*默认设置*/
+
+    /*提醒*/
+    <TextView
+        android:id="@+id/remind_red"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginTop="3dp"
+        android:text="*请务必填写真实姓名，以预防挂号失败；信息填写未完整时，将不能查看医生详细信息。"
+        android:textColor="@color/color_red"
+        android:textSize="9dp"
+        android:layout_below="@id/addition_button"
+        android:gravity="center"
+        android:background="@color/colorWhite"/>
+    /*提醒*/
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/remind_red">
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="31dp"
+            android:text="下一步"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_shape"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
