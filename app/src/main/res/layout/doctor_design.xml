@@ -93,50 +93,104 @@
     </FrameLayout>
 
 
-    <RelativeLayout
+    /*底部设置*/
+    <LinearLayout
         android:id="@+id/buttom"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_above="@+id/text_part"
+        android:layout_marginTop="2dp">
 
-        android:layout_alignParentBottom="true">
-            <ImageView
-                android:id="@+id/home_pag"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="35dp"
-                android:layout_alignTop="@+id/search_doctor_page"
-                android:layout_toLeftOf="@+id/search_doctor_page"
-                android:background="@drawable/home_page" />
-            <ImageView
-                android:id="@+id/search_doctor_page"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/search_doctor"
-                android:layout_marginRight="35dp"
-                android:layout_alignTop="@+id/my_doctor_page"
-                android:layout_toLeftOf="@+id/my_doctor_page"/>
-            <ImageView
-                android:id="@+id/my_doctor_page"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/my_doctor" />
-            <ImageView
-                android:id="@+id/search_menu"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/menu"
-                android:layout_marginLeft="35dp"
-                android:layout_alignTop="@+id/my_doctor_page"
-                android:layout_toRightOf="@+id/my_doctor_page"/>
-            <ImageView
-                android:id="@+id/my_page"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/my"
-                android:layout_marginLeft="35dp"
-                android:layout_alignTop="@+id/my_doctor_page"
-                android:layout_toRightOf="@+id/search_menu"/>
-    </RelativeLayout>
+        <Button
+            android:id="@+id/home_page_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/home_page" />
+        <Button
+            android:id="@+id/search_doctor_page_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/search_doctor"
+            android:layout_toRightOf="@+id/home_pag"
+            android:layout_marginLeft="45dp"/>
+        <Button
+            android:id="@+id/my_doctor_page_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/my_doctor"
+            android:layout_toRightOf="@+id/search_doc"
+            android:layout_marginLeft="45dp"/>
+        <Button
+            android:id="@+id/search_menu_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/menu"
+            android:layout_toRightOf="@+id/home_pag"
+            android:layout_marginLeft="45dp"/>
+        <Button
+            android:id="@+id/my_page_pic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/my"
+            android:layout_toRightOf="@+id/search_menu"
+            android:layout_marginLeft="45dp"/>
+
+    </LinearLayout>
+
+    /*文字设置*/
+    <LinearLayout
+        android:id="@+id/text_part"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_marginTop="2dp">
+        <TextView
+            android:id="@+id/home_pag_text"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="首页"
+            android:textSize="13dp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/search_doctor_page_text"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="寻找"
+            android:textSize="13dp"
+            android:layout_marginLeft="45dp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/my_doctor_page_text"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="医生"
+            android:textSize="13dp"
+            android:layout_marginLeft="45dp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/search_menu_text"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="日程"
+            android:textSize="13dp"
+            android:layout_marginLeft="45dp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/my_page_text"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:text="我的"
+            android:textSize="13dp"
+            android:layout_marginLeft="45dp"
+            android:gravity="center"/>
+
+    </LinearLayout>
 </RelativeLayout>
 
