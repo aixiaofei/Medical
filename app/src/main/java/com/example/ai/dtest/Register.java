@@ -90,6 +90,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
                 case HttpUtils.REGISTERSUCESS:
                     Toast.makeText(Register.this,"注册成功,转向登陆",Toast.LENGTH_SHORT).show();
                     Login.actionStart(Register.this,saveUserName,savePassword);
+                    finish();
                     break;
                 case HttpUtils.CANREGISTER:
                     Toast.makeText(Register.this,"该手机号可以注册",Toast.LENGTH_SHORT).show();

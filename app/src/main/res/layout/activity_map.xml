@@ -8,9 +8,11 @@
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true">
+        android:layout_width="395dp"
+        android:layout_height="643dp"
+        android:clickable="true"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
     </com.baidu.mapapi.map.MapView>
 
 </android.support.constraint.ConstraintLayout>

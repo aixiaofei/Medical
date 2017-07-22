@@ -7,18 +7,20 @@
     <RelativeLayout
         android:id="@+id/personal_top"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:background="@color/colorButton_background">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_centerInParent="true">
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:layout_marginLeft="8dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_image"
+                android:layout_marginLeft="20dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_vertical"/>
 
             /*填写昵称和ID*/
@@ -26,29 +28,27 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp">
+                android:layout_height="50dp">
                 <TextView
-                    android:id="@+id/personal_nickname"
+                    android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:layout_marginStart="20dp"
+                    android:gravity="center_vertical"/>
 
                 <TextView
-                    android:id="@+id/personal_id"
+                    android:id="@+id/user_information"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="账号信息"
+                    android:textSize="12sp" />
             </LinearLayout>
             /*填写昵称和ID*/
-
-            <TextView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/more_white"
-                android:layout_marginRight="15dp"/>
-
         </LinearLayout>
 
     </RelativeLayout>
@@ -64,7 +64,7 @@
     <LinearLayout
         android:id="@+id/my_messa"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_below="@id/below_top_line"
         android:background="@color/colorWhite"
         android:gravity="center_vertical">
@@ -74,17 +74,18 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/personal_message" />
         <TextView
+            android:id="@+id/personal_information"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
-            android:text="个人信息"
-            android:textSize="16dp"/>
+            android:text="个人详细信息"
+            android:textSize="16sp"/>
         <TextView
-            android:id="@+id/change_personal_message"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/change_personal_information"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/more"
             android:layout_marginRight="15dp"/>
@@ -95,7 +96,7 @@
     <LinearLayout
         android:id="@+id/my_pur"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginTop="2dp"
         android:layout_below="@id/my_messa"
         android:background="@color/colorWhite"
@@ -106,17 +107,18 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/my_purse"/>
         <TextView
+            android:id="@+id/my_purse"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:text="我的钱包"
-            android:textSize="16dp"/>
+            android:textSize="16sp"/>
         <TextView
             android:id="@+id/change_my_purse"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/more"
             android:layout_marginRight="15dp"/>
@@ -127,7 +129,7 @@
     <LinearLayout
         android:id="@+id/my_menu"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginTop="2dp"
         android:layout_below="@id/my_pur"
         android:background="@color/colorWhite"
@@ -138,17 +140,18 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/my_deal"/>
         <TextView
+            android:id="@+id/my_order"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:text="我的订单"
-            android:textSize="16dp"/>
+            android:textSize="16sp"/>
         <TextView
-            android:id="@+id/change_my_menu"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/change_my_order"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/more"
             android:layout_marginRight="15dp"/>
@@ -159,7 +162,7 @@
     <LinearLayout
         android:id="@+id/my_set"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginTop="2dp"
         android:layout_below="@id/my_menu"
         android:background="@color/colorWhite"
@@ -170,17 +173,18 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/set"/>
         <TextView
+            android:id="@+id/my_setting"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:text="设置"
-            android:textSize="16dp"/>
+            android:textSize="16sp"/>
         <TextView
-            android:id="@+id/change_my_set"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/change_my_setting"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/more"
             android:layout_marginRight="15dp"/>

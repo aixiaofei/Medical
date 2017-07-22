@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
     <LinearLayout
@@ -10,7 +9,7 @@
         android:focusableInTouchMode="true"
         android:id="@+id/top_first"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="@color/colorButton_background"
         android:layout_alignParentTop="true">
 
@@ -83,15 +82,14 @@
     <FrameLayout
         android:id="@+id/main"
         android:layout_below="@id/top_first"
-        android:layout_above="@id/buttom"
+        android:layout_above="@+id/buttom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <fragment
             android:id="@+id/main_fragment"
             android:name="Frag.DoctorList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout="@layout/doctor_frag" />
+            android:layout_height="match_parent" />
     </FrameLayout>
 
 

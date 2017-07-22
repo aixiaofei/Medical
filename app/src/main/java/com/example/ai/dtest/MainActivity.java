@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +77,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         setContentView(R.layout.doctor_design);
         ImageView map_fig = (ImageView) findViewById(R.id.map);
         TextView map_text = (TextView) findViewById(R.id.top_first_address);
+        Button myPage= (Button) findViewById(R.id.my_page_pic);
+        myPage.setOnClickListener(this);
         map_fig.setOnClickListener(this);
         map_text.setOnClickListener(this);
         List<String> permissionList = new ArrayList<>();
@@ -127,6 +131,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             case R.id.top_first_address:
                 Intent intent2= new Intent(MainActivity.this,Map.class);
                 startActivity(intent2);
+                break;
+            case R.id.my_page_pic:
+                Intent intent= new Intent(MainActivity.this,MyInformation.class);
+                startActivity(intent);
                 break;
             default:
                 break;

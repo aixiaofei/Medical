@@ -78,6 +78,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
                     Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
                 default:
                     break;
