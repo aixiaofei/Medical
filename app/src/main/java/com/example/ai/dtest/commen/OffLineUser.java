@@ -7,26 +7,27 @@ import org.litepal.crud.DataSupport;
  */
 
 public class OffLineUser extends DataSupport{
-    private String userName;
-    private String passWord;
+
+    private String userPhone;
+    private String password;
     private String Token;
     private int isAutoLogin;
     private String lastLoginTime;
 
-    public String getUserName() {
-        return userName;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getToken() {

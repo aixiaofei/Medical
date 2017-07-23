@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -22,23 +23,23 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.ai.dtest.commen.ActivityCollector;
+import com.example.ai.dtest.commen.HttpUtils;
+import com.example.ai.dtest.commen.MD5;
+import com.example.ai.dtest.commen.MacAddressUtils;
+import com.example.ai.dtest.commen.MyApplication;
+import com.example.ai.dtest.commen.OffLineUser;
+import com.example.ai.dtest.commen.Userlogininfo;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import commen.ActivityCollector;
-import commen.HttpUtils;
-import commen.MD5;
-import commen.MacAddressUtils;
-import commen.MyApplication;
-import commen.OffLineUser;
-import commen.Userlogininfo;
 
 public class Login extends BaseActivity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener {
 
     Button login;
 
-    EditText user_name;
+    EditText user_phone;
 
     EditText user_password;
 
@@ -54,7 +55,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
 
     private LocationClient client;
 
-    private String saveUserName=null;
+    private String saveUserPhone=null;
 
     private String savePassword=null;
 
@@ -74,7 +75,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
                     Gson gson= new Gson();
                     Userlogininfo userlogininfo= gson.fromJson(buf_user,Userlogininfo.class);
                     saveOfflineUser(userlogininfo,bundle.getString("token"));
-                    MyApplication.setUserName(userlogininfo.getUserloginname());
+                    MyApplication.setUserPhone(userlogininfo.getUserloginphone());
+                    MyApplication.setUserName(bundle.getString("username"));
                     Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
@@ -101,7 +103,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         String name= intent.getStringExtra("userName");
         String password= intent.getStringExtra("password");
         login = (Button) findViewById(R.id.login);
-        user_name = (EditText) findViewById(R.id.name);
+        user_phone = (EditText) findViewById(R.id.name);
         user_password = (EditText) findViewById(R.id.password);
         eye= (ImageView) findViewById(R.id.eye);
         hold_password = (CheckBox) findViewById(R.id.hold_password);
@@ -116,8 +118,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         hold_password.setOnCheckedChangeListener(this);
         hold_autologin.setOnCheckedChangeListener(this);
         if(!TextUtils.isEmpty(name)){
-            user_name.setText(name);
-            user_name.setSelection(name.length());
+            user_phone.setText(name);
+            user_phone.setSelection(name.length());
         }
         if(!TextUtils.isEmpty(password)){
             user_password.setText(password);
@@ -172,6 +174,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             case R.id.return_register:
                 Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
+                finish();
                 break;
             default:
                 break;
@@ -197,11 +200,11 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     }
 
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        ActivityCollector.finishAll();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        ActivityCollector.finishAll();
+//    }
 
     @Override
     protected void onDestroy() {
@@ -209,11 +212,11 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     }
 
     private void tryLogin() {
-        if (TextUtils.isEmpty(user_name.getText().toString()) || TextUtils.isEmpty(user_password.getText().toString())) {
+        if (TextUtils.isEmpty(user_phone.getText().toString()) || TextUtils.isEmpty(user_password.getText().toString())) {
             Toast.makeText(MyApplication.getContext(), "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        saveUserName=user_name.getText().toString();
+        saveUserPhone=user_phone.getText().toString();
         savePassword=user_password.getText().toString();
         client= new LocationClient(Login.this);
         client.registerLocationListener(new LocationListener());
@@ -224,41 +227,40 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     }
 
     private void saveOfflineUser(Userlogininfo userlogininfo,String token) {
-        String userName = saveUserName;
+        String userPhone = saveUserPhone;
         String userPassword_buf = savePassword;
         String userPassword = Base64.encodeToString(userPassword_buf.getBytes(), Base64.DEFAULT);
-        OffLineUser offLineUsers = DataSupport.where("userName =?", userName).findFirst(OffLineUser.class);
+        OffLineUser offLineUsers=DataSupport.where("userPhone =?", saveUserPhone).findFirst(OffLineUser.class);
         OffLineUser user = new OffLineUser();
         if (offLineUsers == null) {
-            user.setUserName(userName);
+            user.setUserPhone(userPhone);
             if (hold_autologin.isChecked()) {
-                user.setPassWord(userPassword);
+                user.setPassword(userPassword);
                 user.setIsAutoLogin(1);
             } else if (hold_password.isChecked()) {
-                user.setPassWord(userPassword);
+                user.setPassword(userPassword);
                 user.setToDefault("isAutoLogin");
             } else {
-                user.setToDefault("passWord");
+                user.setToDefault("password");
                 user.setToDefault("isAutoLogin");
             }
             user.setToken(token);
             user.setLastLoginTime(userlogininfo.getUserlogintime());
             user.save();
         } else {
-            String userName_buf = offLineUsers.getUserName();
+            String userPhone_buf = offLineUsers.getUserPhone();
             if (hold_autologin.isChecked()) {
-                user.setPassWord(userPassword);
+                user.setPassword(userPassword);
                 user.setIsAutoLogin(1);
             } else if (hold_password.isChecked()) {
-                user.setPassWord(userPassword);
                 user.setToDefault("isAutoLogin");
             } else {
-                user.setToDefault("passWord");
+                user.setToDefault("password");
                 user.setToDefault("isAutoLogin");
             }
             user.setToken(token);
             user.setLastLoginTime(userlogininfo.getUserlogintime());
-            user.updateAll("userName=?", userName_buf);
+            user.updateAll("userPhone=?", userPhone_buf);
         }
     }
 
@@ -278,7 +280,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         String usermac= MacAddressUtils.getMacAddress(Login.this);
         String userip= MacAddressUtils.getIpAddress(Login.this);
         Userlogininfo userlogininfo= new Userlogininfo();
-        userlogininfo.setUserloginname(saveUserName);
+        userlogininfo.setUserloginphone(saveUserPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserloginlat(latitude_longitude.split(",")[0]);
         userlogininfo.setUserloginlon(latitude_longitude.split(",")[1]);
@@ -311,7 +313,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         String usermac= MacAddressUtils.getMacAddress(Login.this);
         String userip= MacAddressUtils.getIpAddress(Login.this);
         Userlogininfo userlogininfo= new Userlogininfo();
-        userlogininfo.setUserloginname(saveUserName);
+        userlogininfo.setUserloginphone(saveUserPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserlogintime(date);
         userlogininfo.setUserlogindev(loginDevice);

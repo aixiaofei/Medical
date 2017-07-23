@@ -30,14 +30,13 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
+import com.example.ai.dtest.commen.DoctorCustom;
+import com.example.ai.dtest.commen.HttpUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
-import commen.DoctorCustom;
-import commen.HttpUtils;
-
-public class Map extends AppCompatActivity {
+public class Map extends BaseActivity {
 
     private MapView mapView;
 
@@ -168,6 +167,7 @@ public class Map extends AppCompatActivity {
         map.clear();
         mapView.onDestroy();
     }
+
 
     public class LocationListener implements BDLocationListener {
         @Override

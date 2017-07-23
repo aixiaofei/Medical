@@ -10,12 +10,12 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.ai.dtest.commen.DoctorCustom;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
-
-import commen.DoctorCustom;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;

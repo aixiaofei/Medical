@@ -29,7 +29,7 @@
             android:layout_marginEnd="10dp"
             android:background="@drawable/none_border_background"
             android:gravity="bottom"
-            android:hint="手机号码/用户名"
+            android:hint="手机号码"
             android:textColor="@color/origin_text_color"
             android:textSize="16sp" />
     </LinearLayout>

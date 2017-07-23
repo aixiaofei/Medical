@@ -16,13 +16,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.ai.dtest.commen.ActivityCollector;
+import com.example.ai.dtest.commen.HttpUtils;
+import com.example.ai.dtest.commen.MD5;
+import com.example.ai.dtest.commen.Userlogininfo;
+import com.example.ai.dtest.yanzhengma.FormatCheckUtils;
 import com.google.gson.Gson;
 import java.io.IOException;
-import commen.ActivityCollector;
-import commen.MD5;
-import commen.HttpUtils;
-import commen.Userlogininfo;
-import yanzhengma.FormatCheckUtils;
 
 public class Register extends BaseActivity implements View.OnClickListener{
 
@@ -30,7 +31,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
 
     Button register;     //注册按钮
 
-    EditText user_name;  //用户名文本框，也就是手机号
+    EditText user_phone;  //用户名文本框，也就是手机号
 
     EditText user_yanzhengma;  // 验证码文本框
 
@@ -40,7 +41,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
 
     TextView return_Login;  //返回登陆
 
-    private String saveUserName=null;
+    private String saveUserPhone=null;
 
     private String savePassword=null;
 
@@ -89,7 +90,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
                     break;
                 case HttpUtils.REGISTERSUCESS:
                     Toast.makeText(Register.this,"注册成功,转向登陆",Toast.LENGTH_SHORT).show();
-                    Login.actionStart(Register.this,saveUserName,savePassword);
+                    Login.actionStart(Register.this,saveUserPhone,savePassword);
                     finish();
                     break;
                 case HttpUtils.CANREGISTER:
@@ -97,7 +98,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
                     break;
                 case HttpUtils.NOCANREGISTER:
                     Toast.makeText(Register.this,"该手机号已被注册",Toast.LENGTH_SHORT).show();
-                    user_name.setText("");
+                    user_phone.setText("");
                     break;
                 default:
                     break;
@@ -164,8 +165,8 @@ public class Register extends BaseActivity implements View.OnClickListener{
         //获取所有控件实例
         send_message= (Button) findViewById(R.id.send_meassage);
         register= (Button) findViewById(R.id.register);
-        user_name= (EditText) findViewById(R.id.user_name);
-        user_name.addTextChangedListener(watcher_user);
+        user_phone= (EditText) findViewById(R.id.user_name);
+        user_phone.addTextChangedListener(watcher_user);
         user_yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);
         eye= (ImageView) findViewById(R.id.eye);
         eye.setOnClickListener(this);
@@ -177,11 +178,11 @@ public class Register extends BaseActivity implements View.OnClickListener{
         return_Login.setOnClickListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        ActivityCollector.finishAll();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        ActivityCollector.finishAll();
+//    }
 
     @Override
     public void onClick(View view) {
@@ -201,7 +202,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.send_meassage:
-                String phone = user_name.getText().toString();
+                String phone = user_phone.getText().toString();
                 //正则判断手机号是否有效
                 if (!FormatCheckUtils.isPhoneLegal(phone)) {
                     Toast.makeText(Register.this, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
@@ -228,19 +229,20 @@ public class Register extends BaseActivity implements View.OnClickListener{
                 builder.create().show();
                 break;
             case R.id.register:
-                //尝试登陆
+                //尝试注册
                 try_rerister();
                 break;
             case R.id.return_login:
                 Intent intent= new Intent(Register.this,Login.class);
                 startActivity(intent);
+                finish();
             default:
                 break;
         }
     }
 
     private void send_message(){
-        String phone = user_name.getText().toString();
+        String phone = user_phone.getText().toString();
         //开启倒计时
         countDownTimer.start();
         try {
@@ -252,12 +254,12 @@ public class Register extends BaseActivity implements View.OnClickListener{
     }
 
     private void try_rerister(){
-        saveUserName = user_name.getText().toString();
+        saveUserPhone = user_phone.getText().toString();
         String yanzhengma = user_yanzhengma.getText().toString();
         savePassword = user_password.getText().toString();
 
         //同
-        if (!FormatCheckUtils.isPhoneLegal(saveUserName)) {
+        if (!FormatCheckUtils.isPhoneLegal(saveUserPhone)) {
             Toast.makeText(Register.this, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -267,14 +269,14 @@ public class Register extends BaseActivity implements View.OnClickListener{
         }
         //检验验证码
         try {
-            HttpUtils.checkMsg(saveUserName,yanzhengma,handler);
+            HttpUtils.checkMsg(saveUserPhone,yanzhengma,handler);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void register(){
-        String phone = saveUserName;
+        String phone = saveUserPhone;
         String password= null;
         try {
             password = MD5.get_Md5(savePassword);
@@ -282,7 +284,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
             e.printStackTrace();
         }
         Userlogininfo userlogininfo= new Userlogininfo();
-        userlogininfo.setUserloginname(phone);
+        userlogininfo.setUserloginphone(phone);
         userlogininfo.setUserloginpwd(password);
         Gson gson= new Gson();
         String buf= gson.toJson(userlogininfo);

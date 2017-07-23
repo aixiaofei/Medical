@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,25 +24,24 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.ai.dtest.commen.ActivityCollector;
+import com.example.ai.dtest.commen.HttpUtils;
+import com.example.ai.dtest.commen.MD5;
+import com.example.ai.dtest.commen.MacAddressUtils;
+import com.example.ai.dtest.commen.MyApplication;
+import com.example.ai.dtest.commen.OffLineUser;
+import com.example.ai.dtest.commen.Userlogininfo;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import commen.ActivityCollector;
-import commen.DoctorCustom;
-import commen.HttpUtils;
-import commen.MD5;
-import commen.MacAddressUtils;
-import commen.MyApplication;
-import commen.OffLineUser;;
-import commen.Userlogininfo;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
-    private String tryAutoLoginUser=null;
+    private String tryAutoLoginPhone=null;
 
     private LocationClient client;
 
@@ -58,12 +56,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     String buf2= login_sucess_bundle.getString("user");
                     Userlogininfo userlogininfo= gson.fromJson(buf2,Userlogininfo.class);
                     saveOfflineUser(userlogininfo,login_sucess_bundle.getString("token"));
-                    MyApplication.setUserName(userlogininfo.getUserloginname());
+                    MyApplication.setUserPhone(userlogininfo.getUserloginphone());
+                    MyApplication.setUserName(login_sucess_bundle.getString("username"));
                     break;
                 case HttpUtils.LOGINFAILURE:
                     Toast.makeText(MainActivity.this,"请重新登录",Toast.LENGTH_SHORT).show();
                     clearInfo();
-                    Login.actionStart(MainActivity.this,tryAutoLoginUser,null);
+                    Login.actionStart(MainActivity.this,tryAutoLoginPhone,null);
                     break;
                 default:
                     break;
@@ -183,12 +182,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         builder.create().show();
     }
 
+
     private void init(){
-        if(MyApplication.getUserName()==null){
+        if(MyApplication.getUserPhone()==null){
             OffLineUser offLineUsers = DataSupport.where("isAutoLogin =?","1").findFirst(OffLineUser.class);
             if (offLineUsers!=null){
                 client= new LocationClient(MainActivity.this);
-                tryAutoLoginUser= offLineUsers.getUserName();
+                tryAutoLoginPhone= offLineUsers.getUserPhone();
                 client.registerLocationListener(new MainActivity.LocationListener());
                 LocationClientOption option = new LocationClientOption();
                 option.setIsNeedAddress(true);
@@ -227,8 +227,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void isLocationLogin(String location,String latitude_longitude){
-        OffLineUser offLineUsers = DataSupport.where("userName =?",tryAutoLoginUser).findFirst(OffLineUser.class);
-        String password_buf= new String(Base64.decode(offLineUsers.getPassWord().getBytes(),Base64.DEFAULT));
+        OffLineUser offLineUsers = DataSupport.where("userPhone =?",tryAutoLoginPhone).findFirst(OffLineUser.class);
+        String password_buf= new String(Base64.decode(offLineUsers.getPassword().getBytes(),Base64.DEFAULT));
         String password= null;
         try {
             password = MD5.get_Md5(password_buf);
@@ -236,7 +236,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             e.printStackTrace();
         }
         Date buf_date= new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = sdf.format(buf_date);
         String loginDevice= "手机端";
         String userphonemodel= android.os.Build.MODEL;
@@ -244,7 +244,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         String usermac= MacAddressUtils.getMacAddress(MainActivity.this);
         String userip= MacAddressUtils.getIpAddress(MainActivity.this);
         Userlogininfo userlogininfo= new Userlogininfo();
-        userlogininfo.setUserloginname(tryAutoLoginUser);
+        userlogininfo.setUserloginphone(tryAutoLoginPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserloginlat(latitude_longitude.split(",")[0]);
         userlogininfo.setUserloginlon(latitude_longitude.split(",")[1]);
@@ -263,8 +263,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void noLocationLogin(){
-        OffLineUser offLineUsers = DataSupport.where("userName =?",tryAutoLoginUser).findFirst(OffLineUser.class);
-        String password_buf= new String(Base64.decode(offLineUsers.getPassWord().getBytes(),Base64.DEFAULT));
+        OffLineUser offLineUsers = DataSupport.where("userPhone =?",tryAutoLoginPhone).findFirst(OffLineUser.class);
+        String password_buf= new String(Base64.decode(offLineUsers.getPassword().getBytes(),Base64.DEFAULT));
         String password= null;
         try {
             password = MD5.get_Md5(password_buf);
@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             e.printStackTrace();
         }
         Date buf_date= new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = sdf.format(buf_date);
         String loginDevice= "手机端";
         String userphonemodel= android.os.Build.MODEL;
@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         String usermac= MacAddressUtils.getMacAddress(MainActivity.this);
         String userip= MacAddressUtils.getIpAddress(MainActivity.this);
         Userlogininfo userlogininfo= new Userlogininfo();
-        userlogininfo.setUserloginname(tryAutoLoginUser);
+        userlogininfo.setUserloginphone(tryAutoLoginPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserlogintime(date);
         userlogininfo.setUserlogindev(loginDevice);
@@ -299,15 +299,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             OffLineUser user= new OffLineUser();
             user.setToken(token);
             user.setLastLoginTime(userlogininfo.getUserlogintime());
-            user.updateAll("userName=?", userlogininfo.getUserloginname());
+            user.updateAll("userPhone=?", userlogininfo.getUserloginphone());
     }
 
     private void clearInfo(){
         OffLineUser user= new OffLineUser();
         user.setToDefault("Token");
         user.setToDefault("isAutoLogin");
-        user.setToDefault("passWord");
+        user.setToDefault("password");
         user.setToDefault("lastLoginTime");
-        user.updateAll("userName=?", tryAutoLoginUser);
+        user.updateAll("userPhone=?", tryAutoLoginPhone);
     }
 }

@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 
-import org.litepal.crud.DataSupport;
+import com.example.ai.dtest.commen.OffLineUser;
 
+import org.litepal.crud.DataSupport;
 import java.util.Arrays;
 
-import commen.OffLineUser;
 
 public class Access extends BaseActivity {
 
@@ -17,10 +17,10 @@ public class Access extends BaseActivity {
         super.onCreate(savedInstanceState);
         OffLineUser isAutoLogin = DataSupport.where("isAutoLogin =?","1").findFirst(OffLineUser.class);
         if(isAutoLogin==null){
-            OffLineUser isPassword = DataSupport.where("passWord !=?", "").findFirst(OffLineUser.class);
+            OffLineUser isPassword = DataSupport.where("password !=?", "").findFirst(OffLineUser.class);
             if(isPassword!=null){
-                String resPassword= Arrays.toString((Base64.decode(isPassword.getPassWord(), Base64.DEFAULT)));
-                Login.actionStart(Access.this,isPassword.getUserName(),resPassword);
+                String resPassword= new String(Base64.decode(isPassword.getPassword(), Base64.DEFAULT));
+                Login.actionStart(Access.this,isPassword.getUserPhone(),resPassword);
             }
             else {
                 OffLineUser isLastLogin= DataSupport.order("lastLoginTime").findFirst(OffLineUser.class);
@@ -28,7 +28,7 @@ public class Access extends BaseActivity {
                     Login.actionStart(Access.this,"","");
                 }
                 else {
-                    Login.actionStart(Access.this,isLastLogin.getUserName(),"");
+                    Login.actionStart(Access.this,isLastLogin.getUserPhone(),"");
                 }
             }
         }

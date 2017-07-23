@@ -87,7 +87,7 @@
         android:layout_height="match_parent">
         <fragment
             android:id="@+id/main_fragment"
-            android:name="Frag.DoctorList"
+            android:name="com.example.ai.dtest.Frag.DoctorList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>

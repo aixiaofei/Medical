@@ -15,6 +15,13 @@ public class FormatCheckUtils {
         return isChinaPhoneLegal(str) || isHKPhoneLegal(str);
     }
 
+    public static boolean isNumber(String str) throws PatternSyntaxException{
+        String regExp= "^[0-9]+$";
+        Pattern p= Pattern.compile(regExp);
+        Matcher m= p.matcher(str);
+        return m.matches();
+    }
+
     public static boolean isPassword(String str) throws  PatternSyntaxException{
         boolean isLength= false;
         String regExp = "^[A-Za-z0-9]+$";

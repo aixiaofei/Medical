@@ -11,15 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.ai.dtest.Adapter.DocterAdapter;
 import com.example.ai.dtest.R;
+import com.example.ai.dtest.commen.DoctorCustom;
+import com.example.ai.dtest.commen.HttpUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import Adapter.DocterAdapter;
-import commen.DoctorCustom;
-import commen.HttpUtils;
 
 /**
  * A simple {@link Fragment} subclass.

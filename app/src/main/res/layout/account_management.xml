@@ -113,6 +113,7 @@
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"/>
         <TextView
+            android:id="@+id/user_phone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"

@@ -1,11 +1,11 @@
 package com.example.ai.dtest.commen;
 
-import java.util.Date;
-
 public class Userlogininfo {
     private Integer userloginid;
-
+    
     private String userloginname;
+
+    private String userloginphone;
 
     private String userloginpwd;
 
@@ -35,8 +35,6 @@ public class Userlogininfo {
 
     private Integer userlogintype;
 
-    private Integer uesrid;
-
     private String userloginpix;
 
     public Integer getUserloginid() {
@@ -53,6 +51,14 @@ public class Userlogininfo {
 
     public void setUserloginname(String userloginname) {
         this.userloginname = userloginname == null ? null : userloginname.trim();
+    }
+
+    public String getUserloginphone() {
+        return userloginphone;
+    }
+
+    public void setUserloginphone(String userloginphone) {
+        this.userloginphone = userloginphone == null ? null : userloginphone.trim();
     }
 
     public String getUserloginpwd() {
@@ -165,14 +171,6 @@ public class Userlogininfo {
 
     public void setUserlogintype(Integer userlogintype) {
         this.userlogintype = userlogintype;
-    }
-
-    public Integer getUesrid() {
-        return uesrid;
-    }
-
-    public void setUesrid(Integer uesrid) {
-        this.uesrid = uesrid;
     }
 
     public String getUserloginpix() {

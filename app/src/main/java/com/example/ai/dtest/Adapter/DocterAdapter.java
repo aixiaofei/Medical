@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.ai.dtest.R;
+import com.example.ai.dtest.commen.DoctorCustom;
+
 import java.util.List;
-import commen.DoctorCustom;
 
 /**
  * Created by ai on 2017/7/9.

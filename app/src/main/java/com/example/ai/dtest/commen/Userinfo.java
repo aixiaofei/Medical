@@ -41,6 +41,8 @@ public class Userinfo {
 
     private String userrelation;
 
+    private Integer userloginid;
+
     public Integer getUserid() {
         return userid;
     }
@@ -191,5 +193,13 @@ public class Userinfo {
 
     public void setUserrelation(String userrelation) {
         this.userrelation = userrelation == null ? null : userrelation.trim();
+    }
+
+    public Integer getUserloginid() {
+        return userloginid;
+    }
+
+    public void setUserloginid(Integer userloginid) {
+        this.userloginid = userloginid;
     }
 }
