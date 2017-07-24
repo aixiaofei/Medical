@@ -174,7 +174,6 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             case R.id.return_register:
                 Intent intent = new Intent(Login.this, Register.class);
                 startActivity(intent);
-                finish();
                 break;
             default:
                 break;
@@ -200,11 +199,11 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     }
 
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        ActivityCollector.finishAll();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCollector.finishAll();
+    }
 
     @Override
     protected void onDestroy() {

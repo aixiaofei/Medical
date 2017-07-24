@@ -29,6 +29,7 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".Login"
             android:windowSoftInputMode="stateHidden">

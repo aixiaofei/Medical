@@ -178,11 +178,11 @@ public class Register extends BaseActivity implements View.OnClickListener{
         return_Login.setOnClickListener(this);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        ActivityCollector.finishAll();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ActivityCollector.finishAll();
+    }
 
     @Override
     public void onClick(View view) {
@@ -235,7 +235,6 @@ public class Register extends BaseActivity implements View.OnClickListener{
             case R.id.return_login:
                 Intent intent= new Intent(Register.this,Login.class);
                 startActivity(intent);
-                finish();
             default:
                 break;
         }

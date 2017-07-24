@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,13 +32,13 @@ public class ImgUtils {
     private static final String storePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "test";
 
     //保存文件到指定路径
-    public static boolean saveImageToGallery(Context context,String userPhone,Bitmap bmp) {
+    public static boolean saveImageToGallery(String userPhone,Bitmap bmp) {
         // 首先保存图片
         File appDir = new File(storePath);
         if (!appDir.exists()) {
             appDir.mkdir();
         }
-        String fileName = userPhone + ".png";
+        String fileName = userPhone+".png";
         File file = new File(appDir, fileName);
         try {
             if(file.exists()){
@@ -48,14 +47,13 @@ public class ImgUtils {
             file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
             //通过io流的方式来压缩保存图片
-            boolean isSuccess = bmp.compress(Bitmap.CompressFormat.PNG, 60, fos);
+            boolean isSuccess = bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
-
-            // 其次把文件插入到系统图库
+////             其次把文件插入到系统图库
 //            MediaStore.Images.Media.insertImage(context.getContentResolver(),file.getAbsolutePath(), fileName, null);
-
-//            保存图片后发送广播通知更新数据库
+//
+////            保存图片后发送广播通知更新数据库
 //            Uri uri = Uri.fromFile(file);
 //            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
             return isSuccess;
@@ -112,12 +110,12 @@ public class ImgUtils {
     public static void getImageFromCamera(Activity activity){
         Uri imageUri;
         File outputImage = new File(mCameraFile);
-        try{
-            if(outputImage.exists()){
-                outputImage.delete();
-            }
+        if(outputImage.exists()){
+            outputImage.delete();
+        }
+        try {
             outputImage.createNewFile();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Intent intent= new Intent("android.media.action.IMAGE_CAPTURE");
@@ -151,11 +149,17 @@ public class ImgUtils {
         if(outputImage.exists()){
             outputImage.delete();
         }
+        try {
+            outputImage.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Uri outPutUri = Uri.fromFile(outputImage);
-        Log.d("ai","crop1");
+
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
         //sdk>=24
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.d("ai","crop1");
             intent.setDataAndType(inputUri, "image/*");
             intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(FLAG_GRANT_WRITE_URI_PERMISSION);
