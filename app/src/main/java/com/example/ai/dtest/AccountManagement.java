@@ -158,7 +158,7 @@ public class AccountManagement extends BaseActivity implements View.OnClickListe
     }
 
     private void showExitDialog(){
-        AlertDialog.Builder builder= new AlertDialog.Builder(AccountManagement.this);
+        AlertDialog.Builder builder= new AlertDialog.Builder(AccountManagement.this,R.style.myDialog);
         builder.setMessage("是否退出登录")
                 .setTitle("提示")
                 .setCancelable(true)
@@ -224,13 +224,6 @@ public class AccountManagement extends BaseActivity implements View.OnClickListe
         change.show();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if(change!=null && change.isShowing()){
-            change.dismiss();
-        }
-    }
 
     private void clearUserInfo(){
         OffLineUser user= new OffLineUser();

@@ -1,19 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:id="@+id/top_first"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:gravity="center_vertical"
-        android:background="@color/colorButton_background"
-        android:layout_alignParentTop="true">
+        <LinearLayout
+            android:id="@+id/top_first"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:background="@color/colorButton_background"
+            android:layout_alignParentTop="true">
 
-        /*位置设置*/
+            /*位置设置*/
             <ImageView
                 android:id="@+id/map"
                 android:layout_width="16dp"
@@ -29,52 +29,51 @@
                 android:gravity="center"
                 android:textSize="14sp"
                 android:textColor="@color/colorWhite" />
-        /*位置设置*/
+            /*位置设置*/
 
-
-        /*搜索框设置*/
-        <LinearLayout
-            android:id="@+id/search_line"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="25dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/search_text">
-            <EditText
-                android:id="@+id/search_message"
+            /*搜索框设置*/
+            <LinearLayout
+                android:id="@+id/search_line"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center_vertical"
-                android:background="@null"
-                android:hint="搜索"
-                android:textColorHint="@color/white"
-                android:textSize="14sp"
-                android:textColor="@color/white"/>
+                android:background="@drawable/search_text">
+                <EditText
+                    android:id="@+id/search_message"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center_vertical"
+                    android:background="@null"
+                    android:hint="搜索"
+                    android:textColorHint="@color/white"
+                    android:textSize="14sp"
+                    android:textColor="@color/white"/>
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/search"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp" />
-        </LinearLayout>
-        /*搜索框设置*/
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/search"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp" />
+            </LinearLayout>
+            /*搜索框设置*/
 
-        /*消息设置*/
+            /*消息设置*/
             <ImageView
                 android:id="@+id/accept_message"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/comments_white"
                 android:layout_gravity="center_vertical" />
-        /*消息设置*/
+            /*消息设置*/
+        </LinearLayout>
 
-    </LinearLayout>
 
     /*内容*/
 
@@ -213,18 +212,5 @@
                 android:gravity="center"/>
         </RelativeLayout>
     </LinearLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_above="@+id/buttom"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/fabdoctor"
-        android:elevation="2dp"
-        android:backgroundTint="@color/colorPrimary"/>
-
 </RelativeLayout>
 

@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.FormatCheckUtils;
@@ -209,10 +208,9 @@ public class Register extends BaseActivity implements View.OnClickListener{
                     Toast.makeText(Register.this, "手机号码格式不正确", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                AlertDialog.Builder builder= new AlertDialog.Builder(Register.this);
+                AlertDialog.Builder builder= new AlertDialog.Builder(Register.this,R.style.myDialog);
                 builder.setMessage("请确认您要向手机号"+phone+"发送验证码")
                         .setTitle("提示")
-                        .setIcon(R.drawable.alert)
                     .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

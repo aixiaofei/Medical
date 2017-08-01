@@ -76,6 +76,7 @@ public class changePW extends Dialog implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.changepwdialog);
+        setCancelable(true);
         setCanceledOnTouchOutside(false);
         sendMessage= (Button) findViewById(R.id.send_meassage);
         yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);

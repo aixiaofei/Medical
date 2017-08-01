@@ -8,11 +8,13 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.ai.dtest.adapter.PagerAdapter;
 import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.HttpUtils;
@@ -161,10 +164,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void permissionAlert(final String[] permissions){
-        AlertDialog.Builder builder= new AlertDialog.Builder(MainActivity.this);
+        AlertDialog.Builder builder= new AlertDialog.Builder(MainActivity.this,R.style.myDialog);
         builder.setMessage("请授予软件所有权限，这些权限都是必须的")
                 .setTitle("警示")
-                .setIcon(R.drawable.alert)
                 .setCancelable(false)
                 .setPositiveButton("继续授权", new DialogInterface.OnClickListener() {
                     @Override
@@ -199,13 +201,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
-    private void replaceFragment(Fragment fragment){
-        FragmentManager manager= getSupportFragmentManager();
-        FragmentTransaction transaction= manager.beginTransaction();
-        transaction.replace(R.id.main,fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+//    private void replaceFragment(Fragment fragment){
+//        FragmentManager manager= getSupportFragmentManager();
+//        FragmentTransaction transaction= manager.beginTransaction();
+//        transaction.replace(R.id.main,fragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     private class LocationListener implements BDLocationListener {
         @Override

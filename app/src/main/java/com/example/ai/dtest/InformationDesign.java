@@ -1,5 +1,6 @@
 package com.example.ai.dtest;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -64,15 +65,19 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
 
     private List<Bitmap> fig;
 
+    private ProgressDialog dialog;
+
     private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.PUSHINFOFAILURE:
+                    dialog.cancel();
                     Toast.makeText(InformationDesign.this, "上传失败", Toast.LENGTH_LONG).show();
                     break;
                 case HttpUtils.PUSHINFOSUCESS:
+                    dialog.cancel();
                     Toast.makeText(InformationDesign.this, "上传成功", Toast.LENGTH_LONG).show();
                     for(Bitmap bitmap:fig){
                         ImgUtils.recycleBitmap(bitmap);
@@ -313,6 +318,11 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         info.setUseradr(address);
         info.setUserphone(MyApplication.getUserPhone());
         HttpUtils.pushUserInfo(info,identifyFig,handler);
+        dialog= new ProgressDialog(this,R.style.myDialog);
+        dialog.setMessage("上传中...");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
 
