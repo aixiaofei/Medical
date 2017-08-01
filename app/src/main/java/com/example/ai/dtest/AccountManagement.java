@@ -12,18 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ai.dtest.View.changePW;
-import com.example.ai.dtest.commen.HttpUtils;
-import com.example.ai.dtest.commen.MD5;
-import com.example.ai.dtest.commen.MyApplication;
-import com.example.ai.dtest.commen.OffLineUser;
-import com.example.ai.dtest.yanzhengma.FormatCheckUtils;
+import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.view.changePW;
+import com.example.ai.dtest.util.FormatCheckUtils;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.MD5;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.db.OffLineUser;
 
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AccountInformation extends BaseActivity implements View.OnClickListener{
+public class AccountManagement extends BaseActivity implements View.OnClickListener{
 
     private changePW change;
 
@@ -37,45 +38,45 @@ public class AccountInformation extends BaseActivity implements View.OnClickList
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.CHANGENICKNAMEFAILURE:
-                    Toast.makeText(AccountInformation.this,"修改昵称失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"修改昵称失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.CHANGENICKNAMESUCESS:
-                    Toast.makeText(AccountInformation.this,"修改昵称成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"修改昵称成功",Toast.LENGTH_SHORT).show();
                     MyApplication.setUserName(tryChangeNickname);
                     userNickname.setText(tryChangeNickname);
                     break;
                 case HttpUtils.EXITFAILURE:
-                    Toast.makeText(AccountInformation.this,"退出登录失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"退出登录失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.EXITSUCESS:
-                    Toast.makeText(AccountInformation.this,"退出登录成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"退出登录成功",Toast.LENGTH_SHORT).show();
                     clearUserInfo();
-                    Login.actionStart(AccountInformation.this,MyApplication.getUserPhone(),"");
+                    Login.actionStart(AccountManagement.this,MyApplication.getUserPhone(),"");
                     finish();
                     break;
                 case HttpUtils.SENDFAILURE:
-                    Toast.makeText(AccountInformation.this,"验证码发送失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"验证码发送失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.SENDSUCCESS:
-                    Toast.makeText(AccountInformation.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"验证码发送成功",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.CHECKFAILURE:
-                    Toast.makeText(AccountInformation.this,"验证码错误",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"验证码错误",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.CHECKSUCESS:
                     change.startChange();
                     break;
                 case HttpUtils.NOCANCHANGEPW:
-                    Toast.makeText(AccountInformation.this,"密码不能相同",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"密码不能相同",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.CANCHANGEPW:
                     change.reStartChange();
                     break;
                 case HttpUtils.CHANGEPWFAILURE:
-                    Toast.makeText(AccountInformation.this,"修改密码失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"修改密码失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.CHANGEPWSUCESS:
-                    Toast.makeText(AccountInformation.this,"修改密码成功",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AccountManagement.this,"修改密码成功",Toast.LENGTH_SHORT).show();
                     change.updatePassword();
                     break;
                 default:
@@ -134,18 +135,18 @@ public class AccountInformation extends BaseActivity implements View.OnClickList
     }
 
     private void showChagngeDialog() {
-        final EditText editText = new EditText(AccountInformation.this);
-        AlertDialog.Builder inputDialog = new AlertDialog.Builder(AccountInformation.this);
+        final EditText editText = new EditText(AccountManagement.this);
+        AlertDialog.Builder inputDialog = new AlertDialog.Builder(AccountManagement.this);
         inputDialog.setTitle("请输入昵称").setView(editText);
         inputDialog.setPositiveButton("确定",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if(TextUtils.isEmpty(editText.getText().toString())){
-                            Toast.makeText(AccountInformation.this,"昵称不能为空",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountManagement.this,"昵称不能为空",Toast.LENGTH_SHORT).show();
                         }else if(FormatCheckUtils.isNumber(editText.getText().toString())){
-                            Toast.makeText(AccountInformation.this,"昵称不能全为数字",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountManagement.this,"昵称不能全为数字",Toast.LENGTH_SHORT).show();
                         }else if(editText.getText().toString().equals(MyApplication.getUserName())){
-                            Toast.makeText(AccountInformation.this,"昵称不能相同",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AccountManagement.this,"昵称不能相同",Toast.LENGTH_SHORT).show();
                         }
                         else {
                             dialog.cancel();
@@ -157,7 +158,7 @@ public class AccountInformation extends BaseActivity implements View.OnClickList
     }
 
     private void showExitDialog(){
-        AlertDialog.Builder builder= new AlertDialog.Builder(AccountInformation.this);
+        AlertDialog.Builder builder= new AlertDialog.Builder(AccountManagement.this);
         builder.setMessage("是否退出登录")
                 .setTitle("提示")
                 .setCancelable(true)
@@ -226,7 +227,7 @@ public class AccountInformation extends BaseActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(change.isShowing()){
+        if(change!=null && change.isShowing()){
             change.dismiss();
         }
     }

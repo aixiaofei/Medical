@@ -1,4 +1,4 @@
-package com.example.ai.dtest.View;
+package com.example.ai.dtest.view;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,9 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.ai.dtest.R;
-import com.example.ai.dtest.commen.MyApplication;
-import com.example.ai.dtest.commen.OffLineUser;
-import com.example.ai.dtest.yanzhengma.FormatCheckUtils;
+import com.example.ai.dtest.util.FormatCheckUtils;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.db.OffLineUser;
 
 import org.litepal.crud.DataSupport;
 
@@ -75,7 +75,7 @@ public class changePW extends Dialog implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.change);
+        setContentView(R.layout.changepwdialog);
         setCanceledOnTouchOutside(false);
         sendMessage= (Button) findViewById(R.id.send_meassage);
         yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);

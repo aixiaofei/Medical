@@ -9,7 +9,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -23,13 +22,17 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.example.ai.dtest.commen.ActivityCollector;
-import com.example.ai.dtest.commen.HttpUtils;
-import com.example.ai.dtest.commen.MD5;
-import com.example.ai.dtest.commen.MacAddressUtils;
-import com.example.ai.dtest.commen.MyApplication;
-import com.example.ai.dtest.commen.OffLineUser;
-import com.example.ai.dtest.commen.Userlogininfo;
+import com.example.ai.dtest.base.ActivityCollector;
+import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.util.FormatCheckUtils;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.MD5;
+import com.example.ai.dtest.util.MacAddressUtils;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.db.OffLineUser;
+import com.example.ai.dtest.data.Userlogininfo;
+import com.example.ai.dtest.view.eye;
+import com.example.ai.dtest.view.okView;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
@@ -43,7 +46,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
 
     EditText user_password;
 
-    ImageView eye;
+    eye eye;
 
     CheckBox hold_password;
 
@@ -53,13 +56,15 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
 
     TextView return_register;
 
+    okView ok;
+
     private LocationClient client;
 
     private String saveUserPhone=null;
 
     private String savePassword=null;
 
-    private boolean isShow= false;
+    private boolean isFirst= true;
 
     private Handler handler = new Handler() {
         @Override
@@ -105,13 +110,14 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         login = (Button) findViewById(R.id.login);
         user_phone = (EditText) findViewById(R.id.name);
         user_password = (EditText) findViewById(R.id.password);
-        eye= (ImageView) findViewById(R.id.eye);
+        ok= (okView) findViewById(R.id.okview);
+        eye= (eye) findViewById(R.id.eye);
         hold_password = (CheckBox) findViewById(R.id.hold_password);
         hold_autologin = (CheckBox) findViewById(R.id.hold_autoLogin);
         forget_password = (TextView) findViewById(R.id.forget_password);
         return_register = (TextView) findViewById(R.id.return_register);
-        user_password.addTextChangedListener(watcher);
-        eye.setOnClickListener(this);
+        user_phone.addTextChangedListener(phoneWather);
+        user_password.addTextChangedListener(passwordWatcher);
         login.setOnClickListener(this);
         return_register.setOnClickListener(this);
         forget_password.setOnClickListener(this);
@@ -125,9 +131,48 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             user_password.setText(password);
             user_password.setSelection(password.length());
         }
+        eye.setListener(new eye.openListener() {
+            @Override
+            public void openEye() {
+                user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                user_password.setSelection(user_password.getText().length());
+            }
+            @Override
+            public void closeEye() {
+                user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+                user_password.setSelection(user_password.getText().length());
+            }
+        });
     }
 
-    TextWatcher watcher= new TextWatcher() {
+    TextWatcher phoneWather= new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(FormatCheckUtils.isPhoneLegal(editable.toString())){
+                if(!isFirst) {
+                    ok.start();
+                }
+                else {
+                    isFirst=false;
+                }
+            }else {
+                isFirst=false;
+                ok.clear();
+            }
+        }
+    };
+
+    TextWatcher passwordWatcher= new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -152,20 +197,20 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.eye:
-                if(!isShow){
-                    isShow=true;
-                    eye.setImageResource(R.drawable.eye_open);
-                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    user_password.setSelection(user_password.getText().length());
-                }
-                else {
-                    isShow=false;
-                    eye.setImageResource(R.drawable.eye_close);
-                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
-                    user_password.setSelection(user_password.getText().length());
-                }
-                break;
+//            case R.id.eye:
+//                if(!isShow){
+//                    isShow=true;
+//                    eye.setImageResource(R.drawable.eye_open);
+//                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                    user_password.setSelection(user_password.getText().length());
+//                }
+//                else {
+//                    isShow=false;
+//                    eye.setImageResource(R.drawable.eye_close);
+//                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+//                    user_password.setSelection(user_password.getText().length());
+//                }
+//                break;
             case R.id.login:
                 tryLogin();
                 break;
@@ -208,6 +253,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ok.clear();
     }
 
     private void tryLogin() {

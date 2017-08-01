@@ -1,10 +1,9 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.base;
 
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.SDKInitializer;
 
 import org.litepal.LitePalApplication;

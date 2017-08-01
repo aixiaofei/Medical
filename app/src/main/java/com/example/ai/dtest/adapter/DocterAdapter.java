@@ -1,4 +1,4 @@
-package com.example.ai.dtest.Adapter;
+package com.example.ai.dtest.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.ai.dtest.R;
-import com.example.ai.dtest.commen.DoctorCustom;
+import com.example.ai.dtest.data.DoctorCustom;
 
 import java.util.List;
 

@@ -3,6 +3,6 @@
     <dbname value="User" />
     <version value="1" />
     <list>
-        <mapping class="com.example.ai.dtest.commen.OffLineUser"/>
+        <mapping class="com.example.ai.dtest.db.OffLineUser"/>
     </list>
 </litepal>

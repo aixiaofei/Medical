@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.util;
 
 import android.content.ContentUris;
 import android.content.Context;

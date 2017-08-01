@@ -1,0 +1,283 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_select_background">
+
+    /*标题栏设置*/
+    <RelativeLayout
+        android:id="@+id/information_top"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorButton_background"
+        android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/design_back_fig"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/back_white"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@+id/title"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:id="@+id/design_back_text"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="返回"
+                android:textColor="@color/colorWhite"
+                android:layout_toRightOf="@id/design_back_fig"
+                android:textSize="18sp"
+                android:layout_alignTop="@+id/title"
+                android:layout_marginTop="5dp"/>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="个人信息显示"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    /*标题栏设置*/
+
+
+    /*姓名*/
+    <RelativeLayout
+        android:id="@+id/addition_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/information_top"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentLeft="true"
+            android:text="姓名"/>
+
+        <TextView
+            android:id="@+id/enter_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
+            android:hint="无"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    /*姓名*/
+
+    /*身份证号码*/
+    <RelativeLayout
+        android:id="@+id/addition_identify"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_name"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_alignParentLeft="true"
+            android:textSize="15sp"
+            android:layout_marginLeft="15dp"
+            android:text="身份证"/>
+
+        <TextView
+            android:id="@+id/enter_identify"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
+            android:hint="无"
+            android:textSize="15sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp" />
+    </RelativeLayout>
+
+    /*身份证号码*/
+
+    /*身份证照片*/
+    <RelativeLayout
+        android:id="@+id/addition_identify_fig"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_identify"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorWhite">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:layout_marginLeft="15dp"
+            android:text="身份证照片"/>
+
+        <TextView
+            android:id="@+id/enter_identify_fig"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
+            android:hint="未上传"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    /*身份证照片*/
+
+    /*性别设置*/
+    <RelativeLayout
+        android:id="@+id/addition_sex"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_identify_fig"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="性别"/>
+
+        <TextView
+            android:id="@+id/select_sex"
+            android:layout_marginLeft="15dp"
+            android:textSize="15sp"
+            android:hint="男"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+    /*性别设置*/
+
+    /*年龄设置*/
+    <RelativeLayout
+        android:id="@+id/addition_age"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_sex"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:gravity="center_vertical"
+            android:text="年龄"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/select_age"
+            android:layout_width="wrap_content"
+            android:textSize="15sp"
+            android:hint="24岁"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp" />
+    </RelativeLayout>
+    /*年龄设置*/
+
+    /*地址设置*/
+    <RelativeLayout
+        android:id="@+id/addition_address"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_age"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="地址"/>
+
+        <TextView
+            android:id="@+id/addressTop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:hint="安徽省-合肥市-蜀山区"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    /*地址设置*/
+
+    /*住址设置*/
+    <RelativeLayout
+        android:id="@+id/addition_address_detail"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/addition_address"
+        android:background="@color/colorWhite"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="15sp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="住址"/>
+
+        <TextView
+            android:id="@+id/addressDown"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:gravity="center_vertical"
+            android:hint="九龙路111号"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    /*住址设置*/
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@id/addition_address_detail">
+        <Button
+            android:id="@+id/perfect"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
+            android:text="完善信息"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_shape"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

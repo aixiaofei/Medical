@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.util;
 
 /**
  * Created by ai on 2017/7/12.

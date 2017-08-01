@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.db;
 
 import org.litepal.crud.DataSupport;
 

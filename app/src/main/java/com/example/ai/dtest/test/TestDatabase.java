@@ -1,8 +1,6 @@
 package com.example.ai.dtest.test;
 
-import android.util.Log;
-
-import com.example.ai.dtest.commen.OffLineUser;
+import com.example.ai.dtest.db.OffLineUser;
 
 import org.litepal.crud.DataSupport;
 

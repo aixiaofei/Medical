@@ -1,15 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:id="@+id/top_first"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="55dp"
+        android:gravity="center_vertical"
         android:background="@color/colorButton_background"
         android:layout_alignParentTop="true">
 
@@ -19,8 +19,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:background="@drawable/address_white"
-                android:layout_marginStart="10dp"
-                android:layout_gravity="center_vertical"/>
+                android:layout_marginStart="10dp" />
             <TextView
                 android:id="@+id/top_first_address"
                 android:layout_width="wrap_content"
@@ -29,8 +28,7 @@
                 android:text="地图模式"
                 android:gravity="center"
                 android:textSize="14sp"
-                android:textColor="@color/colorWhite"
-                android:layout_gravity="center_vertical"/>
+                android:textColor="@color/colorWhite" />
         /*位置设置*/
 
 
@@ -40,36 +38,37 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="25dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:background="@drawable/search_text">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/search"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_vertical"/>
             <EditText
                 android:id="@+id/search_message"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
-                android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
                 android:background="@null"
                 android:hint="搜索"
-                android:textSize="14sp" />
+                android:textColorHint="@color/white"
+                android:textSize="14sp"
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/search"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
         </LinearLayout>
         /*搜索框设置*/
 
         /*消息设置*/
             <ImageView
                 android:id="@+id/accept_message"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/comments_white"
                 android:layout_gravity="center_vertical" />
@@ -85,9 +84,10 @@
         android:layout_above="@+id/buttom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <fragment
             android:id="@+id/main_fragment"
-            android:name="com.example.ai.dtest.Frag.DoctorList"
+            android:name="com.example.ai.dtest.frag.DoctorList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
@@ -98,48 +98,54 @@
         android:id="@+id/buttom"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_above="@+id/text_part"
-        android:layout_marginTop="2dp">
+        android:layout_height="30dp"
+        android:layout_above="@+id/text_part">
 
-        <Button
-            android:id="@+id/home_page_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/home_page" />
-        <Button
-            android:id="@+id/search_doctor_page_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/search_doctor"
-            android:layout_toRightOf="@+id/home_pag"
-            android:layout_marginLeft="45dp"/>
-        <Button
-            android:id="@+id/my_doctor_page_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/my_doctor"
-            android:layout_toRightOf="@+id/search_doc"
-            android:layout_marginLeft="45dp"/>
-        <Button
-            android:id="@+id/search_menu_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/menu"
-            android:layout_toRightOf="@+id/home_pag"
-            android:layout_marginLeft="45dp"/>
-        <Button
-            android:id="@+id/my_page_pic"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:background="@drawable/my"
-            android:layout_toRightOf="@+id/search_menu"
-            android:layout_marginLeft="45dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/home_page_pic"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_toLeftOf="@+id/search_doctor_page_pic"
+                android:layout_alignTop="@+id/search_doctor_page_pic"
+                android:layout_marginRight="45dp"
+                android:background="@drawable/home_page" />
+            <Button
+                android:id="@+id/search_doctor_page_pic"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/my_doctor_page_pic"
+                android:background="@drawable/search_doctor"
+                android:layout_toLeftOf="@+id/my_doctor_page_pic"
+                android:layout_marginRight="45dp"/>
+            <Button
+                android:id="@+id/my_doctor_page_pic"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/my_doctor"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
+            <Button
+                android:id="@+id/search_menu_pic"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignTop="@+id/my_doctor_page_pic"
+                android:background="@drawable/menu"
+                android:layout_toRightOf="@+id/my_doctor_page_pic"
+                android:layout_marginLeft="45dp"/>
+            <Button
+                android:id="@+id/my_page_pic"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_toRightOf="@+id/search_menu_pic"
+                android:background="@drawable/my"
+                android:layout_alignTop="@+id/my_doctor_page_pic"
+                android:layout_marginLeft="45dp"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -149,48 +155,76 @@
         android:layout_width="match_parent"
         android:layout_height="16dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center"
-        android:layout_marginTop="2dp">
-        <TextView
-            android:id="@+id/home_pag_text"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="首页"
-            android:textSize="13dp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/search_doctor_page_text"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="寻找"
-            android:textSize="13dp"
-            android:layout_marginLeft="45dp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/my_doctor_page_text"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="医生"
-            android:textSize="13dp"
-            android:layout_marginLeft="45dp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/search_menu_text"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="日程"
-            android:textSize="13dp"
-            android:layout_marginLeft="45dp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/my_page_text"
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:text="我的"
-            android:textSize="13dp"
-            android:layout_marginLeft="45dp"
-            android:gravity="center"/>
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp"
+        android:gravity="center">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/home_pag_text"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:text="首页"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:layout_alignTop="@+id/my_doctor_page_text"
+                android:layout_toLeftOf="@+id/search_doctor_page_text"
+                android:layout_marginRight="39dp"/>
+            <TextView
+                android:id="@+id/search_doctor_page_text"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:text="寻找"
+                android:textSize="13sp"
+                android:layout_marginRight="39dp"
+                android:layout_alignTop="@+id/my_doctor_page_text"
+                android:layout_toLeftOf="@+id/my_doctor_page_text"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/my_doctor_page_text"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:text="医生"
+                android:textSize="13sp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/search_menu_text"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:text="订单"
+                android:textSize="13sp"
+                android:layout_toRightOf="@+id/my_doctor_page_text"
+                android:layout_alignTop="@+id/my_doctor_page_text"
+                android:layout_marginLeft="39dp"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/my_page_text"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:text="我的"
+                android:textSize="13sp"
+                android:layout_marginLeft="39dp"
+                android:layout_toRightOf="@+id/search_menu_text"
+                android:layout_alignTop="@+id/my_doctor_page_text"
+                android:gravity="center"/>
+        </RelativeLayout>
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/buttom"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/fabdoctor"
+        android:elevation="2dp"
+        android:backgroundTint="@color/colorPrimary"/>
+
 </RelativeLayout>
 

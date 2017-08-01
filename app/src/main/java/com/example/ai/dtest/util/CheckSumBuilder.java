@@ -1,4 +1,4 @@
-package com.example.ai.dtest.yanzhengma;
+package com.example.ai.dtest.util;
 
 import java.security.MessageDigest;
 

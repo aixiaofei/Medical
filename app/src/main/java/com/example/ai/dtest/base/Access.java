@@ -1,13 +1,14 @@
-package com.example.ai.dtest;
+package com.example.ai.dtest.base;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 
-import com.example.ai.dtest.commen.OffLineUser;
+import com.example.ai.dtest.Login;
+import com.example.ai.dtest.MainActivity;
+import com.example.ai.dtest.db.OffLineUser;
 
 import org.litepal.crud.DataSupport;
-import java.util.Arrays;
 
 
 public class Access extends BaseActivity {

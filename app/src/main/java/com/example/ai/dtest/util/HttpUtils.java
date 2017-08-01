@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.util;
 
 /**
  * Created by ai on 2017/7/10.
@@ -9,13 +9,14 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
-import com.example.ai.dtest.yanzhengma.CheckSumBuilder;
+
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.data.DoctorCustom;
+import com.example.ai.dtest.data.Userinfo;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import okhttp3.Call;
@@ -42,6 +43,8 @@ public class HttpUtils {
     private static final String EXITLOGIN= "http://192.168.2.2:8080/internetmedical/user/exit"; //退出登录接口
     private static final String CANCHANGEPASSWORD= "http://192.168.2.2:8080/internetmedical/user/checkpassword"; //能否修改密码接口
     private static final String CHANGEPASSWORD= "http://192.168.2.2:8080/internetmedical/user/editpassword"; //修改密码接口
+    private static final String GETUSERINFO= "http://192.168.2.2:8080/internetmedical/user/getinfo"; //获取用户信息接口
+    private static final String PUSHUSERINFO= "http://192.168.2.2:8080/internetmedical/user/editinfo"; //上传用户信息接口
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
     private static final String NONCE = "123456";//随机数
@@ -60,11 +63,11 @@ public class HttpUtils {
     public static final int UPDATESUCCESS = 10; // 更新信息成功
     public static final int NOCANREGISTER=11; // 号码不可以注册
     public static final int CANREGISTER=12; // 号码可以注册
-    public static final int PUSHFAILURE =13; // 上传照片失败
-    public static final int PUSHNOFILE =14; //上传头像不存在
-    public static final int PUSHSUCESS =15; //上传头像成功
-    public static final int PULLFAILURE =16; // 下载头像失败
-    public static final int PULLSUCESS=17; // 下载头像成功
+    public static final int PUSHIMAGEFAILURE =13; // 上传照片失败
+    public static final int PUSHIMAGENOFILE =14; //上传头像不存在
+    public static final int PUSHIMAGESUCESS =15; //上传头像成功
+    public static final int PULLIMAGEFAILURE =16; // 下载头像失败
+    public static final int PULLIMAGESUCESS=17; // 下载头像成功
     public static final int CHANGENICKNAMEFAILURE=18; // 更改昵称失败
     public static final int CHANGENICKNAMESUCESS=19; // 更改昵称成功
     public static final int EXITFAILURE= 20; // 退出登陆失败
@@ -73,6 +76,12 @@ public class HttpUtils {
     public static final int CANCHANGEPW= 23; // 可以修改密码
     public static final int CHANGEPWFAILURE=24; //更改密码失败
     public static final int CHANGEPWSUCESS=25; // 更改密码成功
+    public static final int GETUSERINFOFAILURE=26; //获取用户信息失败
+    public static final int GETUSERINFOSUCESS=27; // 获取用户信息成功
+    public static final int PUSHINFOFAILURE=28; // 上传用户信息失败
+    public static final int PUSHINFOSUCESS=29; // 上传用户信息成功
+
+
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
@@ -379,11 +388,11 @@ public class HttpUtils {
                 Message message= new Message();
                 if(state.state.equals("1")){
                     Log.d("ai","成功");
-                    message.what= PUSHSUCESS;
+                    message.what= PUSHIMAGESUCESS;
                     handler.sendMessage(message);
                 }
                 else {
-                    message.what= PUSHFAILURE;
+                    message.what= PUSHIMAGEFAILURE;
                     handler.sendMessage(message);
                 }
             }
@@ -404,7 +413,7 @@ public class HttpUtils {
             @Override
             public void onFailure(Call call, IOException e) {
                 Message message= new Message();
-                message.what= PULLFAILURE;
+                message.what= PULLIMAGEFAILURE;
                 handler.sendMessage(message);
             }
             @Override
@@ -413,14 +422,14 @@ public class HttpUtils {
                 Bitmap drawable = BitmapFactory.decodeByteArray(res,0,res.length);
                 Message message= new Message();
                 if(drawable!=null){
-                    message.what= PULLSUCESS;
+                    message.what= PULLIMAGESUCESS;
                     Bundle bundle= new Bundle();
                     bundle.putByteArray("pix",res);
                     message.setData(bundle);
                     handler.sendMessage(message);
                 }
                 else {
-                    message.what= PULLFAILURE;
+                    message.what= PULLIMAGEFAILURE;
                     handler.sendMessage(message);
                 }
             }
@@ -469,7 +478,7 @@ public class HttpUtils {
 
     //退出登录
     public static void exitLogin(String userPhone,final Handler handler){
-        exit exit= new exit();
+        Phone exit= new Phone();
         exit.phone=userPhone;
         final Gson gson= new Gson();
         String resExit= gson.toJson(exit);
@@ -500,8 +509,8 @@ public class HttpUtils {
         });
     }
 
-    //退出登陆Gson包装类
-    private static class exit{
+    //所有phone Gson包装类
+    private static class Phone{
         String phone;
     }
 
@@ -576,5 +585,86 @@ public class HttpUtils {
     private static class ChangePassword{
         String phone;
         String password;
+    }
+
+    //查询用户信息
+    public static void getUserInfo(String userPhone,final Handler handler){
+        Phone info= new Phone();
+        info.phone= userPhone;
+        final Gson gson= new Gson();
+        String res= gson.toJson(info);
+        RequestBody requestBody = RequestBody.create(JSON, res);
+        Request request = new Request.Builder().url(GETUSERINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message= new Message();
+                message.what= GETUSERINFOFAILURE;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                userInfo state= gson.fromJson(res,userInfo.class);
+                Message message= new Message();
+                if(state.state.equals("1")){
+                    message.what= GETUSERINFOSUCESS;
+                    Bundle bundle= new Bundle();
+                    bundle.putSerializable("info",state.data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+                else {
+                    message.what= GETUSERINFOFAILURE;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private static class userInfo{
+        String state;
+        Userinfo data;
+    }
+
+    //上传用户信息
+    public static void pushUserInfo(Userinfo info,List<String> figPath,final Handler handler){
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("phone",info.getUserphone())
+                .addFormDataPart("username",info.getUsername())
+                .addFormDataPart("usercardnum",info.getUsercardnum())
+                .addFormDataPart("userage",info.getUserage())
+                .addFormDataPart("usermale",info.getUsermale())
+                .addFormDataPart("useradr",info.getUseradr())
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"top.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath.get(0))))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"down.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath.get(1))))
+                .build();
+        Request request = new Request.Builder().url(PUSHUSERINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message= new Message();
+                message.what= PUSHINFOFAILURE;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                Gson gson= new Gson();
+                State state= gson.fromJson(res,State.class);
+                Message message= new Message();
+                if(state.state.equals("1")){
+                    message.what= PUSHINFOSUCESS;
+                    handler.sendMessage(message);
+                }
+                else {
+                    message.what= PUSHINFOFAILURE;
+                    handler.sendMessage(message);
+                }
+            }
+        });
     }
 }

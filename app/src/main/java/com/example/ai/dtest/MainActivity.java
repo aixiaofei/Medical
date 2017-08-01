@@ -24,13 +24,14 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.example.ai.dtest.commen.ActivityCollector;
-import com.example.ai.dtest.commen.HttpUtils;
-import com.example.ai.dtest.commen.MD5;
-import com.example.ai.dtest.commen.MacAddressUtils;
-import com.example.ai.dtest.commen.MyApplication;
-import com.example.ai.dtest.commen.OffLineUser;
-import com.example.ai.dtest.commen.Userlogininfo;
+import com.example.ai.dtest.base.ActivityCollector;
+import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.MD5;
+import com.example.ai.dtest.util.MacAddressUtils;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.db.OffLineUser;
+import com.example.ai.dtest.data.Userlogininfo;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
@@ -132,8 +133,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 startActivity(intent2);
                 break;
             case R.id.my_page_pic:
-                Intent intent= new Intent(MainActivity.this,MyInformation.class);
-                startActivity(intent);
+                Intent intent3= new Intent(MainActivity.this,MyAccount.class);
+                startActivity(intent3);
                 break;
             default:
                 break;

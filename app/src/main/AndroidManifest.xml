@@ -15,8 +15,9 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".commen.MyApplication"
+        android:name=".base.MyApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -29,55 +30,43 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".Login"
-            android:windowSoftInputMode="stateHidden">
-
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".Register"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".BaseActivity" />
+        <activity android:name=".base.BaseActivity" />
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
 
-        <activity
-            android:name=".Map">
-        </activity>
-
-
-        <activity
-            android:name=".MyInformation" />
-
-        <activity android:name=".Access" >
+        <activity android:name=".Map" />
+        <activity android:name=".MyAccount" />
+        <activity android:name=".base.Access">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".AccountInformation" />
-
+        <activity android:name=".AccountManagement" />
         <activity android:name=".InformationDesign" />
-
-        <activity android:name=".test.ImageTest">
-
-        </activity>
+        <activity android:name=".test.ImageTest" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.ai.dtest.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepath"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepath" />
         </provider>
+
+        <activity android:name=".InformationShow" />
     </application>
 
 </manifest>

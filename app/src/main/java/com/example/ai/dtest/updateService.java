@@ -7,21 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.ai.dtest.commen.DoctorCustom;
+import com.example.ai.dtest.data.DoctorCustom;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**

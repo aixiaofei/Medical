@@ -1,16 +1,19 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Path;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+
+import com.example.ai.dtest.base.MyApplication;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,16 +28,21 @@ public class ImgUtils {
 
     public static final int CROP_PHOTO=3;
 
-    public static final String mCameraFile = MyApplication.getContext().getExternalCacheDir()+File.separator+MyApplication.getUserPhone()+"1"+".png";
+    public static final String cameraImage = MyApplication.getContext().getExternalCacheDir()+File.separator+"CameraImage";
 
-    public static final String mCropFile = MyApplication.getContext().getExternalCacheDir()+File.separator+MyApplication.getUserPhone()+".png";
+    public static final String cameraIdentify= MyApplication.getContext().getExternalCacheDir()+File.separator+"CameraIdentify";
 
-    private static final String storePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "test";
+    public static final String cropImage = MyApplication.getContext().getExternalCacheDir()+File.separator+"Crop";
+
+    public static final String imagePath = MyApplication.getContext().getExternalCacheDir()+File.separator + "sdyyImage";
+
+    public static final String identifyPath= MyApplication.getContext().getExternalCacheDir()+File.separator+"identify";
 
     //保存文件到指定路径
-    public static boolean saveImageToGallery(String userPhone,Bitmap bmp) {
+    public static boolean saveImageToGallery(String userPhone, String Path,Bitmap bmp) {
+        boolean isSuccess=false;
         // 首先保存图片
-        File appDir = new File(storePath);
+        File appDir = new File(Path);
         if (!appDir.exists()) {
             appDir.mkdir();
         }
@@ -47,7 +55,7 @@ public class ImgUtils {
             file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file);
             //通过io流的方式来压缩保存图片
-            boolean isSuccess = bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            isSuccess = bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
 ////             其次把文件插入到系统图库
@@ -56,20 +64,19 @@ public class ImgUtils {
 ////            保存图片后发送广播通知更新数据库
 //            Uri uri = Uri.fromFile(file);
 //            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-            return isSuccess;
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return isSuccess;
     }
 
     public static Bitmap getImageFromSD (String userPhone) {
-        File appDir = new File(storePath);
+        File appDir = new File(imagePath);
         if (!appDir.exists()) {
             appDir.mkdir();
         }
         String fileName = userPhone + ".png";
-        String Path = storePath+File.separator+fileName;
+        String Path = imagePath+File.separator+fileName;
         File file = new File(appDir, fileName);
         Bitmap bitmap = null;
         try {
@@ -107,9 +114,13 @@ public class ImgUtils {
         return bitmapBuf;
     }
 
-    public static void getImageFromCamera(Activity activity){
+    public static void getImageFromCamera(Activity activity,String path){
         Uri imageUri;
-        File outputImage = new File(mCameraFile);
+        File appDir = new File(path);
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        File outputImage= new File( path ,"camera.png");
         if(outputImage.exists()){
             outputImage.delete();
         }
@@ -120,7 +131,7 @@ public class ImgUtils {
         }
         Intent intent= new Intent("android.media.action.IMAGE_CAPTURE");
         if(Build.VERSION.SDK_INT>=24){
-            imageUri = FileProvider.getUriForFile(activity,"com.example.ai.dtest.fileprovider",new File(mCameraFile));
+            imageUri = FileProvider.getUriForFile(activity,"com.example.ai.dtest.fileprovider",outputImage);
             intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
             intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -145,7 +156,11 @@ public class ImgUtils {
             return;
         }
         Intent intent = new Intent("com.android.camera.action.CROP");
-        File outputImage = new File(mCropFile);
+        File appDir = new File(cropImage);
+        if (!appDir.exists()) {
+            appDir.mkdir();
+        }
+        File outputImage = new File(cropImage,"crop.png");
         if(outputImage.exists()){
             outputImage.delete();
         }
@@ -159,7 +174,7 @@ public class ImgUtils {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, outPutUri);
         //sdk>=24
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.d("ai","crop1");
+//            Log.d("ai","crop1");
             intent.setDataAndType(inputUri, "image/*");
             intent.addFlags(FLAG_GRANT_READ_URI_PERMISSION);
             intent.addFlags(FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -185,5 +200,12 @@ public class ImgUtils {
         intent.putExtra("noFaceDetection", false);//去除默认的人脸识别，否则和剪裁匡重叠
 //        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
         activity.startActivityForResult(intent, CROP_PHOTO);//这里就将裁剪后的图片的Uri返回了
+    }
+
+    public static void recycleBitmap(Bitmap bitmap){
+        if(bitmap != null && !bitmap.isRecycled()){
+            bitmap.recycle();
+        }
+        System.gc();
     }
 }

@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

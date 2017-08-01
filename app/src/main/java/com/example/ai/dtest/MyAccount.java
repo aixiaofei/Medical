@@ -15,16 +15,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.ai.dtest.commen.HttpUtils;
-import com.example.ai.dtest.commen.ImgUtils;
-import com.example.ai.dtest.commen.MyApplication;
-import com.example.ai.dtest.commen.getImagePath;
+import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.ImgUtils;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.util.getImagePath;
 import java.io.File;
 import de.hdodenhof.circleimageview.CircleImageView;
-import static com.example.ai.dtest.commen.ImgUtils.mCameraFile;
-import static com.example.ai.dtest.commen.ImgUtils.mCropFile;
+import static com.example.ai.dtest.util.ImgUtils.cameraImage;
+import static com.example.ai.dtest.util.ImgUtils.cropImage;
+import static com.example.ai.dtest.util.ImgUtils.imagePath;
 
-public class MyInformation extends BaseActivity implements View.OnClickListener{
+public class MyAccount extends BaseActivity implements View.OnClickListener{
 
     private TextView userName;
 
@@ -34,39 +36,39 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case HttpUtils.PUSHSUCESS:
+                case HttpUtils.PUSHIMAGESUCESS:
                     Log.d("ai","22");
-                    Toast.makeText(MyInformation.this,"修改头像成功",Toast.LENGTH_SHORT).show();
-                    final Bitmap bitmapBuf1 = BitmapFactory.decodeFile(mCropFile);
+                    Toast.makeText(MyAccount.this,"修改头像成功",Toast.LENGTH_SHORT).show();
+                    final Bitmap bitmapBuf1 = BitmapFactory.decodeFile(cropImage+File.separator+"crop.png");
                     userImage.setImageBitmap(bitmapBuf1);
                     Bitmap bitmap= MyApplication.getBitmap();
-                    recycleBitmap(bitmap);
+                    ImgUtils.recycleBitmap(bitmap);
                     MyApplication.setBitmap(bitmapBuf1);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),bitmapBuf1);
+                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),imagePath,bitmapBuf1);
                         }
                     }).start();
                     break;
-                case HttpUtils.PUSHFAILURE:
-                    Toast.makeText(MyInformation.this,"上传失败",Toast.LENGTH_SHORT).show();
+                case HttpUtils.PUSHIMAGEFAILURE:
+                    Toast.makeText(MyAccount.this,"上传失败",Toast.LENGTH_SHORT).show();
                     break;
-                case HttpUtils.PUSHNOFILE:
-                    Toast.makeText(MyInformation.this,"选择图片失败",Toast.LENGTH_SHORT).show();
+                case HttpUtils.PUSHIMAGENOFILE:
+                    Toast.makeText(MyAccount.this,"选择图片失败",Toast.LENGTH_SHORT).show();
                     break;
-                case HttpUtils.PULLFAILURE:
+                case HttpUtils.PULLIMAGEFAILURE:
                     final Bitmap bitmapDefault=BitmapFactory.decodeResource(getResources(),R.drawable.defaultuserimage);
                     MyApplication.setBitmap(bitmapDefault);
                     userImage.setImageBitmap(bitmapDefault);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),bitmapDefault);
+                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),imagePath,bitmapDefault);
                         }
                     }).start();
                     break;
-                case HttpUtils.PULLSUCESS:
+                case HttpUtils.PULLIMAGESUCESS:
                     Bundle bundle= msg.getData();
                     byte[] resImage= bundle.getByteArray("pix");
                     final Bitmap bitmapBuf= BitmapFactory.decodeByteArray(resImage,0,resImage.length);
@@ -75,7 +77,7 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),bitmapBuf);
+                            ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),imagePath,bitmapBuf);
                         }
                     }).start();
                     break;
@@ -89,12 +91,13 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.my_information);
+        setContentView(R.layout.my_account);
         userImage= (CircleImageView) findViewById(R.id.user_image);
         userName= (TextView) findViewById(R.id.user_name);
         if(MyApplication.getBitmap()==null) {
             Bitmap bitmapBuf = ImgUtils.getImageFromSD(MyApplication.getUserPhone());
             if (bitmapBuf == null) {
+                Log.d("ai","test");
                 HttpUtils.pullImage(MyApplication.getUserPhone(), handler);
             }
             else {
@@ -105,7 +108,7 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
             userImage.setImageBitmap(MyApplication.getBitmap());
         }
         userName.setText(MyApplication.getUserName());
-        TextView userInformation= (TextView) findViewById(R.id.user_information);
+        TextView acoountInformation= (TextView) findViewById(R.id.user_information);
         TextView personalInformation= (TextView) findViewById(R.id.personal_information);
         TextView changePersonalInformation= (TextView) findViewById(R.id.change_personal_information);
         TextView myPurse= (TextView) findViewById(R.id.my_purse);
@@ -115,7 +118,7 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
         TextView mySetting= (TextView) findViewById(R.id.my_setting);
         TextView change_my_setting= (TextView) findViewById(R.id.change_my_setting);
         userImage.setOnClickListener(this);
-        userInformation.setOnClickListener(this);
+        acoountInformation.setOnClickListener(this);
         personalInformation.setOnClickListener(this);
         changePersonalInformation.setOnClickListener(this);
         myPurse.setOnClickListener(this);
@@ -138,13 +141,15 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.user_information:
-                Intent intent= new Intent(MyInformation.this,AccountInformation.class);
-                startActivity(intent);
+                Intent intentToAccount= new Intent(MyAccount.this,AccountManagement.class);
+                startActivity(intentToAccount);
                 break;
             case R.id.user_image:
                 showListDialog();
                 break;
             case R.id.personal_information:
+                Intent intentToInformation= new Intent(MyAccount.this,InformationShow.class);
+                startActivity(intentToInformation);
                 break;
             case R.id.change_personal_information:
                 break;
@@ -167,7 +172,7 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
 
     private void showListDialog() {
         final String[] items = { "拍照","从相册选取"};
-        final AlertDialog.Builder listDialog = new AlertDialog.Builder(MyInformation.this);
+        final AlertDialog.Builder listDialog = new AlertDialog.Builder(MyAccount.this);
         listDialog.setTitle("选择图片");
         listDialog.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -175,11 +180,11 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
                 switch (which) {
                     case 0:
                         dialog.cancel();
-                        ImgUtils.getImageFromCamera(MyInformation.this);
+                        ImgUtils.getImageFromCamera(MyAccount.this,cameraImage);
                         break;
                     case 1:
                         dialog.cancel();
-                        ImgUtils.getImageFromAlbum(MyInformation.this);
+                        ImgUtils.getImageFromAlbum(MyAccount.this);
                         break;
                     default:
                         break;
@@ -192,7 +197,7 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        recycleBitmap(MyApplication.getBitmap());
+        ImgUtils.recycleBitmap(MyApplication.getBitmap());
     }
 
     @Override
@@ -202,11 +207,11 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
             case ImgUtils.TAKE_PHOTO:
                 if(resultCode==RESULT_OK){
                     if(Build.VERSION.SDK_INT>=24){
-                        Uri imageUri= FileProvider.getUriForFile(this,"com.example.ai.dtest.fileprovider",new File(mCameraFile));
+                        Uri imageUri= FileProvider.getUriForFile(this,"com.example.ai.dtest.fileprovider",new File(cameraImage,"camera.png"));
                         ImgUtils.startPhotoZoom(imageUri,this);
                     }
                     else {
-                        Uri imageUri= Uri.fromFile(new File(mCameraFile));
+                        Uri imageUri= Uri.fromFile(new File(cameraImage,"camera.png"));
                         ImgUtils.startPhotoZoom(imageUri,this);
                     }
                 }
@@ -214,9 +219,9 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
             case ImgUtils.CHOOSE_PHOTO:
                 if(resultCode==RESULT_OK){
                     if(Build.VERSION.SDK_INT>=24) {
-                        String imagePath = getImagePath.getPath(MyInformation.this, data.getData());
+                        String imagePath = getImagePath.getPath(MyAccount.this, data.getData());
                         assert imagePath != null;
-                        Uri imageUri= FileProvider.getUriForFile(MyInformation.this,"com.example.ai.dtest.fileprovider",new File(imagePath));
+                        Uri imageUri= FileProvider.getUriForFile(MyAccount.this,"com.example.ai.dtest.fileprovider",new File(imagePath));
                         ImgUtils.startPhotoZoom(imageUri,this);
                     }
                     else {
@@ -227,18 +232,11 @@ public class MyInformation extends BaseActivity implements View.OnClickListener{
                 break;
             case ImgUtils.CROP_PHOTO:
                 if(resultCode==RESULT_OK) {
-                    HttpUtils.pushImage(MyApplication.getUserPhone(),mCropFile,handler);
+                    HttpUtils.pushImage(MyApplication.getUserPhone(),cropImage+File.separator+"crop.png",handler);
                 }
                 break;
             default:
                 break;
         }
-    }
-
-    private void recycleBitmap(Bitmap bitmap){
-        if(bitmap != null && !bitmap.isRecycled()){
-            bitmap.recycle();
-        }
-        System.gc();
     }
 }

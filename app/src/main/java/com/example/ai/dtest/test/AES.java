@@ -1,8 +1,6 @@
 package com.example.ai.dtest.test;
 
 
-import com.example.ai.dtest.commen.SimpleCrypto;
-
 /**
  * Created by ai on 2017/7/11.
  */

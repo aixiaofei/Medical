@@ -1,4 +1,4 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.test;
 import android.util.Base64;
 
 import java.security.SecureRandom;

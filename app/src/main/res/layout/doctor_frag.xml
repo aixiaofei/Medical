@@ -44,11 +44,22 @@
     </LinearLayout>
     /*分界面*/
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/doctor_list"
-        android:layout_below="@+id/select"
-        android:layout_height="match_parent"
+    <View
         android:layout_width="match_parent"
-        />
+        android:layout_height="0.5dp"
+        android:background="#cccccc"
+        android:layout_below="@+id/select"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/select">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/doctor_list"
+            android:layout_below="@+id/select"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

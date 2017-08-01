@@ -17,11 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ai.dtest.commen.ActivityCollector;
-import com.example.ai.dtest.commen.HttpUtils;
-import com.example.ai.dtest.commen.MD5;
-import com.example.ai.dtest.commen.Userlogininfo;
-import com.example.ai.dtest.yanzhengma.FormatCheckUtils;
+import com.example.ai.dtest.base.ActivityCollector;
+import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.util.FormatCheckUtils;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.MD5;
+import com.example.ai.dtest.data.Userlogininfo;
 import com.google.gson.Gson;
 import java.io.IOException;
 

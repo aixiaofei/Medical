@@ -1,15 +1,17 @@
-package com.example.ai.dtest.commen;
+package com.example.ai.dtest.data;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Userinfo {
+public class Userinfo implements Serializable{
+
     private Integer userid;
 
     private String username;
 
     private String usermale;
 
-    private Integer userage;
+    private String userage;
 
     private String usercardnum;
 
@@ -67,11 +69,11 @@ public class Userinfo {
         this.usermale = usermale == null ? null : usermale.trim();
     }
 
-    public Integer getUserage() {
+    public String getUserage() {
         return userage;
     }
 
-    public void setUserage(Integer userage) {
+    public void setUserage(String userage) {
         this.userage = userage;
     }
 
