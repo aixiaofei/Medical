@@ -94,18 +94,13 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
         setContentView(R.layout.my_account);
         userImage= (CircleImageView) findViewById(R.id.user_image);
         userName= (TextView) findViewById(R.id.user_name);
-        if(MyApplication.getBitmap()==null) {
-            Bitmap bitmapBuf = ImgUtils.getImageFromSD(MyApplication.getUserPhone());
-            if (bitmapBuf == null) {
-                Log.d("ai","test");
-                HttpUtils.pullImage(MyApplication.getUserPhone(), handler);
-            }
-            else {
-                MyApplication.setBitmap(bitmapBuf);
-                userImage.setImageBitmap(bitmapBuf);
-            }
-        }else {
-            userImage.setImageBitmap(MyApplication.getBitmap());
+        Bitmap bitmapBuf = ImgUtils.getImageFromSD(MyApplication.getUserPhone());
+        if (bitmapBuf == null) {
+            HttpUtils.pullImage(MyApplication.getUserPhone(), handler);
+        }
+        else {
+            MyApplication.setBitmap(bitmapBuf);
+            userImage.setImageBitmap(bitmapBuf);
         }
         userName.setText(MyApplication.getUserName());
         TextView acoountInformation= (TextView) findViewById(R.id.user_information);

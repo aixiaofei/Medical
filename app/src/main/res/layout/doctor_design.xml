@@ -15,13 +15,13 @@
 
             /*位置设置*/
             <ImageView
-                android:id="@+id/map"
+                android:id="@+id/map_fig"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:background="@drawable/address_white"
                 android:layout_marginStart="10dp" />
             <TextView
-                android:id="@+id/top_first_address"
+                android:id="@+id/map_text"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="2dp"
@@ -83,12 +83,6 @@
         android:layout_above="@+id/buttom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <fragment
-            android:id="@+id/main_fragment"
-            android:name="com.example.ai.dtest.frag.DoctorList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </FrameLayout>
 
 
@@ -104,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
+            <ImageButton
                 android:id="@+id/home_page_pic"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -171,7 +165,8 @@
                 android:gravity="center"
                 android:layout_alignTop="@+id/my_doctor_page_text"
                 android:layout_toLeftOf="@+id/search_doctor_page_text"
-                android:layout_marginRight="39dp"/>
+                android:layout_marginRight="39dp"
+                android:textColor="@color/default_text_seclector"/>
             <TextView
                 android:id="@+id/search_doctor_page_text"
                 android:layout_width="30dp"

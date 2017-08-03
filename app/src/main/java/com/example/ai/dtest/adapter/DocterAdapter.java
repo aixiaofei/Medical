@@ -5,61 +5,120 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import com.example.ai.dtest.R;
+import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by ai on 2017/7/9.
  */
 
-public class DocterAdapter extends RecyclerView.Adapter<DocterAdapter.ViewHolder>{
+public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    private static final int TYPE_FOOT=0;
+
+    private static final int TYPE_NORMAL=1;
 
     private List<DoctorCustom> mList;
+
+    private View footView;
 
     public DocterAdapter(List<DoctorCustom> mList){
         this.mList=mList;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    private int mFoot= 0;
+
+    public void setFootView(View view){
+        if(footView==null) {
+            footView = view;
+            mFoot += 1;
+        }
+    }
+
+    public void clearFootView(){
+        if(footView!=null){
+            footView=null;
+            mFoot-=1;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(mFoot!=0 && position>=getItemCount()-mFoot){
+            return TYPE_FOOT;
+        }else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    private static class normalViewHolder extends RecyclerView.ViewHolder{
         View docter_view;
+        CircleImageView docter_fig;
         TextView docter_name;
         TextView docter_age;
         TextView docter_keshi;
         TextView docter_hosipital;
         TextView docter_specialty;
+        TextView docter_distance;
 
-        public ViewHolder(View view){
+        normalViewHolder(View view){
             super(view);
             docter_view=view;
+            docter_fig= (CircleImageView) view.findViewById(R.id.doctor_photo);
             docter_name= (TextView) view.findViewById(R.id.docter_name);
             docter_age= (TextView) view.findViewById(R.id.docter_age);
             docter_keshi= (TextView) view.findViewById(R.id.docter_keshi);
             docter_hosipital= (TextView) view.findViewById(R.id.docter_hosipital);
             docter_specialty= (TextView) view.findViewById(R.id.docter_specialty);
+            docter_distance= (TextView) view.findViewById(R.id.distance);
+        }
+    }
+
+    private static class footViewHolder extends RecyclerView.ViewHolder {
+
+        footViewHolder(View itemView) {
+            super(itemView);
         }
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info,parent,false);
-        final ViewHolder viewHolder= new ViewHolder(view);
-        return viewHolder;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(viewType==TYPE_FOOT){
+            return new footViewHolder(footView);
+        }else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info, parent, false);
+            return new normalViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        DoctorCustom docter= mList.get(position);
-        holder.docter_name.setText(docter.getDocname());
-        holder.docter_age.setText(docter.getDocage().toString());
-        holder.docter_keshi.setText(docter.getDocdept());
-        holder.docter_hosipital.setText(docter.getHospname());
-        holder.docter_specialty.setText(docter.getDocexpert());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder1, int position) {
+        if(holder1 instanceof normalViewHolder){
+            DoctorCustom docter= mList.get(position);
+            normalViewHolder holder= (normalViewHolder) holder1;
+            Glide.with(MyApplication.getContext()).load(R.drawable.defaultuserimage).into(holder.docter_fig);
+            holder.docter_name.setText(docter.getDocname());
+            holder.docter_age.setText(docter.getDocage().toString());
+            holder.docter_keshi.setText(docter.getDocdept());
+            holder.docter_hosipital.setText(docter.getDochosp());
+            holder.docter_specialty.setText(docter.getDocexpert());
+            Double distance= Double.valueOf(docter.getDistance());
+            if(distance>=1000){
+                holder.docter_distance.setText(new DecimalFormat("0.0").format(distance/1000)+"km");
+            }else {
+                holder.docter_distance.setText(new DecimalFormat("0").format(distance)+"m");
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        return mList.size()+mFoot;
     }
 }

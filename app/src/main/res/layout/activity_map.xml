@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ai.dtest.Map">
-
+    tools:context="com.example.ai.dtest.frag.Map">
     <com.baidu.mapapi.map.MapView
         android:id="@+id/map"
-        android:layout_width="395dp"
-        android:layout_height="643dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:clickable="true"
         tools:layout_editor_absoluteY="8dp"
         tools:layout_editor_absoluteX="8dp">
     </com.baidu.mapapi.map.MapView>
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

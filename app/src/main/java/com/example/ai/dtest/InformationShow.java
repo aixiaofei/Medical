@@ -40,7 +40,6 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.GETUSERINFOFAILURE:
-                    Toast.makeText(InformationShow.this,"获取信息失败",Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.GETUSERINFOSUCESS:
                     Bundle bundle= msg.getData();

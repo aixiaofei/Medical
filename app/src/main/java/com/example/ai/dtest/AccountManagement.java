@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.util.ImgUtils;
 import com.example.ai.dtest.view.changePW;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.util.HttpUtils;
@@ -51,6 +52,8 @@ public class AccountManagement extends BaseActivity implements View.OnClickListe
                 case HttpUtils.EXITSUCESS:
                     Toast.makeText(AccountManagement.this,"退出登录成功",Toast.LENGTH_SHORT).show();
                     clearUserInfo();
+                    ImgUtils.recycleBitmap(MyApplication.getBitmap());
+                    MyApplication.setBitmap(null);
                     Login.actionStart(AccountManagement.this,MyApplication.getUserPhone(),"");
                     finish();
                     break;

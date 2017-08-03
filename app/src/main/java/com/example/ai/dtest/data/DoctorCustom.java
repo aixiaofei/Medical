@@ -26,7 +26,7 @@ public class DoctorCustom implements Serializable{
 
 	private String docnation;
 
-	private Integer hospid;
+	private String dochosp;
 
 	private String docdept;
 
@@ -49,6 +49,8 @@ public class DoctorCustom implements Serializable{
 	private String docloginloc;
 
 	private String hospname;
+
+	private String distance;
 
 	public Integer getDocid() {
 		return docid;
@@ -114,12 +116,12 @@ public class DoctorCustom implements Serializable{
 		this.docnation = docnation == null ? null : docnation.trim();
 	}
 
-	public Integer getHospid() {
-		return hospid;
+	public String getDochosp() {
+		return dochosp;
 	}
 
-	public void setHospid(Integer hospid) {
-		this.hospid = hospid;
+	public void setDochosp(String dochosp) {
+		this.dochosp = dochosp;
 	}
 
 	public String getDocdept() {
@@ -208,6 +210,14 @@ public class DoctorCustom implements Serializable{
 
 	public void setHospname(String hospname) {
 		this.hospname = hospname;
+	}
+
+	public String getDistance() {
+		return distance;
+	}
+
+	public void setDistance(String distance) {
+		this.distance = distance;
 	}
 
 	public Object deepCopy() throws IOException, ClassNotFoundException {

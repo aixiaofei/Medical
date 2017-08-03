@@ -7,7 +7,7 @@
     <LinearLayout
         android:id="@+id/select"
         android:layout_width="match_parent"
-        android:layout_height="35dp">
+        android:layout_height="40dp">
 
         <TextView
             android:id="@+id/recommend_doctor"
@@ -15,23 +15,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:text="推荐医生"
-            android:textSize="16sp"
-            android:gravity="center"/>
+            android:textSize="14sp"
+            android:gravity="center"
+            android:clickable="true"
+            android:textColor="@color/default_text_seclector"/>
+
         <TextView
             android:id="@+id/offices"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:gravity="center"
             android:text="科室"
-            android:textSize="16sp"
-            android:gravity="center"/>
+            android:clickable="true"
+            android:textSize="14sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/default_text_seclector"/>
+
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
             android:text="日期"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:gravity="center"/>
         <TextView
             android:id="@+id/city"
@@ -39,7 +45,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:text="城市"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:gravity="center"/>
     </LinearLayout>
     /*分界面*/
@@ -50,6 +56,7 @@
         android:background="#cccccc"
         android:layout_below="@+id/select"/>
 
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
@@ -59,7 +66,8 @@
             android:id="@+id/doctor_list"
             android:layout_below="@+id/select"
             android:layout_height="match_parent"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:scrollbars="vertical"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

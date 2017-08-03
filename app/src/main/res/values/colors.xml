@@ -5,7 +5,7 @@
     <color name="origin_text_color">#000000</color>
     <color name="colorAccent">#6393FF</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorBackground">#F0F0F0</color>
+    <color name="colorBackground">#808080</color>
     <color name="colorButton_background">#6393FF</color>
     <color name="color_line">#EAEAEA</color>
     <color name="color_remind">#F3F3F3</color>

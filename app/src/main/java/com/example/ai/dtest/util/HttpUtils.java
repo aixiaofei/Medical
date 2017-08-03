@@ -277,8 +277,9 @@ public class HttpUtils {
         });
     }
 
-    public static void docterUpdataDefault(final Handler handler) {
-        Request request = new Request.Builder().url(DOCTERUPDATEDEFAULT).build();
+    public static void docterUpdata(String info,final Handler handler) {
+        RequestBody responseBody = RequestBody.create(JSON, info);
+        Request request = new Request.Builder().url(DOCTERUPDATEDEFAULT).post(responseBody).build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override

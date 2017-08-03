@@ -1,12 +1,15 @@
-package com.example.ai.dtest;
+package com.example.ai.dtest.frag;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -26,14 +29,18 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
-import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.MainActivity;
+import com.example.ai.dtest.R;
+import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
+import com.example.ai.dtest.frag.DoctorList;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.ImgUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
-public class Map extends BaseActivity {
+public class Map extends Fragment {
 
     private MapView mapView;
 
@@ -41,7 +48,7 @@ public class Map extends BaseActivity {
 
     private boolean isFirstLocate= true;
 
-    LocationClient client;
+    private LocationClient client;
 
     private Handler handler= new Handler(){
         @Override
@@ -56,11 +63,8 @@ public class Map extends BaseActivity {
                     String buf= update_bundle.getString("result");
                     List<DoctorCustom> doctor= gson.fromJson(buf, new TypeToken<List<DoctorCustom>>(){}.getType());
                     if(doctor!=null) {
-//                        BitmapFactory.Options option_1 = new BitmapFactory.Options();
-//                        option_1.inSampleSize=4;
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.doctor);
-                        Bitmap res= scaleMatrixImage(bitmap,0.25f,0.25f);
-                        BitmapDescriptor bitmapDescriptor= BitmapDescriptorFactory.fromBitmap(res);
+                        Bitmap bitmap = zoonBitmap(R.drawable.doctor);
+                        BitmapDescriptor bitmapDescriptor= BitmapDescriptorFactory.fromBitmap(bitmap);
                         List<Marker> markers= map.getMarkersInBounds(map.getMapStatus().bound);
                         if(markers!=null) {
                             for (Marker i : markers) {
@@ -69,16 +73,10 @@ public class Map extends BaseActivity {
                         }
                         for (DoctorCustom i : doctor) {
                             LatLng point = new LatLng(Double.valueOf(i.getDocloginlat()), Double.valueOf(i.getDocloginlon()));
-                            OverlayOptions options= new MarkerOptions().position(point).title(i.getDocname()).animateType(MarkerOptions.MarkerAnimateType.none).visible(true).perspective(false)
-                                    .icon(bitmapDescriptor);
+                            OverlayOptions options= new MarkerOptions().position(point).title("haha").visible(true).perspective(true).icon(bitmapDescriptor);
                             map.addOverlay(options);
                         }
-                        if (!bitmap.isRecycled()){
-                            bitmap.recycle();
-                        }
-                        if(!res.isRecycled()){
-                            res.recycle();
-                        }
+                        ImgUtils.recycleBitmap(bitmap);
                     }
                     break;
                 default:
@@ -107,9 +105,9 @@ public class Map extends BaseActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        client= new LocationClient(Map.this);
+        client= new LocationClient(MyApplication.getContext());
         client.registerLocationListener(new LocationListener());
         LocationClientOption option= new LocationClientOption();
         option.setScanSpan(2000);
@@ -117,15 +115,21 @@ public class Map extends BaseActivity {
         option.setNeedDeviceDirect(true);
         option.setIsNeedAddress(true);
         client.setLocOption(option);
-        setContentView(R.layout.activity_map);
-        mapView= (MapView) findViewById(R.id.map);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view= inflater.inflate(R.layout.activity_map,container,false);
+        mapView= (MapView) view.findViewById(R.id.map);
         map= mapView.getMap();
         map.setOnMapStatusChangeListener(listener);
         map.setOnMapLoadedCallback(callback);
+        return view;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         map.setMyLocationEnabled(true);
         if(!client.isStarted()){
             client.start();
@@ -134,13 +138,13 @@ public class Map extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mapView.onResume();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mapView.onPause();
         map.setMyLocationEnabled(false);
@@ -150,7 +154,7 @@ public class Map extends BaseActivity {
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         map.setMyLocationEnabled(false);
         if(client.isStarted()){
             client.stop();
@@ -159,14 +163,14 @@ public class Map extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         map.clear();
         mapView.onDestroy();
     }
 
 
-    public class LocationListener implements BDLocationListener {
+    private class LocationListener implements BDLocationListener {
         @Override
         public void onConnectHotSpotMessage(String s, int i) {
         }
@@ -176,9 +180,9 @@ public class Map extends BaseActivity {
             if ((bdLocation.getLocType() == BDLocation.TypeGpsLocation) || (bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) || (bdLocation.getLocType() == BDLocation.TypeOffLineLocation)) {
                 navigateTo(bdLocation);
             } else {
-                Toast.makeText(Map.this,"获取位置信息失败",Toast.LENGTH_SHORT).show();
-                Intent intent= new Intent(Map.this,MainActivity.class);
-                startActivity(intent);
+                Toast.makeText(MyApplication.getContext(),"获取位置信息失败",Toast.LENGTH_SHORT).show();
+                MainActivity activity= (MainActivity) getActivity();
+                activity.addFragment(new DoctorList());
             }
         }
     }
@@ -188,7 +192,7 @@ public class Map extends BaseActivity {
             LatLng ll = new LatLng(bdLocation.getLatitude(), bdLocation.getLongitude());
             MapStatusUpdate update = MapStatusUpdateFactory.newLatLng(ll);
             map.animateMapStatus(update);
-            update = MapStatusUpdateFactory.zoomTo(16f);
+            update = MapStatusUpdateFactory.zoomTo(17f);
             map.animateMapStatus(update);
             isFirstLocate=false;
         }
@@ -221,10 +225,25 @@ public class Map extends BaseActivity {
         HttpUtils.docterUpdataMap(result.toString(),handler);
     }
 
-    public Bitmap scaleMatrixImage(Bitmap oldbitmap, float scaleWidth, float scaleHeight) {
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth,scaleHeight);// 放大缩小比例
-        return Bitmap.createBitmap(oldbitmap, 0, 0, oldbitmap.getWidth(), oldbitmap.getHeight(), matrix, true);
+    private Bitmap zoonBitmap(int resourceId){
+        Bitmap bitmapBuf;
+        BitmapFactory.Options options= new BitmapFactory.Options();
+        options.inJustDecodeBounds=true;
+        BitmapFactory.decodeResource(getResources(),resourceId,options);
+        int width = options.outWidth;
+        int height= options.outHeight;
+        double widthScale= 1;
+        double heightScale= 1;
+        if(width>64){
+            widthScale= (double) width/64;
+        }
+        if(height>64){
+            heightScale= (double) height/64;
+        }
+        options.inJustDecodeBounds=false;
+        options.inSampleSize=(int) Math.max(widthScale,heightScale);
+        bitmapBuf= BitmapFactory.decodeResource(getResources(),resourceId,options);
+        return bitmapBuf;
     }
 }
 

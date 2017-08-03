@@ -129,24 +129,26 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         addIdentify.setOnClickListener(this);
         selectAddress.setOnClickListener(this);
         nextStep.setOnClickListener(this);
-        if(!TextUtils.isEmpty(info.getUsername())){
-            userName.setText(info.getUsername());
-        }
-        if(!TextUtils.isEmpty(info.getUsercardnum())){
-            identify.setText(info.getUsercardnum());
-        }
-        if(!TextUtils.isEmpty(info.getUsermale())){
-            if(info.getUsermale().equals("男")) {
-                sex.setSelection(0);
-            }else {
-                sex.setSelection(1);
+        if(info!=null) {
+            if (!TextUtils.isEmpty(info.getUsername())) {
+                userName.setText(info.getUsername());
             }
-        }
-        if(!TextUtils.isEmpty(info.getUseradr())){
-            String top= info.getUseradr().split("\\|")[0];
-            String down= info.getUseradr().split("\\|")[1];
-            addressTop.setText(top);
-            addressDown.setText(down);
+            if (!TextUtils.isEmpty(info.getUsercardnum())) {
+                identify.setText(info.getUsercardnum());
+            }
+            if (!TextUtils.isEmpty(info.getUsermale())) {
+                if (info.getUsermale().equals("男")) {
+                    sex.setSelection(0);
+                } else {
+                    sex.setSelection(1);
+                }
+            }
+            if (!TextUtils.isEmpty(info.getUseradr())) {
+                String top = info.getUseradr().split("\\|")[0];
+                String down = info.getUseradr().split("\\|")[1];
+                addressTop.setText(top);
+                addressDown.setText(down);
+            }
         }
     }
 

@@ -1,24 +1,30 @@
 package com.example.ai.dtest;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,10 +32,12 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.example.ai.dtest.adapter.PagerAdapter;
 import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.frag.DoctorList;
+import com.example.ai.dtest.frag.Map;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.util.ImgUtils;
 import com.example.ai.dtest.util.MD5;
 import com.example.ai.dtest.util.MacAddressUtils;
 import com.example.ai.dtest.base.MyApplication;
@@ -49,7 +57,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private LocationClient client;
 
-    private Handler handler=new Handler(){
+    private TextView map_text;
+
+    private ImageView map_fig;
+
+    private ImageButton homePageFig;
+
+    private TextView homePageText;
+
+    private int tag=0;
+
+    private static final String MAP="地图模式";
+
+    private static final String LIST="列表模式";
+
+    public Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             Gson gson=new Gson();
@@ -78,8 +100,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_design);
-        ImageView map_fig = (ImageView) findViewById(R.id.map);
-        TextView map_text = (TextView) findViewById(R.id.top_first_address);
+        map_fig = (ImageView) findViewById(R.id.map_fig);
+        map_text = (TextView) findViewById(R.id.map_text);
+
+        homePageFig= (ImageButton) findViewById(R.id.home_page_pic);
+        Drawable src = homePageFig.getBackground();
+        ImgUtils.tintDrawable(src, getResources().getColorStateList(R.color.button_selector));
+        startAnima(homePageFig);
+        homePageFig.setOnClickListener(this);
+
+        homePageText= (TextView) findViewById(R.id.home_pag_text);
+        homePageText.setOnClickListener(this);
+        homePageText.setSelected(true);
+
         Button myPage= (Button) findViewById(R.id.my_page_pic);
         myPage.setOnClickListener(this);
         map_fig.setOnClickListener(this);
@@ -122,22 +155,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     public void onBackPressed() {
         super.onBackPressed();
         ActivityCollector.finishAll();
+        ImgUtils.recycleBitmap(MyApplication.getBitmap());
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.map:
-                Intent intent1= new Intent(MainActivity.this,Map.class);
-                startActivity(intent1);
+            case R.id.map_fig:
+                goMap();
                 break;
-            case R.id.top_first_address:
-                Intent intent2= new Intent(MainActivity.this,Map.class);
-                startActivity(intent2);
+            case R.id.map_text:
+                goMap();
                 break;
             case R.id.my_page_pic:
-                Intent intent3= new Intent(MainActivity.this,MyAccount.class);
-                startActivity(intent3);
+                Intent intent= new Intent(MainActivity.this,MyAccount.class);
+                startActivity(intent);
+                break;
+            case R.id.home_page_pic:
+                goHomePage();
+                break;
+            case R.id.home_pag_text:
+                goHomePage();
                 break;
             default:
                 break;
@@ -187,6 +226,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
 
     private void init(){
+        addFragment(new DoctorList());
         if(MyApplication.getUserPhone()==null){
             OffLineUser offLineUsers = DataSupport.where("isAutoLogin =?","1").findFirst(OffLineUser.class);
             if (offLineUsers!=null){
@@ -201,13 +241,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     }
 
-//    private void replaceFragment(Fragment fragment){
-//        FragmentManager manager= getSupportFragmentManager();
-//        FragmentTransaction transaction= manager.beginTransaction();
-//        transaction.replace(R.id.main,fragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
+    public void addFragment(Fragment fragment){
+        FragmentManager manager= getSupportFragmentManager();
+        FragmentTransaction transaction= manager.beginTransaction();
+        Fragment target= manager.findFragmentByTag(fragment.getClass().getName());
+        if(target!=null){
+            for(Fragment other:manager.getFragments()){
+                if(other!=target){
+                    transaction.hide(other);
+                }
+            }
+            transaction.show(target);
+        }else {
+            for(Fragment other:manager.getFragments()){
+                transaction.hide(other);
+            }
+            transaction.add(R.id.main,fragment,fragment.getClass().getName());
+            transaction.show(fragment);
+        }
+        transaction.commit();
+    }
 
     private class LocationListener implements BDLocationListener {
         @Override
@@ -312,5 +365,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         user.setToDefault("password");
         user.setToDefault("lastLoginTime");
         user.updateAll("userPhone=?", tryAutoLoginPhone);
+    }
+
+    private void goHomePage(){
+        if(tag==1){
+            map_fig.setVisibility(View.VISIBLE);
+            map_text.setText(MAP);
+        }
+        startAnima(homePageFig);
+        homePageText.setSelected(true);
+        addFragment(new DoctorList());
+        tag=0;
+    }
+
+    private void goMap(){
+        if(map_text.getText().toString().equals(MAP)) {
+            map_fig.setVisibility(View.INVISIBLE);
+            map_text.setText(LIST);
+            if(tag==0) {
+                stopAnima(homePageFig);
+                homePageText.setSelected(false);
+            }
+            addFragment(new Map());
+            tag=1;
+        }else {
+            map_fig.setVisibility(View.VISIBLE);
+            map_text.setText(MAP);
+            goHomePage();
+        }
+    }
+
+    private void startAnima(View view){
+        AnimatorSet set= new AnimatorSet();
+        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.5f,1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.5f,1f);
+        view.setSelected(true);
+        set.setDuration(300);
+        set.playTogether(scaleX,scaleY);
+        set.start();
+    }
+
+    private void stopAnima(View view){
+        AnimatorSet set= new AnimatorSet();
+        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.5f,1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.5f,1f);
+        view.setSelected(false);
+        set.setDuration(300);
+        set.playTogether(scaleX,scaleY);
+        set.start();
+    }
+
+    private void locAnima(){
+
     }
 }

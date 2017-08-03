@@ -43,7 +43,7 @@
             android:enabled="true"
             android:process=":remote" />
 
-        <activity android:name=".Map" />
+        <activity android:name=".frag.Map" />
         <activity android:name=".MyAccount" />
         <activity android:name=".base.Access">
             <intent-filter>
