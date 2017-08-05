@@ -106,8 +106,8 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
         TextView acoountInformation= (TextView) findViewById(R.id.user_information);
         TextView personalInformation= (TextView) findViewById(R.id.personal_information);
         TextView changePersonalInformation= (TextView) findViewById(R.id.change_personal_information);
-        TextView myPurse= (TextView) findViewById(R.id.my_purse);
-        TextView changeMyPurse = (TextView) findViewById(R.id.change_my_purse);
+        TextView myPatient= (TextView) findViewById(R.id.patient);
+        TextView changeMyPatient = (TextView) findViewById(R.id.change_patient);
         TextView myOrder= (TextView) findViewById(R.id.my_order);
         TextView changeMyOrder= (TextView) findViewById(R.id.change_my_order);
         TextView mySetting= (TextView) findViewById(R.id.my_setting);
@@ -116,8 +116,8 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
         acoountInformation.setOnClickListener(this);
         personalInformation.setOnClickListener(this);
         changePersonalInformation.setOnClickListener(this);
-        myPurse.setOnClickListener(this);
-        changeMyPurse.setOnClickListener(this);
+        myPatient.setOnClickListener(this);
+        changeMyPatient.setOnClickListener(this);
         myOrder.setOnClickListener(this);
         changeMyOrder.setOnClickListener(this);
         mySetting.setOnClickListener(this);
@@ -143,14 +143,20 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
                 showListDialog();
                 break;
             case R.id.personal_information:
-                Intent intentToInformation= new Intent(MyAccount.this,InformationShow.class);
-                startActivity(intentToInformation);
+                Intent intentToInformation_1= new Intent(MyAccount.this,InformationShow.class);
+                startActivity(intentToInformation_1);
                 break;
             case R.id.change_personal_information:
+                Intent intentToInformation_2= new Intent(MyAccount.this,InformationShow.class);
+                startActivity(intentToInformation_2);
                 break;
-            case R.id.my_purse:
+            case R.id.patient:
+                Intent intentToPatient_1= new Intent(this,PatientInformation.class);
+                startActivity(intentToPatient_1);
                 break;
-            case R.id.change_my_purse:
+            case R.id.change_patient:
+                Intent intentToPatient_2= new Intent(this,PatientInformation.class);
+                startActivity(intentToPatient_2);
                 break;
             case R.id.my_order:
                 break;

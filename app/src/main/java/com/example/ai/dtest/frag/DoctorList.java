@@ -107,9 +107,7 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                         if(!doctor.isEmpty()){
                             adapter.setFootView(footView);
                         }
-                        for(int i=PageItem*(page-1);i<=PageItem*page-1;i++) {
-                            adapter.notifyItemInserted(i);
-                        }
+                        adapter.notifyDataSetChanged();
                         isPull=false;
                     }
                     if(isRefresh){

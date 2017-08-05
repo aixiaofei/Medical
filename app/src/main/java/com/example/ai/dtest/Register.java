@@ -21,7 +21,7 @@ import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.MD5;
-import com.example.ai.dtest.data.Userlogininfo;
+import com.example.ai.dtest.data.UserLoginInfo;
 import com.google.gson.Gson;
 import java.io.IOException;
 
@@ -281,7 +281,7 @@ public class Register extends BaseActivity implements View.OnClickListener{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Userlogininfo userlogininfo= new Userlogininfo();
+        UserLoginInfo userlogininfo= new UserLoginInfo();
         userlogininfo.setUserloginphone(phone);
         userlogininfo.setUserloginpwd(password);
         Gson gson= new Gson();

@@ -1,6 +1,6 @@
 package com.example.ai.dtest.data;
 
-public class Userlogininfo {
+public class UserLoginInfo {
     private Integer userloginid;
     
     private String userloginname;

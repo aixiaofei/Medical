@@ -13,7 +13,8 @@ import android.util.Log;
 
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
-import com.example.ai.dtest.data.Userinfo;
+import com.example.ai.dtest.data.FamilyInfo;
+import com.example.ai.dtest.data.UerInfo;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +46,9 @@ public class HttpUtils {
     private static final String CHANGEPASSWORD= "http://192.168.2.2:8080/internetmedical/user/editpassword"; //修改密码接口
     private static final String GETUSERINFO= "http://192.168.2.2:8080/internetmedical/user/getinfo"; //获取用户信息接口
     private static final String PUSHUSERINFO= "http://192.168.2.2:8080/internetmedical/user/editinfo"; //上传用户信息接口
+    private static final String PULLFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/findfamily"; //同步家人信息接口
+    private static final String ADDFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/addfamily"; //添加家人信息接口
+    private static final String DEFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/deletefamily"; //删除家人信息接口
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
     private static final String NONCE = "123456";//随机数
@@ -80,7 +84,12 @@ public class HttpUtils {
     public static final int GETUSERINFOSUCESS=27; // 获取用户信息成功
     public static final int PUSHINFOFAILURE=28; // 上传用户信息失败
     public static final int PUSHINFOSUCESS=29; // 上传用户信息成功
-
+    public static final int PULLFAMILYINFOFA=30; // 更新家人信息失败
+    public static final int PULLFAMILYINFOSU=31; // 更新家人信息成功
+    public static final int ADDFAMILYINFOFA=32; // 添加家人信息失败
+    public static final int ADDFAMILYINFOSU=33; // 添加家人信息成功
+    public static final int DEFAMILYINFOFA=34; // 删除家人信息失败
+    public static final int DEFAMILYINFOSU=35; // 删除家人信息成功
 
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -624,13 +633,13 @@ public class HttpUtils {
         });
     }
 
-    private static class userInfo{
+    private class userInfo{
         String state;
-        Userinfo data;
+        UerInfo data;
     }
 
     //上传用户信息
-    public static void pushUserInfo(Userinfo info,List<String> figPath,final Handler handler){
+    public static void pushUserInfo(UerInfo info, List<String> figPath, final Handler handler){
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("phone",info.getUserphone())
@@ -667,5 +676,118 @@ public class HttpUtils {
                 }
             }
         });
+    }
+
+    //同步家人信息
+    public static void pullFamilyInfo( String userPhone, final Handler handler){
+        Phone phone= new Phone();
+        phone.phone=userPhone;
+        Gson gson= new Gson();
+        String res= gson.toJson(phone);
+        RequestBody requestBody = RequestBody.create(JSON, res);
+        Request request = new Request.Builder().url(PULLFAMILYINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        Log.d("ai","22");
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message= new Message();
+                message.what= PULLFAMILYINFOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                Gson gson= new Gson();
+                familyInfo info= gson.fromJson(res,familyInfo.class);
+                Message message= new Message();
+                if(info.state.equals("1")){
+                    Log.d("ai","33");
+                    String result= gson.toJson(info.data);
+                    message.what= PULLFAMILYINFOSU;
+                    Bundle bundle= new Bundle();
+                    bundle.putString("result",result);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+                else {
+                    message.what= PULLFAMILYINFOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class familyInfo{
+        String state;
+        List<FamilyInfo> data;
+    }
+
+    //添加家人信息
+    public static void addFamilyInfo( String info, final Handler handler){
+        RequestBody requestBody = RequestBody.create(JSON,info);
+        Request request = new Request.Builder().url(ADDFAMILYINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message= new Message();
+                message.what= ADDFAMILYINFOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                Gson gson= new Gson();
+                State state= gson.fromJson(res,State.class);
+                Message message= new Message();
+                if(state.state.equals("1")){
+                    message.what= ADDFAMILYINFOSU;
+                    handler.sendMessage(message);
+                }
+                else {
+                    message.what= ADDFAMILYINFOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //添加家人信息
+    public static void deleteFamilyInfo(String id, final Handler handler){
+        Gson gson =new Gson();
+        Id familyId= new Id();
+        familyId.id=id;
+        String res= gson.toJson(familyId);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(DEFAMILYINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message= new Message();
+                message.what= DEFAMILYINFOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                Gson gson= new Gson();
+                State state= gson.fromJson(res,State.class);
+                Message message= new Message();
+                if(state.state.equals("1")){
+                    message.what= DEFAMILYINFOSU;
+                    handler.sendMessage(message);
+                }
+                else {
+                    message.what= DEFAMILYINFOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private static class Id{
+        String id;
     }
 }

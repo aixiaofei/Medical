@@ -5,17 +5,18 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
@@ -30,8 +31,10 @@ import com.example.ai.dtest.util.MD5;
 import com.example.ai.dtest.util.MacAddressUtils;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.db.OffLineUser;
-import com.example.ai.dtest.data.Userlogininfo;
+import com.example.ai.dtest.data.UserLoginInfo;
 import com.example.ai.dtest.view.eye;
+import com.example.ai.dtest.view.load;
+import com.example.ai.dtest.view.loadDialog;
 import com.example.ai.dtest.view.okView;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
@@ -66,6 +69,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
 
     private boolean isFirst= true;
 
+    private loadDialog dialog;
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -78,7 +83,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
                     Bundle bundle= msg.getData();
                     String buf_user= bundle.getString("user");
                     Gson gson= new Gson();
-                    Userlogininfo userlogininfo= gson.fromJson(buf_user,Userlogininfo.class);
+                    UserLoginInfo userlogininfo= gson.fromJson(buf_user,UserLoginInfo.class);
                     saveOfflineUser(userlogininfo,bundle.getString("token"));
                     MyApplication.setUserPhone(userlogininfo.getUserloginphone());
                     MyApplication.setUserName(bundle.getString("username"));
@@ -197,24 +202,18 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.eye:
-//                if(!isShow){
-//                    isShow=true;
-//                    eye.setImageResource(R.drawable.eye_open);
-//                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-//                    user_password.setSelection(user_password.getText().length());
-//                }
-//                else {
-//                    isShow=false;
-//                    eye.setImageResource(R.drawable.eye_close);
-//                    user_password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
-//                    user_password.setSelection(user_password.getText().length());
-//                }
-//                break;
             case R.id.login:
                 tryLogin();
                 break;
             case R.id.forget_password:
+                if(dialog==null){
+                    dialog= new loadDialog(this);
+                    dialog.show();
+                }else if(!dialog.isShowing()){
+                    dialog.show();
+                }else {
+                    dialog.dismiss();
+                }
                 break;
             case R.id.return_register:
                 Intent intent = new Intent(Login.this, Register.class);
@@ -271,7 +270,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         client.start();
     }
 
-    private void saveOfflineUser(Userlogininfo userlogininfo,String token) {
+    private void saveOfflineUser(UserLoginInfo userlogininfo, String token) {
         String userPhone = saveUserPhone;
         String userPassword_buf = savePassword;
         String userPassword = Base64.encodeToString(userPassword_buf.getBytes(), Base64.DEFAULT);
@@ -324,7 +323,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         String userphoneversion= android.os.Build.VERSION.RELEASE;
         String usermac= MacAddressUtils.getMacAddress(Login.this);
         String userip= MacAddressUtils.getIpAddress(Login.this);
-        Userlogininfo userlogininfo= new Userlogininfo();
+        UserLoginInfo userlogininfo= new UserLoginInfo();
         userlogininfo.setUserloginphone(saveUserPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserloginlat(latitude_longitude.split(",")[0]);
@@ -357,7 +356,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         String userphoneversion= android.os.Build.VERSION.RELEASE;
         String usermac= MacAddressUtils.getMacAddress(Login.this);
         String userip= MacAddressUtils.getIpAddress(Login.this);
-        Userlogininfo userlogininfo= new Userlogininfo();
+        UserLoginInfo userlogininfo= new UserLoginInfo();
         userlogininfo.setUserloginphone(saveUserPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserlogintime(date);

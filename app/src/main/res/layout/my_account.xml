@@ -107,16 +107,16 @@
             android:layout_marginLeft="8dp"
             android:background="@drawable/my_purse"/>
         <TextView
-            android:id="@+id/my_purse"
+            android:id="@+id/patient"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
-            android:text="我的钱包"
+            android:text="病人信息"
             android:textSize="16sp"/>
         <TextView
-            android:id="@+id/change_my_purse"
+            android:id="@+id/change_patient"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_gravity="center_vertical"

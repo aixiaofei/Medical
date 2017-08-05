@@ -13,7 +13,6 @@ import android.os.Message;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,11 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
-import com.example.ai.dtest.data.Userinfo;
+import com.example.ai.dtest.data.UerInfo;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
-import com.google.gson.Gson;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -109,9 +107,9 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.information_design);
+        setContentView(R.layout.person_info_design);
         Intent intent= getIntent();
-        Userinfo info= (Userinfo) intent.getSerializableExtra("info");
+        UerInfo info= (UerInfo) intent.getSerializableExtra("info");
         userName= (EditText) findViewById(R.id.enter_name);
         identify= (EditText) findViewById(R.id.enter_identify);
         sex= (Spinner) findViewById(R.id.select_sex);
@@ -152,7 +150,7 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         }
     }
 
-    public static void actionStart(Context context, Userinfo userinfo){
+    public static void actionStart(Context context, UerInfo userinfo){
         Intent intent= new Intent(context,InformationDesign.class);
         intent.putExtra("info",userinfo);
         context.startActivity(intent);
@@ -309,7 +307,7 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
             Toast.makeText(InformationDesign.this, "请上传身份证照片", Toast.LENGTH_LONG).show();
             return;
         }
-        Userinfo info= new Userinfo();
+        UerInfo info= new UerInfo();
         info.setUsername(userName.getText().toString());
         info.setUsercardnum(identify.getText().toString());
         String age= FormatCheckUtils.returnAge(identify.getText().toString());

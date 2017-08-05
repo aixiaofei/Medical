@@ -7,7 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 
-public class Doctorinfo {
+public class DoctorInfo {
     private Integer docid;
 
     private String docname;

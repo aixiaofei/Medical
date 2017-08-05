@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/first"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/family_name"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_toLeftOf="@+id/family_male"
+            android:layout_alignTop="@+id/family_male"/>
+
+        <TextView
+            android:id="@+id/family_male"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/family_age"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:layout_toRightOf="@+id/family_male"
+            android:layout_alignTop="@+id/family_male"/>
+
+        <ImageView
+            android:id="@+id/change_info"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/family_age"
+            android:layout_alignTop="@+id/family_age"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/change_family"
+            android:contentDescription="change" />
+
+        <ImageView
+            android:id="@+id/delete_info"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toRightOf="@+id/change_info"
+            android:layout_alignTop="@+id/family_age"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/delete_family"
+            android:contentDescription="delete" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_below="@+id/first"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/colorBackground"/>
+
+</RelativeLayout>

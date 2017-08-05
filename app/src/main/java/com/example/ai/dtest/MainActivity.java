@@ -2,14 +2,10 @@ package com.example.ai.dtest;
 
 import android.Manifest;
 import android.animation.AnimatorSet;
-import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Bundle;
@@ -42,7 +38,7 @@ import com.example.ai.dtest.util.MD5;
 import com.example.ai.dtest.util.MacAddressUtils;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.db.OffLineUser;
-import com.example.ai.dtest.data.Userlogininfo;
+import com.example.ai.dtest.data.UserLoginInfo;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
@@ -80,7 +76,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 case HttpUtils.LOGINSUCESS:
                     Bundle login_sucess_bundle= msg.getData();
                     String buf2= login_sucess_bundle.getString("user");
-                    Userlogininfo userlogininfo= gson.fromJson(buf2,Userlogininfo.class);
+                    UserLoginInfo userlogininfo= gson.fromJson(buf2,UserLoginInfo.class);
                     saveOfflineUser(userlogininfo,login_sucess_bundle.getString("token"));
                     MyApplication.setUserPhone(userlogininfo.getUserloginphone());
                     MyApplication.setUserName(login_sucess_bundle.getString("username"));
@@ -299,7 +295,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         String userphoneversion= android.os.Build.VERSION.RELEASE;
         String usermac= MacAddressUtils.getMacAddress(MainActivity.this);
         String userip= MacAddressUtils.getIpAddress(MainActivity.this);
-        Userlogininfo userlogininfo= new Userlogininfo();
+        UserLoginInfo userlogininfo= new UserLoginInfo();
         userlogininfo.setUserloginphone(tryAutoLoginPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserloginlat(latitude_longitude.split(",")[0]);
@@ -335,7 +331,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         String userphoneversion= android.os.Build.VERSION.RELEASE;
         String usermac= MacAddressUtils.getMacAddress(MainActivity.this);
         String userip= MacAddressUtils.getIpAddress(MainActivity.this);
-        Userlogininfo userlogininfo= new Userlogininfo();
+        UserLoginInfo userlogininfo= new UserLoginInfo();
         userlogininfo.setUserloginphone(tryAutoLoginPhone);
         userlogininfo.setUserloginpwd(password);
         userlogininfo.setUserlogintime(date);
@@ -351,7 +347,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         HttpUtils.login(user,handler);
     }
 
-    private void saveOfflineUser(Userlogininfo userlogininfo,String token) {
+    private void saveOfflineUser(UserLoginInfo userlogininfo, String token) {
             OffLineUser user= new OffLineUser();
             user.setToken(token);
             user.setLastLoginTime(userlogininfo.getUserlogintime());

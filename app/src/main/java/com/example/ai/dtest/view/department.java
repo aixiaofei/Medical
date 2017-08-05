@@ -5,15 +5,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ai.dtest.R;
-import com.example.ai.dtest.adapter.departmentAdapter;
+import com.example.ai.dtest.adapter.DepartmentAdapter;
 import com.example.ai.dtest.base.MyApplication;
-import com.example.ai.dtest.data.departmentInfo;
+import com.example.ai.dtest.data.DepartmentInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
@@ -42,9 +40,9 @@ public class department extends basePopwindow {
 
     private TextView select;
 
-    private departmentAdapter firstAdapter;
+    private DepartmentAdapter firstAdapter;
 
-    private departmentAdapter secondAdapter;
+    private DepartmentAdapter secondAdapter;
 
     private TextView departmentFirst;
 
@@ -79,8 +77,8 @@ public class department extends basePopwindow {
                  e.printStackTrace();
             }
         String res= stringBuilder.toString();
-        List<departmentInfo> data = gson.fromJson(res,new TypeToken<List<departmentInfo>>(){}.getType());
-        for(departmentInfo i:data){
+        List<DepartmentInfo> data = gson.fromJson(res,new TypeToken<List<DepartmentInfo>>(){}.getType());
+        for(DepartmentInfo i:data){
             first.add(i.getFirst());
             second_buf.put(i.getFirst(),i.getSecond());
         }
@@ -97,8 +95,8 @@ public class department extends basePopwindow {
         recSecond= (RecyclerView) contentView.findViewById(R.id.rec_second);
         LinearLayoutManager manager1= new LinearLayoutManager(context);
         LinearLayoutManager manager2= new LinearLayoutManager(context);
-        firstAdapter= new departmentAdapter(R.layout.department_item,first);
-        secondAdapter= new departmentAdapter(R.layout.department_item,second);
+        firstAdapter= new DepartmentAdapter(R.layout.department_item,first);
+        secondAdapter= new DepartmentAdapter(R.layout.department_item,second);
         recFirst.setAdapter(firstAdapter);
         recSecond.setAdapter(secondAdapter);
         recFirst.setLayoutManager(manager1);
@@ -110,7 +108,7 @@ public class department extends basePopwindow {
     }
 
     private void initListener(){
-        firstAdapter.setListener(new departmentAdapter.departmentListener() {
+        firstAdapter.setListener(new DepartmentAdapter.departmentListener() {
             @Override
             public void process(int position) {
                 departmentFirst.setText(first.get(position));
@@ -123,7 +121,7 @@ public class department extends basePopwindow {
                 secondAdapter.notifyDataSetChanged();
             }
         });
-        secondAdapter.setListener(new departmentAdapter.departmentListener() {
+        secondAdapter.setListener(new DepartmentAdapter.departmentListener() {
             @Override
             public void process(int position) {
                 departmentSecond.setText(second.get(position));

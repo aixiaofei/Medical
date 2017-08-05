@@ -16,7 +16,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mImmersionBar = ImmersionBar.with(this).statusBarColor(R.color.colorPrimary).fitsSystemWindows(true);
         mImmersionBar.init();   //所有子类都将继承这些相同的属性
-        Log.d("Activity",getClass().getSimpleName());
+        Log.d("ai",getClass().getSimpleName());
         ActivityCollector.addActivity(this);
     }
 

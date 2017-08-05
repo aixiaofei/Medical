@@ -7,7 +7,7 @@ import java.util.List;
  * Created by ai on 2017/8/2.
  */
 
-public class departmentInfo {
+public class DepartmentInfo {
 
     private String first;
     private List<String> second;

@@ -3,7 +3,7 @@ package com.example.ai.dtest.data;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Userinfo implements Serializable{
+public class UerInfo implements Serializable{
 
     private Integer userid;
 

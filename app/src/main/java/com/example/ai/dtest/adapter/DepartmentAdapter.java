@@ -15,7 +15,7 @@ import java.util.List;
  * Created by ai on 2017/8/2.
  */
 
-public class departmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DepartmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<String> mList;
 
@@ -25,7 +25,7 @@ public class departmentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private departmentListener listener;
 
-    public departmentAdapter(int resourceId,List<String> list){
+    public DepartmentAdapter(int resourceId, List<String> list){
         this.resourceId=resourceId;
         mList=list;
     }

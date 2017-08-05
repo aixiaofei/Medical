@@ -5,15 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
-import com.example.ai.dtest.data.Userinfo;
+import com.example.ai.dtest.data.UerInfo;
 import com.example.ai.dtest.util.HttpUtils;
 
 public class InformationShow extends BaseActivity implements View.OnClickListener{
@@ -32,7 +31,7 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
 
     private TextView addressDown;
 
-    private Userinfo info;
+    private UerInfo info;
 
     private Handler handler= new Handler(){
         @Override
@@ -43,7 +42,7 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
                     break;
                 case HttpUtils.GETUSERINFOSUCESS:
                     Bundle bundle= msg.getData();
-                    info = (Userinfo) bundle.getSerializable("info");
+                    info = (UerInfo) bundle.getSerializable("info");
                     setInfo(info);
                     break;
                 default:
@@ -56,7 +55,7 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.information_show);
+        setContentView(R.layout.personl_info_show);
         ImageView back_fig= (ImageView) findViewById(R.id.design_back_fig);
         TextView back_text= (TextView) findViewById(R.id.design_back_text);
         userName = (TextView) findViewById(R.id.enter_name);
@@ -73,7 +72,7 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
         perfect.setOnClickListener(this);
     }
 
-    private void setInfo(Userinfo info){
+    private void setInfo(UerInfo info){
         if(!TextUtils.isEmpty(info.getUsername())){
             userName.setText(info.getUsername());
         }
