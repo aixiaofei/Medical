@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     /*分界面*/
     <LinearLayout
@@ -11,39 +12,41 @@
 
         <TextView
             android:id="@+id/recommend_doctor"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
             android:text="推荐医生"
             android:textSize="14sp"
             android:gravity="center"
             android:clickable="true"
+            android:layout_marginStart="20dp"
             android:textColor="@color/default_text_seclector"/>
 
         <TextView
             android:id="@+id/offices"
-            android:layout_width="100dp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="科室"
             android:clickable="true"
             android:textSize="14sp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:textColor="@color/default_text_seclector"/>
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="日期"
             android:textSize="14sp"
             android:gravity="center"/>
         <TextView
             android:id="@+id/city"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="60dp"
             android:text="城市"
             android:textSize="14sp"
             android:gravity="center"/>
@@ -51,9 +54,10 @@
     /*分界面*/
 
     <View
+        android:id="@+id/split"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#cccccc"
+        android:background="@color/colorBackground"
         android:layout_below="@+id/select"/>
 
 

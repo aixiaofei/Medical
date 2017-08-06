@@ -31,24 +31,25 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HttpUtils {
+    private static final String SOURCEIP= "http://192.168.2.2:8080"; //远程主机IP
     private static final String SERVER_URL_SEND = "https://api.netease.im/sms/sendcode.action";//发送验证码的请求路径URL
     private static final String SERVER_URL_VERIFY = "https://api.netease.im/sms/verifycode.action";//校验验证码的请求路径URL
-    private static final String SERVER_URL_LOGIN = "http://192.168.2.2:8080/internetmedical/user/login.do"; //用户登录接口
-    private static final String SERVER_URL_CANREGISTER= "http://192.168.2.2:8080/internetmedical/user/phonetest"; // 判断是否可注册接口
-    private static final String SERVER_URL_REGISTER = "http://192.168.2.2:8080/internetmedical/user/register"; //用户注册接口
-    private static final String DOCTERUPDATEDEFAULT = "http://192.168.2.2:8080/internetmedical/user/doctors"; //主页面查询接口
-    private static final String DOCTERUPDATEMAP = "http://192.168.2.2:8080/internetmedical/user/mapdoctors"; //地图模式查询接口
-    private static final String PUSHIMAGE = "http://192.168.2.2:8080/internetmedical/user/pullpix"; // 上传图片接口
-    private static final String PULLIMAGE= "http://192.168.2.2:8080/internetmedical/user/pushpix"; //下载图片接口
-    private static final String CHANGENICKNAME= "http://192.168.2.2:8080/internetmedical/user/editusername"; //修改昵称接口
-    private static final String EXITLOGIN= "http://192.168.2.2:8080/internetmedical/user/exit"; //退出登录接口
-    private static final String CANCHANGEPASSWORD= "http://192.168.2.2:8080/internetmedical/user/checkpassword"; //能否修改密码接口
-    private static final String CHANGEPASSWORD= "http://192.168.2.2:8080/internetmedical/user/editpassword"; //修改密码接口
-    private static final String GETUSERINFO= "http://192.168.2.2:8080/internetmedical/user/getinfo"; //获取用户信息接口
-    private static final String PUSHUSERINFO= "http://192.168.2.2:8080/internetmedical/user/editinfo"; //上传用户信息接口
-    private static final String PULLFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/findfamily"; //同步家人信息接口
-    private static final String ADDFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/addfamily"; //添加家人信息接口
-    private static final String DEFAMILYINFO= "http://192.168.2.2:8080/internetmedical/user/deletefamily"; //删除家人信息接口
+    private static final String SERVER_URL_LOGIN = SOURCEIP+"/internetmedical/user/login.do"; //用户登录接口
+    private static final String SERVER_URL_CANREGISTER= SOURCEIP+"/internetmedical/user/phonetest"; // 判断是否可注册接口
+    private static final String SERVER_URL_REGISTER = SOURCEIP+"/internetmedical/user/register"; //用户注册接口
+    private static final String DOCTERUPDATEDEFAULT = SOURCEIP+"/internetmedical/user/doctors"; //主页面查询接口
+    private static final String DOCTERUPDATEMAP = SOURCEIP+"/internetmedical/user/mapdoctors"; //地图模式查询接口
+    private static final String PUSHIMAGE = SOURCEIP+"/internetmedical/user/pullpix"; // 上传图片接口
+    private static final String PULLIMAGE= SOURCEIP+"/internetmedical/user/pushpix"; //下载图片接口
+    private static final String CHANGENICKNAME= SOURCEIP+"/internetmedical/user/editusername"; //修改昵称接口
+    private static final String EXITLOGIN= SOURCEIP+"/internetmedical/user/exit"; //退出登录接口
+    private static final String CANCHANGEPASSWORD= SOURCEIP+"/internetmedical/user/checkpassword"; //能否修改密码接口
+    private static final String CHANGEPASSWORD= SOURCEIP+"/internetmedical/user/editpassword"; //修改密码接口
+    private static final String GETUSERINFO= SOURCEIP+"/internetmedical/user/getinfo"; //获取用户信息接口
+    private static final String PUSHUSERINFO= SOURCEIP+"/internetmedical/user/editinfo"; //上传用户信息接口
+    private static final String PULLFAMILYINFO= SOURCEIP+"/internetmedical/user/findfamily"; //同步家人信息接口
+    private static final String ADDFAMILYINFO= SOURCEIP+"/internetmedical/user/addfamily"; //添加家人信息接口
+    private static final String DEFAMILYINFO= SOURCEIP+"/internetmedical/user/deletefamily"; //删除家人信息接口
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
     private static final String NONCE = "123456";//随机数
@@ -92,7 +93,10 @@ public class HttpUtils {
     public static final int DEFAMILYINFOSU=35; // 删除家人信息成功
 
 
+
+
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
 
     public static void sendMsg(String phone, final Handler handler) throws IOException {
         String curTime = String.valueOf((new Date().getTime() / 1000L));

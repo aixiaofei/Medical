@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ai.dtest.adapter.FamilyAdapter;
@@ -77,15 +78,21 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paint_information);
+
+        ImageView backFig= (ImageView) findViewById(R.id.design_back_fig);
+        TextView backText= (TextView) findViewById(R.id.design_back_text);
+        backFig.setOnClickListener(this);
+        backText.setOnClickListener(this);
+
         recyclerView = (RecyclerView) findViewById(R.id.patient_show);
-        add = (TextView) findViewById(R.id.add_info);
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mList = new ArrayList<>();
         adapter = new FamilyAdapter(this,R.layout.patient_info_show, mList);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+
+        add = (TextView) findViewById(R.id.add_info);
         add.setOnClickListener(this);
-        HttpUtils.pullFamilyInfo(MyApplication.getUserPhone(),handler);
         adapter.setListener(new FamilyAdapter.familyListener() {
             @Override
             public void change(int position) {
@@ -99,11 +106,24 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
                 showDEDialog(info);
             }
         });
+
+        HttpUtils.pullFamilyInfo(MyApplication.getUserPhone(),handler);
     }
 
     @Override
     public void onClick(View view) {
-            showADDDialog();
+        switch (view.getId()){
+            case R.id.design_back_fig:
+                finish();
+                break;
+            case R.id.design_back_text:
+                finish();
+                break;
+            case R.id.add_info:
+                showADDDialog();
+            default:
+                break;
+        }
     }
 
 

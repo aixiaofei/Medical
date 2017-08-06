@@ -77,9 +77,11 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             super.handleMessage(msg);
             switch (msg.what) {
                 case HttpUtils.LOGINFAILURE:
+                    dialog.dismiss();
                     Toast.makeText(Login.this, "登录失败", Toast.LENGTH_SHORT).show();
                     break;
                 case HttpUtils.LOGINSUCESS:
+                    dialog.dismiss();
                     Bundle bundle= msg.getData();
                     String buf_user= bundle.getString("user");
                     Gson gson= new Gson();
@@ -203,17 +205,10 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login:
+                showLoad();
                 tryLogin();
                 break;
             case R.id.forget_password:
-                if(dialog==null){
-                    dialog= new loadDialog(this);
-                    dialog.show();
-                }else if(!dialog.isShowing()){
-                    dialog.show();
-                }else {
-                    dialog.dismiss();
-                }
                 break;
             case R.id.return_register:
                 Intent intent = new Intent(Login.this, Register.class);
@@ -221,6 +216,16 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
                 break;
             default:
                 break;
+        }
+    }
+
+
+    private void showLoad(){
+        if(dialog==null){
+            dialog= new loadDialog(this);
+            dialog.show();
+        }else {
+            dialog.show();
         }
     }
 

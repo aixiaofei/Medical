@@ -45,6 +45,7 @@
     </RelativeLayout>
     /*标题栏设置*/
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/patient_show"
         android:layout_width="match_parent"
@@ -52,8 +53,8 @@
         android:scrollbars="vertical"
         android:scrollbarStyle="outsideOverlay"
         android:layout_below="@+id/information_top">
-
     </android.support.v7.widget.RecyclerView>
+
 
     <TextView
         android:id="@+id/add_info"

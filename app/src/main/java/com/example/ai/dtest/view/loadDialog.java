@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 
 import com.example.ai.dtest.R;
 
@@ -16,7 +17,11 @@ public class loadDialog extends Dialog {
     private load loading;
 
     public loadDialog(@NonNull Context context) {
-        super(context, R.style.loadDialog);
+        super(context, R.style.loadDialogP);
+    }
+
+    public loadDialog(@NonNull Context context, @StyleRes int themeResId) {
+        super(context, themeResId);
     }
 
     @Override
@@ -24,8 +29,8 @@ public class loadDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
         loading= (load) findViewById(R.id.load);
-//        setCanceledOnTouchOutside(false);
-//        setCancelable(false);
+        setCanceledOnTouchOutside(false);
+        setCancelable(true);
     }
 
     @Override

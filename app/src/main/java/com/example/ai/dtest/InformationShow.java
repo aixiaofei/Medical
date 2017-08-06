@@ -1,5 +1,6 @@
 package com.example.ai.dtest;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,11 +66,16 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
         age= (TextView) findViewById(R.id.select_age);
         addressTop = (TextView) findViewById(R.id.addressTop);
         addressDown= (TextView) findViewById(R.id.addressDown);
-        HttpUtils.getUserInfo(MyApplication.getUserPhone(),handler);
         Button perfect= (Button) findViewById(R.id.perfect);
         back_fig.setOnClickListener(this);
         back_text.setOnClickListener(this);
         perfect.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        HttpUtils.getUserInfo(MyApplication.getUserPhone(),handler);
     }
 
     private void setInfo(UerInfo info){
@@ -106,8 +112,8 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.perfect:
-                InformationDesign.actionStart(this,info);
-                finish();
+                Intent intent= new Intent(this,InformationDesign.class);
+                startActivity(intent);
                 break;
             default:
                 break;

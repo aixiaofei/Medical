@@ -203,15 +203,16 @@
             android:layout_marginLeft="15dp"
             android:text="性别"/>
 
-        <Spinner
+        <TextView
+            android:id="@+id/select_sex"
             android:layout_marginLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="15dp"
-            android:id="@+id/select_sex"
-            android:entries="@array/sex_choose"
-            android:dropDownVerticalOffset="40dp"/>
+            android:text="请选择性别"
+            android:textSize="15sp"/>
     </LinearLayout>
     /*性别设置*/
 
@@ -244,8 +245,8 @@
 
         <ImageView
             android:id="@+id/select_address"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:background="@drawable/more"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"/>

@@ -204,9 +204,9 @@ public class load extends View {
             float eBaseX= (float) (R + M + Math.sqrt(Math.pow(R, 2.0) - Math.pow((R+M-circleH), 2.0)));
             float baseY= circleH;
             circlePath.moveTo(sBaseX,baseY);
-            float C1_X= (float) (sBaseX+Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/2);
+            float C1_X= (float) (sBaseX+Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/3*2);
             float C1_Y= circleH-R*1/4;
-            float C2_X= (float) (eBaseX-Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/2);
+            float C2_X= (float) (eBaseX-Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/3*2);
             float C2_Y= circleH+R*1/4;
             circlePath.cubicTo(C1_X,C1_Y,C2_X,C2_Y,eBaseX,baseY);
 //            circlePath.lineTo(eBaseX,baseY);

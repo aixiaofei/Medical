@@ -1,5 +1,8 @@
 package com.example.ai.dtest.frag;
 
+import android.animation.ObjectAnimator;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
@@ -26,6 +31,7 @@ import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.EndLessOnScrollListener;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.view.department;
+import com.example.ai.dtest.view.loadDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -67,6 +73,10 @@ public class DoctorList extends Fragment implements View.OnClickListener{
 
     private String dept;
 
+    private loadDialog dialog;
+
+    private View split;
+
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -81,6 +91,9 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                     }
                     break;
                 case HttpUtils.UPDATESUCCESS:
+                    if(dialog.isShowing()){
+                        dialog.dismiss();
+                    }
                     if(isClick){
                         mList.clear();
                         Bundle update_bundle= msg.getData();
@@ -132,6 +145,9 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.doctor_frag,container,false);
+
+        split= view.findViewById(R.id.split);
+
         refreshLayout= (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         refreshLayout.setColorSchemeResources(R.color.colorPrimary);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -150,7 +166,7 @@ public class DoctorList extends Fragment implements View.OnClickListener{
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         footView= LayoutInflater.from(getContext()).inflate(R.layout.foot,recyclerView,false);
-        adapter.setFootView(footView);
+        dialog= new loadDialog(getContext());
         isClick=true;
         update();
         return view;
@@ -171,8 +187,10 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     }
 
     private void update(){
+        if(isClick && !isRefresh){
+            dialog.show();
+        }
         adapter.clearFootView();
-        Log.d("ai", "update");
         defaultUpdate();
     }
 
@@ -230,7 +248,7 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                 selectDepart.setContentView(target);
                 selectDepart.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                 selectDepart.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-                selectDepart.showAsDropDown(office);
+                selectDepart.showAsDropDown(split);
                 selectDepart.setListener(new department.departmentListener() {
                     @Override
                     public void getResult(String result) {
@@ -270,6 +288,7 @@ public class DoctorList extends Fragment implements View.OnClickListener{
             }
         }
     }
+
 
     private class defaultInfo{
         String lat;

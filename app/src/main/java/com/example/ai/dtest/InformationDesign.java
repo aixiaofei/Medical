@@ -2,6 +2,7 @@ package com.example.ai.dtest;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,12 +25,25 @@ import android.widget.Toast;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.UerInfo;
+import com.example.ai.dtest.db.City;
+import com.example.ai.dtest.db.Country;
+import com.example.ai.dtest.db.Province;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
+import com.example.ai.dtest.view.loadDialog;
+import com.example.ai.dtest.view.locationDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lljjcoder.citypickerview.widget.CityPicker;
+
+import org.litepal.crud.DataSupport;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +56,7 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
 
     private EditText identify;
 
-    private Spinner sex;
+    private TextView sex;
 
     private TextView addressTop;
 
@@ -65,11 +80,24 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
 
     private ProgressDialog dialog;
 
+    private locationDialog lDialog;
+
+    private boolean isEnd= false;
+
+    private UerInfo info;
+
     private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
+                case HttpUtils.GETUSERINFOFAILURE:
+                    break;
+                case HttpUtils.GETUSERINFOSUCESS:
+                    Bundle bundle= msg.getData();
+                    info = (UerInfo) bundle.getSerializable("info");
+                    setInfo(info);
+                    break;
                 case HttpUtils.PUSHINFOFAILURE:
                     dialog.cancel();
                     Toast.makeText(InformationDesign.this, "上传失败", Toast.LENGTH_LONG).show();
@@ -98,6 +126,9 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
                 case secondFigCompleted:
                     identifyFig.add(identifyPath + File.separator + MyApplication.getUserPhone() + "down.png");
                     break;
+                case 100:
+                    isEnd=true;
+                    break;
                 default:
                     break;
             }
@@ -108,11 +139,9 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.person_info_design);
-        Intent intent= getIntent();
-        UerInfo info= (UerInfo) intent.getSerializableExtra("info");
         userName= (EditText) findViewById(R.id.enter_name);
         identify= (EditText) findViewById(R.id.enter_identify);
-        sex= (Spinner) findViewById(R.id.select_sex);
+        sex= (TextView) findViewById(R.id.select_sex);
         addressTop= (TextView) findViewById(R.id.address_top);
         addressDown= (EditText) findViewById(R.id.address_down);
         addIdentify= (ImageView) findViewById(R.id.add_identify);
@@ -124,36 +153,53 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         Button nextStep= (Button) findViewById(R.id.next_step);
         backFig.setOnClickListener(this);
         backText.setOnClickListener(this);
+        sex.setOnClickListener(this);
         addIdentify.setOnClickListener(this);
+        addressTop.setOnClickListener(this);
         selectAddress.setOnClickListener(this);
         nextStep.setOnClickListener(this);
-        if(info!=null) {
-            if (!TextUtils.isEmpty(info.getUsername())) {
-                userName.setText(info.getUsername());
-            }
-            if (!TextUtils.isEmpty(info.getUsercardnum())) {
-                identify.setText(info.getUsercardnum());
-            }
-            if (!TextUtils.isEmpty(info.getUsermale())) {
-                if (info.getUsermale().equals("男")) {
-                    sex.setSelection(0);
-                } else {
-                    sex.setSelection(1);
-                }
-            }
-            if (!TextUtils.isEmpty(info.getUseradr())) {
-                String top = info.getUseradr().split("\\|")[0];
-                String down = info.getUseradr().split("\\|")[1];
-                addressTop.setText(top);
-                addressDown.setText(down);
-            }
+        initData();
+        HttpUtils.getUserInfo(MyApplication.getUserPhone(),handler);
+    }
+
+    private void setInfo(UerInfo info){
+        if(!TextUtils.isEmpty(info.getUsername())){
+            userName.setText(info.getUsername());
+        }
+        if(!TextUtils.isEmpty(info.getUsercardnum())){
+            identify.setText(info.getUsercardnum());
+        }
+        if(!TextUtils.isEmpty(info.getUsermale())){
+            sex.setText(info.getUsermale());
+        }
+        if(!TextUtils.isEmpty(info.getUseradr())){
+            String[] test= info.getUseradr().split("\\|");
+            addressTop.setText(test[0]);
+            addressDown.setText(test[1]);
         }
     }
 
-    public static void actionStart(Context context, UerInfo userinfo){
-        Intent intent= new Intent(context,InformationDesign.class);
-        intent.putExtra("info",userinfo);
-        context.startActivity(intent);
+    private void initData() {
+        final List<Province> provinces = DataSupport.findAll(Province.class);
+        final List<City> cities = DataSupport.findAll(City.class);
+        final List<Country> countries = DataSupport.findAll(Country.class);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(provinces.isEmpty()) {
+                    handleProvince();
+                }
+                if(cities.isEmpty()) {
+                    handleCity();
+                }
+                if(countries.isEmpty()) {
+                    handleCountry();
+                }
+                Message message = new Message();
+                message.what= 100;
+                handler.sendMessage(message);
+            }
+        }).start();
     }
 
     @Override
@@ -173,15 +219,60 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
             case R.id.add_identify:
                 captureIdentify();
                 break;
+            case R.id.address_top:
+                if(!isEnd){
+                    Toast.makeText(this,"数据正在初始化...",Toast.LENGTH_SHORT).show();
+                }else {
+                    showLocationDialog();
+                }
+                break;
             case R.id.select_address:
-                showCityPicker();
+                if(!isEnd){
+                    Toast.makeText(this,"数据正在初始化...",Toast.LENGTH_SHORT).show();
+                }else {
+                    showLocationDialog();
+                }
                 break;
             case R.id.next_step:
                 canNextStep();
                 break;
+            case R.id.select_sex:
+                showDialog();
+                break;
             default:
                 break;
         }
+    }
+
+    private void showLocationDialog(){
+        if(lDialog==null){
+            lDialog= new locationDialog(this);
+        }
+        lDialog.setListener(new locationDialog.selectLocationListener() {
+            @Override
+            public void complete(String location) {
+                lDialog.dismiss();
+                addressTop.setText(location);
+            }
+        });
+        lDialog.show();
+    }
+
+    private void showDialog(){
+        String[] items={"男","女"};
+        AlertDialog dialog = new AlertDialog.Builder(this,R.style.myDialog).setTitle("选择性别")
+                .setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which==0){
+                            sex.setText("男");
+                        }else {
+                            sex.setText("女");
+                        }
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
 
     private void captureIdentify(){
@@ -311,9 +402,8 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         info.setUsername(userName.getText().toString());
         info.setUsercardnum(identify.getText().toString());
         String age= FormatCheckUtils.returnAge(identify.getText().toString());
-//        Log.d("ai",age);
         info.setUserage(age);
-        info.setUsermale(sex.getSelectedItem().toString());
+        info.setUsermale(sex.getText().toString());
         String address= addressTop.getText().toString()+"|"+addressDown.getText().toString();
         info.setUseradr(address);
         info.setUserphone(MyApplication.getUserPhone());
@@ -326,42 +416,69 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
     }
 
 
-
-
-    private void showCityPicker(){
-        CityPicker cityPicker = new CityPicker.Builder(InformationDesign.this)
-                .textSize(15)
-                .title("地址选择")
-                .titleBackgroundColor("#6393FF")
-                .titleTextColor("#000000")
-                .backgroundPop(0x00ffffff)
-                .confirTextColor("#000000")
-                .cancelTextColor("#000000")
-                .province("安徽省")
-                .city("合肥市")
-                .district("蜀山区")
-                .textColor(Color.parseColor("#000000"))
-                .provinceCyclic(true)
-                .cityCyclic(false)
-                .districtCyclic(false)
-                .visibleItemsCount(7)
-                .itemPadding(10)
-                .onlyShowProvinceAndCity(false)
-                .build();
-        cityPicker.show();
-        cityPicker.setOnCityItemClickListener(new CityPicker.OnCityItemClickListener() {
-            @Override
-            public void onSelected(String... citySelected) {
-                String province = citySelected[0];
-                String city = citySelected[1];
-                String district = citySelected[2];
-                addressTop.setText(province+"-"+city+"-"+district);
+    private void handleProvince(){
+        try {
+            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.provinces));
+            BufferedReader reader = new BufferedReader(is);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
             }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(InformationDesign.this, "已取消", Toast.LENGTH_LONG).show();
+            is.close();
+            reader.close();
+            String res= stringBuilder.toString();
+            Gson gson= new Gson();
+            List<Province> data= gson.fromJson(res,new TypeToken<List<Province>>(){}.getType());
+            for (Province province : data) {
+                province.save();
             }
-        });
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCity(){
+        try {
+            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.cities));
+            BufferedReader reader = new BufferedReader(is);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            is.close();
+            reader.close();
+            String res= stringBuilder.toString();
+            Gson gson= new Gson();
+            List<City> data= gson.fromJson(res,new TypeToken<List<City>>(){}.getType());
+            for(City city:data){
+                city.save();
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void handleCountry(){
+        try {
+            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.areas));
+            BufferedReader reader = new BufferedReader(is);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            is.close();
+            reader.close();
+            String res= stringBuilder.toString();
+            Gson gson= new Gson();
+            List<Country> data= gson.fromJson(res,new TypeToken<List<Country>>(){}.getType());
+            for(Country country:data){
+                country.save();
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

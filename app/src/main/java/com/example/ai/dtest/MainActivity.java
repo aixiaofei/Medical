@@ -152,7 +152,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onBackPressed();
         ActivityCollector.finishAll();
         ImgUtils.recycleBitmap(MyApplication.getBitmap());
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override
