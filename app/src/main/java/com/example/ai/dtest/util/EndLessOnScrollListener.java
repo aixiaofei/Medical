@@ -34,14 +34,14 @@ public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListe
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        Log.d("ai","11");
+//        Log.d("ai","11");
         visibleItemCount = recyclerView.getChildCount();
         totalItemCount = mLinearLayoutManager.getItemCount();
         firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
         if(loading){
-            Log.d("ai","firstVisibleItem: " +firstVisibleItem);
-            Log.d("ai","totalPageCount:" +totalItemCount);
-            Log.d("ai", "visibleItemCount:" + visibleItemCount);
+//            Log.d("ai","firstVisibleItem: " +firstVisibleItem);
+//            Log.d("ai","totalPageCount:" +totalItemCount);
+//            Log.d("ai", "visibleItemCount:" + visibleItemCount);
             if(totalItemCount > previousTotal){
                 //说明数据已经加载结束
                 loading = false;
@@ -56,7 +56,7 @@ public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListe
     }
 
     /**
-     * 提供一个抽闲方法，在Activity中监听到这个EndLessOnScrollListener
+     * 提供一个抽象方法，在Activity中监听到这个EndLessOnScrollListener
      * 并且实现这个方法
      * */
     public abstract void onLoadMore();

@@ -1,7 +1,9 @@
 package com.example.ai.dtest;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,10 +22,17 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baidu.android.pushservice.BasicPushNotificationBuilder;
+import com.baidu.android.pushservice.CustomPushNotificationBuilder;
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
+import com.baidu.android.pushservice.PushNotificationBuilder;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.bumptech.glide.load.engine.Resource;
 import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.FormatCheckUtils;
@@ -39,7 +49,9 @@ import com.example.ai.dtest.view.okView;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Login extends BaseActivity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener {
 
@@ -90,6 +102,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
                     MyApplication.setUserPhone(userlogininfo.getUserloginphone());
                     MyApplication.setUserName(bundle.getString("username"));
                     Toast.makeText(Login.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    startPushService();
                     Intent intent = new Intent(Login.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -105,6 +118,18 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         intent.putExtra("userName",user);
         intent.putExtra("password",password);
         context.startActivity(intent);
+    }
+
+    private void startPushService(){
+        BasicPushNotificationBuilder cBuilder= new BasicPushNotificationBuilder();
+        cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
+        cBuilder.setNotificationDefaults(Notification.DEFAULT_VIBRATE);
+        cBuilder.setStatusbarIcon(R.drawable.notification);
+        PushManager.setNotificationBuilder(getApplicationContext(),1,cBuilder);
+        List<String> tags= new ArrayList<>();
+        tags.add("安大");
+        PushManager.setTags(getApplicationContext(),tags);
+        PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "GnIsxXgAHX6U2NsyMgP91o3n");
     }
 
     @Override

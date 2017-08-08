@@ -8,9 +8,10 @@
         android:id="@+id/user_Line"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:layout_centerInParent="true"
         android:background="@drawable/account_password_background"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/return_register">
 
         <ImageView
             android:id="@+id/account"
@@ -27,6 +28,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:layout_marginEnd="10dp"
+            android:maxLines="1"
             android:background="@drawable/none_border_background"
             android:gravity="bottom"
             android:hint="手机号码"
@@ -66,6 +68,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:maxLines="1"
             android:background="@drawable/none_border_background"
             android:gravity="bottom"
             android:hint="密码"
@@ -76,7 +79,7 @@
 
         <com.example.ai.dtest.view.eye
             android:id="@+id/eye"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"

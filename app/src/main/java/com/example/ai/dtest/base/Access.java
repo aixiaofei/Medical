@@ -3,11 +3,9 @@ package com.example.ai.dtest.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
-
 import com.example.ai.dtest.Login;
 import com.example.ai.dtest.MainActivity;
 import com.example.ai.dtest.db.OffLineUser;
-
 import org.litepal.crud.DataSupport;
 
 

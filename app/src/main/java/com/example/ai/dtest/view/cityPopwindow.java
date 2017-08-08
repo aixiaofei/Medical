@@ -1,17 +1,17 @@
 package com.example.ai.dtest.view;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -27,13 +27,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
+
 /**
- * Created by ai on 2017/8/5.
+ * Created by ai on 2017/8/6.
  */
 
-public class locationDialog extends Dialog implements View.OnClickListener{
+public class cityPopwindow extends basePopwindow implements View.OnClickListener{
 
     private RecyclerView recFirst;
 
@@ -67,7 +69,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
 
     private Context context;
 
-    private selectLocationListener listener;
+    private locationDialog.selectLocationListener listener;
 
     private LocationClient client;
 
@@ -75,7 +77,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
 
     private boolean auto;
 
-    public void setListener(selectLocationListener listener){
+    public void setListener(locationDialog.selectLocationListener listener){
         this.listener= listener;
     }
 
@@ -83,7 +85,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what==HttpUtils.GETLOCATIONSU) {
+            if(msg.what== HttpUtils.GETLOCATIONSU) {
                 Bundle bundle = msg.getData();
                 Gson gson = new Gson();
                 String res = bundle.getString("result");
@@ -120,21 +122,17 @@ public class locationDialog extends Dialog implements View.OnClickListener{
         }
     };
 
-    public locationDialog(@NonNull Context context) {
-        super(context,R.style.myDialog);
-        this.context= context;
+    public cityPopwindow(Context context) {
+        super(context);
+        this.context=context;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.location);
-        setCanceledOnTouchOutside(false);
-        setCancelable(true);
-
-        recFirst= findViewById(R.id.rec_first);
-        recSecond= findViewById(R.id.rec_second);
-        recThird= findViewById(R.id.rec_third);
+    public void setContentView(View contentView) {
+        super.setContentView(contentView);
+        recFirst= contentView.findViewById(R.id.rec_first);
+        recSecond= contentView.findViewById(R.id.rec_second);
+        recThird= contentView.findViewById(R.id.rec_third);
 
         provinceList= new ArrayList<>();
         cityList= new ArrayList<>();
@@ -156,12 +154,12 @@ public class locationDialog extends Dialog implements View.OnClickListener{
         recSecond.setAdapter(adapterSrcond);
         recThird.setAdapter(adapterThird);
 
-        province= findViewById(R.id.province);
-        city= findViewById(R.id.city);
-        country= findViewById(R.id.country);
+        province= contentView.findViewById(R.id.province);
+        city= contentView.findViewById(R.id.city);
+        country= contentView.findViewById(R.id.country);
 
-        autoLocation= findViewById(R.id.auto_location);
-        TextView select = findViewById(R.id.select);
+        autoLocation= contentView.findViewById(R.id.auto_location);
+        TextView select = contentView.findViewById(R.id.select);
         autoLocation.setOnClickListener(this);
         select.setOnClickListener(this);
 
@@ -180,7 +178,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
         client.start();
     }
 
-    private class LocationListener implements BDLocationListener{
+    private class LocationListener implements BDLocationListener {
         @Override
         public void onConnectHotSpotMessage(String s, int i) {
         }
@@ -219,10 +217,10 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                 adapterFirst.notifyDataSetChanged();
                 adapterSrcond.setCurrentPostion(-1);
                 adapterSrcond.notifyDataSetChanged();
-
                 if(!countryList.isEmpty()){
                     countryList.clear();
                     adapterThird.notifyDataSetChanged();
+
                 }
                 queryCity();
             }
@@ -320,9 +318,4 @@ public class locationDialog extends Dialog implements View.OnClickListener{
             HttpUtils.getLocation(selectCity.getCitycode(),handler);
         }
     }
-
-    public interface selectLocationListener{
-        void complete(String location);
-    }
-
 }

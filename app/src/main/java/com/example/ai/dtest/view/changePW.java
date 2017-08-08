@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.base.MyApplication;
@@ -68,7 +69,7 @@ public class changePW extends Dialog implements View.OnClickListener{
     }
 
     public changePW(Context context) {
-        super(context,R.style.changePW);
+        super(context, R.style.changePW);
         this.context=context;
     }
 

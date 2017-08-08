@@ -3,9 +3,11 @@ package com.example.ai.dtest;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Bundle;
@@ -18,12 +20,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baidu.android.pushservice.BasicPushNotificationBuilder;
+import com.baidu.android.pushservice.CustomPushNotificationBuilder;
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -53,13 +61,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private LocationClient client;
 
-    private TextView map_text;
-
-    private ImageView map_fig;
-
     private ImageButton homePageFig;
 
     private TextView homePageText;
+
+    private ImageView mapFig;
+
+    private TextView mapText;
 
     private int tag=0;
 
@@ -80,11 +88,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     saveOfflineUser(userlogininfo,login_sucess_bundle.getString("token"));
                     MyApplication.setUserPhone(userlogininfo.getUserloginphone());
                     MyApplication.setUserName(login_sucess_bundle.getString("username"));
+                    startPushService();
                     break;
                 case HttpUtils.LOGINFAILURE:
                     Toast.makeText(MainActivity.this,"请重新登录",Toast.LENGTH_SHORT).show();
                     clearInfo();
                     Login.actionStart(MainActivity.this,tryAutoLoginPhone,null);
+                    if(PushManager.isPushEnabled(getApplicationContext())){
+                        PushManager.stopWork(getApplicationContext());
+                    }
                     break;
                 default:
                     break;
@@ -92,12 +104,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     };
 
+    private void startPushService(){
+        BasicPushNotificationBuilder cBuilder= new BasicPushNotificationBuilder();
+        cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
+        cBuilder.setNotificationDefaults(Notification.DEFAULT_VIBRATE);
+        cBuilder.setStatusbarIcon(R.drawable.notification);
+        PushManager.setNotificationBuilder(getApplicationContext(),1,cBuilder);
+        List<String> tags= new ArrayList<>();
+        tags.add("安大");
+        PushManager.setTags(getApplicationContext(),tags);
+        PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "GnIsxXgAHX6U2NsyMgP91o3n");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_design);
-        map_fig = (ImageView) findViewById(R.id.map_fig);
-        map_text = (TextView) findViewById(R.id.map_text);
+
+        mapFig= (ImageView) findViewById(R.id.map_fig);
+        mapText=(TextView) findViewById(R.id.map_text);
+        mapFig.setOnClickListener(this);
+        mapText.setOnClickListener(this);
 
         homePageFig= (ImageButton) findViewById(R.id.home_page_pic);
         Drawable src = homePageFig.getBackground();
@@ -111,8 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         Button myPage= (Button) findViewById(R.id.my_page_pic);
         myPage.setOnClickListener(this);
-        map_fig.setOnClickListener(this);
-        map_text.setOnClickListener(this);
+
         List<String> permissionList = new ArrayList<>();
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
@@ -131,6 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             init();
         }
     }
+
 
     @Override
     protected void onStart() {
@@ -364,8 +391,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private void goHomePage(){
         if(tag==1){
-            map_fig.setVisibility(View.VISIBLE);
-            map_text.setText(MAP);
+            mapFig.setVisibility(View.VISIBLE);
+            mapText.setText(MAP);
         }
         startAnima(homePageFig);
         homePageText.setSelected(true);
@@ -374,9 +401,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void goMap(){
-        if(map_text.getText().toString().equals(MAP)) {
-            map_fig.setVisibility(View.INVISIBLE);
-            map_text.setText(LIST);
+        if(mapText.getText().toString().equals(MAP)) {
+            mapFig.setVisibility(View.INVISIBLE);
+            mapText.setText(LIST);
             if(tag==0) {
                 stopAnima(homePageFig);
                 homePageText.setSelected(false);
@@ -384,8 +411,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             addFragment(new Map());
             tag=1;
         }else {
-            map_fig.setVisibility(View.VISIBLE);
-            map_text.setText(MAP);
+            mapFig.setVisibility(View.VISIBLE);
+            mapText.setText(MAP);
             goHomePage();
         }
     }

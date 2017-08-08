@@ -1,8 +1,5 @@
 package com.example.ai.dtest.frag;
 
-import android.animation.ObjectAnimator;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,13 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
@@ -30,8 +23,10 @@ import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.EndLessOnScrollListener;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.view.cityPopwindow;
 import com.example.ai.dtest.view.department;
 import com.example.ai.dtest.view.loadDialog;
+import com.example.ai.dtest.view.locationDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
@@ -54,6 +49,8 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     private SwipeRefreshLayout refreshLayout;
 
     private TextView recommendDoctor;
+
+    private TextView city;
 
     private TextView office;
 
@@ -156,8 +153,10 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                 refreshDoctor();
             }
         });
+
         office= (TextView) view.findViewById(R.id.offices);
         office.setOnClickListener(this);
+
         recommendDoctor= (TextView) view.findViewById(R.id.recommend_doctor);
         recommendDoctor.setOnClickListener(this);
         recommendDoctor.setSelected(true);
@@ -165,7 +164,12 @@ public class DoctorList extends Fragment implements View.OnClickListener{
         linearLayoutManager= new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        footView= LayoutInflater.from(getContext()).inflate(R.layout.foot,recyclerView,false);
+
+        city= view.findViewById(R.id.city);
+        city.setOnClickListener(this);
+
+        footView= LayoutInflater.from(getContext()).inflate(R.layout.loading,recyclerView,false);
+
         dialog= new loadDialog(getContext());
         isClick=true;
         update();
@@ -238,9 +242,14 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                 page=1;
                 tag=0;
                 recommendDoctor.setSelected(true);
+                update();
+
                 office.setText("科室");
                 office.setSelected(false);
-                update();
+
+                city.setText("城市");
+                city.setSelected(false);
+
                 break;
             case R.id.offices:
                 final View target= LayoutInflater.from(getContext()).inflate(R.layout.department,null);
@@ -252,25 +261,51 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                 selectDepart.setListener(new department.departmentListener() {
                     @Override
                     public void getResult(String result) {
+                        if(selectDepart.isShowing()){
+                            selectDepart.dismiss();
+                        }
                         String[] buf= result.split(",");
                         if(buf.length==1){
                             office.setText(buf[0]);
                             office.setSelected(true);
-                            recommendDoctor.setSelected(false);
                             dept=buf[0];
                         }else {
                             office.setText(buf[1]);
                             office.setSelected(true);
-                            recommendDoctor.setSelected(false);
                             dept=buf[1];
-                        }
-                        if(selectDepart.isShowing()){
-                            selectDepart.dismiss();
                         }
                         isClick=true;
                         page=1;
                         tag=1;
                         update();
+
+                        recommendDoctor.setSelected(false);
+                        city.setText("城市");
+                        city.setSelected(false);
+                    }
+                });
+                break;
+            case R.id.city:
+                final View cityView= LayoutInflater.from(getContext()).inflate(R.layout.location,null);
+                final cityPopwindow cityPopwindowShow = new cityPopwindow(getContext());
+                cityPopwindowShow.setContentView(cityView);
+                cityPopwindowShow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                cityPopwindowShow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                cityPopwindowShow.showAsDropDown(split);
+                cityPopwindowShow.setListener(new locationDialog.selectLocationListener() {
+                    @Override
+                    public void complete(String location) {
+                        if(cityPopwindowShow.isShowing()){
+                            cityPopwindowShow.dismiss();
+                        }
+
+                        String[] bufLocation= location.split("-");
+                        city.setText(bufLocation[bufLocation.length-1]);
+                        city.setSelected(true);
+
+                        recommendDoctor.setSelected(false);
+                        office.setText("科室");
+                        office.setSelected(false);
                     }
                 });
                 break;

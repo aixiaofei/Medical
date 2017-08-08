@@ -1,15 +1,21 @@
 package com.example.ai.dtest.adapter;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
+import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.view.load;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -19,6 +25,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    private static final String IMAGEURI= HttpUtils.SOURCEIP+ "/internetmedical/user/getdoctorpix/";
 
     private static final int TYPE_FOOT=0;
 
@@ -81,7 +89,6 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private static class footViewHolder extends RecyclerView.ViewHolder {
-
         footViewHolder(View itemView) {
             super(itemView);
         }
@@ -90,6 +97,8 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType==TYPE_FOOT){
+            load loading = footView.findViewById(R.id.load);
+            loading.loadAnima();
             return new footViewHolder(footView);
         }else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info, parent, false);
@@ -102,7 +111,7 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(holder1 instanceof normalViewHolder){
             DoctorCustom docter= mList.get(position);
             normalViewHolder holder= (normalViewHolder) holder1;
-            Glide.with(MyApplication.getContext()).load(R.drawable.defaultuserimage).into(holder.docter_fig);
+            loadImage(holder.docter_fig,docter.getDocloginid());
             holder.docter_name.setText(docter.getDocname());
             holder.docter_age.setText(docter.getDocage().toString());
             holder.docter_keshi.setText(docter.getDocdept());
@@ -115,6 +124,15 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 holder.docter_distance.setText(new DecimalFormat("0").format(distance)+"m");
             }
         }
+    }
+
+    private void loadImage(CircleImageView imageView,int doctorId){
+        Uri uri= Uri.parse(IMAGEURI+doctorId);
+        Glide.with(MyApplication.getContext())
+                .load(uri)
+                .error(R.drawable.defaultuserimage)
+                .diskCacheStrategy(DiskCacheStrategy.NONE )
+                .into(imageView);
     }
 
     @Override

@@ -10,7 +10,9 @@ import java.util.Date;
 
 public class DoctorCustom implements Serializable{
 
-	private Integer docid;
+	private int docid;
+
+	private int docloginid;
 
 	private String docname;
 
@@ -52,13 +54,22 @@ public class DoctorCustom implements Serializable{
 
 	private String distance;
 
-	public Integer getDocid() {
+	public int getDocid() {
 		return docid;
 	}
 
-	public void setDocid(Integer docid) {
+	public void setDocid(int docid) {
 		this.docid = docid;
 	}
+
+	public int getDocloginid() {
+		return docloginid;
+	}
+
+	public void setDocloginid(int docloginid) {
+		this.docloginid = docloginid;
+	}
+
 
 	public String getDocname() {
 		return docname;

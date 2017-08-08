@@ -8,6 +8,6 @@ public class ImageTest extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        HttpUtils.putImage("5564516");
+
     }
 }

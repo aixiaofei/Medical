@@ -6,12 +6,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.ImgUtils;
 import com.example.ai.dtest.view.changePW;
@@ -54,6 +57,9 @@ public class AccountManagement extends BaseActivity implements View.OnClickListe
                     clearUserInfo();
                     ImgUtils.recycleBitmap(MyApplication.getBitmap());
                     MyApplication.setBitmap(null);
+                    if(PushManager.isPushEnabled(getApplicationContext())){
+                        PushManager.stopWork(getApplicationContext());
+                    }
                     Login.actionStart(AccountManagement.this,MyApplication.getUserPhone(),"");
                     finish();
                     break;
@@ -139,8 +145,8 @@ public class AccountManagement extends BaseActivity implements View.OnClickListe
 
     private void showChagngeDialog() {
         final EditText editText = new EditText(AccountManagement.this);
-        AlertDialog.Builder inputDialog = new AlertDialog.Builder(AccountManagement.this);
-        inputDialog.setTitle("请输入昵称").setView(editText);
+        AlertDialog.Builder inputDialog = new AlertDialog.Builder(AccountManagement.this,R.style.myDialog);
+        inputDialog.setTitle("请输入昵称").setView(editText,60,0,60,0);
         inputDialog.setPositiveButton("确定",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

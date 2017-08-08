@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
     <dbname value="User" />
-    <version value="2" />
+    <version value="3" />
     <list>
         <mapping class="com.example.ai.dtest.db.OffLineUser"/>
         <mapping class="com.example.ai.dtest.db.Province"/>
         <mapping class="com.example.ai.dtest.db.City"/>
         <mapping class="com.example.ai.dtest.db.Country"/>
     </list>
+
 </litepal>

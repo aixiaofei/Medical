@@ -9,12 +9,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
-
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.data.FamilyInfo;
 import com.example.ai.dtest.data.UerInfo;
+import com.example.ai.dtest.db.Province;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class HttpUtils {
-    private static final String SOURCEIP= "http://192.168.2.2:8080"; //远程主机IP
+    public static final String SOURCEIP= "http://192.168.2.2:8080"; //远程主机IP
     private static final String SERVER_URL_SEND = "https://api.netease.im/sms/sendcode.action";//发送验证码的请求路径URL
     private static final String SERVER_URL_VERIFY = "https://api.netease.im/sms/verifycode.action";//校验验证码的请求路径URL
     private static final String SERVER_URL_LOGIN = SOURCEIP+"/internetmedical/user/login.do"; //用户登录接口
@@ -50,6 +51,9 @@ public class HttpUtils {
     private static final String PULLFAMILYINFO= SOURCEIP+"/internetmedical/user/findfamily"; //同步家人信息接口
     private static final String ADDFAMILYINFO= SOURCEIP+"/internetmedical/user/addfamily"; //添加家人信息接口
     private static final String DEFAMILYINFO= SOURCEIP+"/internetmedical/user/deletefamily"; //删除家人信息接口
+    private static final String GETLOCATION = SOURCEIP + "/internetmedical/user/findcities"; // 查询位置信息接口
+    private static final String PUSHCHANNELID = SOURCEIP + "/internetmedical/user/pullhannelId"; // 推送客户端ID接口
+
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
     private static final String NONCE = "123456";//随机数
@@ -91,7 +95,9 @@ public class HttpUtils {
     public static final int ADDFAMILYINFOSU=33; // 添加家人信息成功
     public static final int DEFAMILYINFOFA=34; // 删除家人信息失败
     public static final int DEFAMILYINFOSU=35; // 删除家人信息成功
-
+    public static final int GETLOCATIONSU=36; //获取位置信息成功
+    public static final int PUSHCHANNELIDFA=37;  // 推送客户端ID失败
+    public static final int PUSHCHANNELIDSU= 38; // 推送客户端ID成功
 
 
 
@@ -793,5 +799,73 @@ public class HttpUtils {
 
     private static class Id{
         String id;
+    }
+
+    //查询位置信息
+    public static void getLocation(String code,final Handler handler){
+        Gson gson =new Gson();
+        ParentCode parentcode= new ParentCode();
+        parentcode.parentcode=code;
+        String res= gson.toJson(parentcode);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(GETLOCATION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                location location= gson.fromJson(res,location.class);
+                String data= gson.toJson(location.data);
+                if(!TextUtils.isEmpty(res)) {
+                    Message message = new Message();
+                    message.what= GETLOCATIONSU;
+                    Bundle bundle= new Bundle();
+                    bundle.putString("result",data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private static class ParentCode{
+        String parentcode;
+    }
+
+    private class location{
+        String state;
+        List<Province> data;
+    }
+
+    //推送客户端ID信息
+    static void pushChannelId(String info, final Handler handler){
+        RequestBody requestBody = RequestBody.create(JSON,info);
+        Request request = new Request.Builder().url(PUSHCHANNELID).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PUSHCHANNELIDFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res= response.body().string();
+                if("1".equals(res)) {
+                    Message message = new Message();
+                    message.what= PUSHCHANNELIDSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PUSHCHANNELIDFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
     }
 }

@@ -7,31 +7,40 @@ import org.litepal.crud.DataSupport;
  */
 
 public class Country extends DataSupport {
-    private String name;
-    private String code;
-    private String parent_code;
+    private String cityname;
+    private String citycode;
+    private String cityparentcode;
+    private int citylevel;
 
-    public String getName() {
-        return name;
+    public String getCityname() {
+        return cityname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCityname(String cityname) {
+        this.cityname = cityname;
     }
 
-    public String getCode() {
-        return code;
+    public String getCitycode() {
+        return citycode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCitycode(String citycode) {
+        this.citycode = citycode;
     }
 
-    public String getParent_code() {
-        return parent_code;
+    public String getCityparentcode() {
+        return cityparentcode;
     }
 
-    public void setParent_code(String parent_code) {
-        this.parent_code = parent_code;
+    public void setCityparentcode(String cityparentcode) {
+        this.cityparentcode = cityparentcode;
+    }
+
+    public int getCitylevel() {
+        return citylevel;
+    }
+
+    public void setCitylevel(int citylevel) {
+        this.citylevel = citylevel;
     }
 }

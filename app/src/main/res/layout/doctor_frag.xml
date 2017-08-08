@@ -25,9 +25,10 @@
         <TextView
             android:id="@+id/offices"
             android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:maxLines="1"
             android:text="科室"
             android:clickable="true"
             android:textSize="14sp"
@@ -39,8 +40,10 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="日期"
+            android:maxLines="1"
             android:textSize="14sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/default_text_seclector"/>
         <TextView
             android:id="@+id/city"
             android:layout_width="0dp"
@@ -48,15 +51,18 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="60dp"
             android:text="城市"
+            android:maxLines="1"
             android:textSize="14sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/default_text_seclector"/>
+
     </LinearLayout>
     /*分界面*/
 
     <View
         android:id="@+id/split"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="0.3dp"
         android:background="@color/colorBackground"
         android:layout_below="@+id/select"/>
 

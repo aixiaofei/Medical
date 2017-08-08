@@ -82,10 +82,6 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
 
     private locationDialog lDialog;
 
-    private boolean isEnd= false;
-
-    private UerInfo info;
-
     private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -95,7 +91,7 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
                     break;
                 case HttpUtils.GETUSERINFOSUCESS:
                     Bundle bundle= msg.getData();
-                    info = (UerInfo) bundle.getSerializable("info");
+                    UerInfo info = (UerInfo) bundle.getSerializable("info");
                     setInfo(info);
                     break;
                 case HttpUtils.PUSHINFOFAILURE:
@@ -126,9 +122,6 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
                 case secondFigCompleted:
                     identifyFig.add(identifyPath + File.separator + MyApplication.getUserPhone() + "down.png");
                     break;
-                case 100:
-                    isEnd=true;
-                    break;
                 default:
                     break;
             }
@@ -158,7 +151,6 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         addressTop.setOnClickListener(this);
         selectAddress.setOnClickListener(this);
         nextStep.setOnClickListener(this);
-        initData();
         HttpUtils.getUserInfo(MyApplication.getUserPhone(),handler);
     }
 
@@ -179,29 +171,6 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         }
     }
 
-    private void initData() {
-        final List<Province> provinces = DataSupport.findAll(Province.class);
-        final List<City> cities = DataSupport.findAll(City.class);
-        final List<Country> countries = DataSupport.findAll(Country.class);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(provinces.isEmpty()) {
-                    handleProvince();
-                }
-                if(cities.isEmpty()) {
-                    handleCity();
-                }
-                if(countries.isEmpty()) {
-                    handleCountry();
-                }
-                Message message = new Message();
-                message.what= 100;
-                handler.sendMessage(message);
-            }
-        }).start();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -220,18 +189,10 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
                 captureIdentify();
                 break;
             case R.id.address_top:
-                if(!isEnd){
-                    Toast.makeText(this,"数据正在初始化...",Toast.LENGTH_SHORT).show();
-                }else {
-                    showLocationDialog();
-                }
+                showLocationDialog();
                 break;
             case R.id.select_address:
-                if(!isEnd){
-                    Toast.makeText(this,"数据正在初始化...",Toast.LENGTH_SHORT).show();
-                }else {
-                    showLocationDialog();
-                }
+                showLocationDialog();
                 break;
             case R.id.next_step:
                 canNextStep();
@@ -413,72 +374,5 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.show();
-    }
-
-
-    private void handleProvince(){
-        try {
-            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.provinces));
-            BufferedReader reader = new BufferedReader(is);
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            is.close();
-            reader.close();
-            String res= stringBuilder.toString();
-            Gson gson= new Gson();
-            List<Province> data= gson.fromJson(res,new TypeToken<List<Province>>(){}.getType());
-            for (Province province : data) {
-                province.save();
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void handleCity(){
-        try {
-            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.cities));
-            BufferedReader reader = new BufferedReader(is);
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            is.close();
-            reader.close();
-            String res= stringBuilder.toString();
-            Gson gson= new Gson();
-            List<City> data= gson.fromJson(res,new TypeToken<List<City>>(){}.getType());
-            for(City city:data){
-                city.save();
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void handleCountry(){
-        try {
-            InputStreamReader is = new InputStreamReader(MyApplication.getContext().getResources().openRawResource(R.raw.areas));
-            BufferedReader reader = new BufferedReader(is);
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            is.close();
-            reader.close();
-            String res= stringBuilder.toString();
-            Gson gson= new Gson();
-            List<Country> data= gson.fromJson(res,new TypeToken<List<Country>>(){}.getType());
-            for(Country country:data){
-                country.save();
-            }
-        }catch (IOException e){
-            e.printStackTrace();
-        }
     }
 }

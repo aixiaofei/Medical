@@ -139,15 +139,15 @@ public class okView extends View {
         int heightMode= MeasureSpec.getMode(heightMeasureSpec);
         int heightSize= MeasureSpec.getSize(heightMeasureSpec);
 
-        int heightMy= dp2px(16);
+        int heightMy= dp2px(20);
 
         if(heightMode==MeasureSpec.EXACTLY||heightMode==MeasureSpec.AT_MOST){
             defaultHeight=heightMy;
-            height=dp2px(14);
+            height=dp2px(18);
         }
         if(widthMode==MeasureSpec.EXACTLY||widthMode==MeasureSpec.AT_MOST){
             defaultWidth=heightMy;
-            width=dp2px(14);
+            width=dp2px(18);
         }
         setMeasuredDimension((int) defaultWidth,(int) defaultHeight);
         initPath();

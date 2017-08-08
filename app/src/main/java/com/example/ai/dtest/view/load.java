@@ -125,7 +125,7 @@ public class load extends View {
     }
 
     public void loadAnima(){
-        animatorLoadCircle= ValueAnimator.ofFloat(2*R+M,M);
+        animatorLoadCircle= ValueAnimator.ofFloat(1.4f*R+M,M);
         animatorLoadCircle.setDuration(1000);
         animatorLoadCircle.setRepeatCount(ValueAnimator.INFINITE);
         animatorLoadCircle.setRepeatMode(ValueAnimator.REVERSE);
@@ -141,7 +141,7 @@ public class load extends View {
     }
 
     public void clearAnima(){
-        if(animatorLoadCircle.isRunning()){
+        if(animatorLoadCircle!=null&&animatorLoadCircle.isRunning()){
             animatorLoadCircle.pause();
             animatorLoadCircle.end();
             animatorLoadCircle=null;
@@ -184,15 +184,14 @@ public class load extends View {
     private void drawLoad(Canvas canvas){
         Path circlePath = new Path();
         RectF rectF= new RectF(M,M,M+2*R,M+2*R);
-        Log.d("ai",Float.toString(circleH));
         if(circleH>=R+M) {
             float sBaseX = (float) (R + M - Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0)));
             float eBaseX= (float) (R + M + Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0)));
             float baseY= circleH;
             circlePath.moveTo(sBaseX,baseY);
-            float C1_X= (float) (sBaseX+Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/2);
+            float C1_X= (float) (sBaseX+Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/3*2);
             float C1_Y= circleH-R*1/4;
-            float C2_X= (float) (eBaseX-Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/2);
+            float C2_X= (float) (eBaseX-Math.sqrt(Math.pow(R, 2.0) - Math.pow((circleH-R-M), 2.0))/3*2);
             float C2_Y= circleH+R*1/4;
             circlePath.cubicTo(C1_X,C1_Y,C2_X,C2_Y,eBaseX,baseY);
 //            circlePath.lineTo(eBaseX,baseY);

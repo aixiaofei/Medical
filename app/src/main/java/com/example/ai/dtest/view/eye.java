@@ -135,7 +135,7 @@ public class eye extends View {
         int heightMode= MeasureSpec.getMode(heightMeasureSpec);
         int heightSize= MeasureSpec.getSize(heightMeasureSpec);
 
-        int defaultHeight= dp2px(16);
+        int defaultHeight= dp2px(20);
 
         if(heightMode==MeasureSpec.EXACTLY||heightMode==MeasureSpec.AT_MOST){
             height=defaultHeight;
