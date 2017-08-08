@@ -21,7 +21,6 @@ import com.example.ai.dtest.adapter.DocterAdapter;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
-import com.example.ai.dtest.util.EndLessOnScrollListener;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.view.cityPopwindow;
 import com.example.ai.dtest.view.department;
@@ -74,6 +73,10 @@ public class DoctorList extends Fragment implements View.OnClickListener{
 
     private View split;
 
+    private boolean canUpdate=true;
+
+    private int lastVisibleItem = 0;
+
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -92,33 +95,28 @@ public class DoctorList extends Fragment implements View.OnClickListener{
                         dialog.dismiss();
                     }
                     if(isClick){
+                        isClick=false;
                         mList.clear();
                         Bundle update_bundle= msg.getData();
                         String buf1= update_bundle.getString("result");
                         List<DoctorCustom> doctor= gson.fromJson(buf1, new TypeToken<List<DoctorCustom>>(){}.getType());
                         deepclone(doctor);
-                        if(!doctor.isEmpty()){
+                        if(!doctor.isEmpty() && linearLayoutManager.findLastVisibleItemPosition()<linearLayoutManager.getItemCount()-1){
                             adapter.setFootView(footView);
                         }
                         adapter.notifyDataSetChanged();
                         recyclerView.scrollToPosition(0);
-                        isClick=false;
-                        recyclerView.addOnScrollListener(new EndLessOnScrollListener(linearLayoutManager) {
-                            @Override
-                            public void onLoadMore() {
-                                loadMoreDate();
-                            }
-                        });
+                        canUpdate=true;
                     }else if(isPull){
+                        isPull=false;
                         Bundle update_bundle= msg.getData();
                         String buf1= update_bundle.getString("result");
                         List<DoctorCustom> doctor= gson.fromJson(buf1, new TypeToken<List<DoctorCustom>>(){}.getType());
                         deepclone(doctor);
-                        if(!doctor.isEmpty()){
+                        if(!doctor.isEmpty() && linearLayoutManager.findLastVisibleItemPosition()<linearLayoutManager.getItemCount()-1){
                             adapter.setFootView(footView);
                         }
                         adapter.notifyDataSetChanged();
-                        isPull=false;
                     }
                     if(isRefresh){
                         refreshLayout.setRefreshing(false);
@@ -136,7 +134,6 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mList= new ArrayList<>();
-        adapter= new DocterAdapter(mList);
     }
 
     @Override
@@ -150,30 +147,52 @@ public class DoctorList extends Fragment implements View.OnClickListener{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshDoctor();
+                if(canUpdate) {
+                    canUpdate=false;
+                    refreshDoctor();
+                }
             }
         });
 
         office= (TextView) view.findViewById(R.id.offices);
         office.setOnClickListener(this);
 
+        recyclerView= (RecyclerView) view.findViewById(R.id.doctor_list);
+
         recommendDoctor= (TextView) view.findViewById(R.id.recommend_doctor);
         recommendDoctor.setOnClickListener(this);
         recommendDoctor.setSelected(true);
-        recyclerView= (RecyclerView) view.findViewById(R.id.doctor_list);
-        linearLayoutManager= new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapter);
-
         city= view.findViewById(R.id.city);
         city.setOnClickListener(this);
 
-        footView= LayoutInflater.from(getContext()).inflate(R.layout.loading,recyclerView,false);
-
+        initRecycleview();
         dialog= new loadDialog(getContext());
+
         isClick=true;
         update();
         return view;
+    }
+
+    private void initRecycleview(){
+        adapter= new DocterAdapter(mList);
+        linearLayoutManager= new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+        footView= LayoutInflater.from(getContext()).inflate(R.layout.loading,recyclerView,false);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == adapter.getItemCount()) {
+                    loadMoreDate();
+                }
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+            }
+        });
     }
 
     private void loadMoreDate(){
@@ -191,10 +210,10 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     }
 
     private void update(){
-        if(isClick && !isRefresh){
+        adapter.clearFootView();
+        if (isClick && !isRefresh) {
             dialog.show();
         }
-        adapter.clearFootView();
         defaultUpdate();
     }
 
@@ -238,18 +257,18 @@ public class DoctorList extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.recommend_doctor:
-                isClick=true;
-                page=1;
-                tag=0;
-                recommendDoctor.setSelected(true);
-                update();
-
-                office.setText("科室");
-                office.setSelected(false);
-
-                city.setText("城市");
-                city.setSelected(false);
-
+                if(canUpdate){
+                    canUpdate=false;
+                    isClick = true;
+                    page = 1;
+                    tag = 0;
+                    recommendDoctor.setSelected(true);
+                    office.setText("科室");
+                    office.setSelected(false);
+                    city.setText("城市");
+                    city.setSelected(false);
+                    update();
+                }
                 break;
             case R.id.offices:
                 final View target= LayoutInflater.from(getContext()).inflate(R.layout.department,null);

@@ -7,7 +7,6 @@ import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Bundle;
@@ -20,16 +19,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.baidu.android.pushservice.BasicPushNotificationBuilder;
-import com.baidu.android.pushservice.CustomPushNotificationBuilder;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.location.BDLocation;
@@ -47,6 +43,7 @@ import com.example.ai.dtest.util.MacAddressUtils;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.db.OffLineUser;
 import com.example.ai.dtest.data.UserLoginInfo;
+import com.example.ai.dtest.view.loadDialog;
 import com.google.gson.Gson;
 import org.litepal.crud.DataSupport;
 import java.text.SimpleDateFormat;
@@ -82,6 +79,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.LOGINSUCESS:
+                    addFragment(new DoctorList());
                     Bundle login_sucess_bundle= msg.getData();
                     String buf2= login_sucess_bundle.getString("user");
                     UserLoginInfo userlogininfo= gson.fromJson(buf2,UserLoginInfo.class);
@@ -104,15 +102,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
     };
 
+
     private void startPushService(){
         BasicPushNotificationBuilder cBuilder= new BasicPushNotificationBuilder();
         cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
+        cBuilder.setNotificationDefaults(Notification.DEFAULT_SOUND);
         cBuilder.setNotificationDefaults(Notification.DEFAULT_VIBRATE);
         cBuilder.setStatusbarIcon(R.drawable.notification);
-        PushManager.setNotificationBuilder(getApplicationContext(),1,cBuilder);
-        List<String> tags= new ArrayList<>();
-        tags.add("安大");
-        PushManager.setTags(getApplicationContext(),tags);
+        PushManager.setDefaultNotificationBuilder(getApplicationContext(),cBuilder);
         PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "GnIsxXgAHX6U2NsyMgP91o3n");
     }
 
@@ -177,8 +174,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ActivityCollector.finishAll();
         ImgUtils.recycleBitmap(MyApplication.getBitmap());
+        ActivityCollector.finishAll();
     }
 
     @Override
@@ -248,7 +245,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
 
     private void init(){
-        addFragment(new DoctorList());
         if(MyApplication.getUserPhone()==null){
             OffLineUser offLineUsers = DataSupport.where("isAutoLogin =?","1").findFirst(OffLineUser.class);
             if (offLineUsers!=null){
@@ -260,6 +256,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 client.setLocOption(option);
                 client.start();
             }
+        }else {
+            addFragment(new DoctorList());
         }
     }
 

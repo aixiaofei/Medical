@@ -87,7 +87,7 @@ public class InformationShow extends BaseActivity implements View.OnClickListene
         }
         if(!TextUtils.isEmpty(info.getUsercardphoto())){
             identifyFig.setText("已上传");
-            identifyFig.setTextColor(Color.BLUE);
+            identifyFig.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
         if(!TextUtils.isEmpty(info.getUsermale())){
             sex.setText(info.getUsermale());

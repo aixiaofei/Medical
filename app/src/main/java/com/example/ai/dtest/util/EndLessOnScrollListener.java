@@ -10,7 +10,7 @@ import android.util.Log;
 
 public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListener {
     //声明一个LinearLayoutManager
-    private LinearLayoutManager mLinearLayoutManager;
+//    private LinearLayoutManager mLinearLayoutManager;
 
     //已经加载出来的Item的数量
     private int totalItemCount;
@@ -27,12 +27,13 @@ public abstract class EndLessOnScrollListener extends RecyclerView.OnScrollListe
     //是否正在上拉数据
     private boolean loading = true;
 
-    public EndLessOnScrollListener(LinearLayoutManager linearLayoutManager) {
-        this.mLinearLayoutManager = linearLayoutManager;
-    }
+//    public EndLessOnScrollListener(LinearLayoutManager linearLayoutManager) {
+//        this.mLinearLayoutManager = linearLayoutManager;
+//    }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        LinearLayoutManager mLinearLayoutManager= (LinearLayoutManager) recyclerView.getLayoutManager();
         super.onScrolled(recyclerView, dx, dy);
 //        Log.d("ai","11");
         visibleItemCount = recyclerView.getChildCount();

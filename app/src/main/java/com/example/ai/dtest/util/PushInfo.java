@@ -4,9 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.baidu.android.pushservice.PushManager;
 import com.baidu.android.pushservice.PushMessageReceiver;
 import com.example.ai.dtest.base.MyApplication;
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,33 +19,34 @@ import java.util.List;
 
 public class PushInfo extends PushMessageReceiver{
 
-    private Handler handler= new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case HttpUtils.PUSHCHANNELIDFA:
-                    break;
-                case HttpUtils.PUSHCHANNELIDSU:
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
-
-    private class channelId{
-        String phone;
-        String id;
-    }
+//    private Handler handler= new Handler(){
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what){
+//                case HttpUtils.PUSHCHANNELIDFA:
+//                    break;
+//                case HttpUtils.PUSHCHANNELIDSU:
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    };
+//
+//    private class channelId{
+//        String phone;
+//        String id;
+//    }
 
     @Override
     public void onBind(Context context, int i, String s, String s1, String s2, String s3) {
-        channelId channel= new channelId();
-        channel.phone= MyApplication.getUserPhone();
-        channel.id= s3;
-        Gson gson= new Gson();
-        String res= gson.toJson(channel);
-        HttpUtils.pushChannelId(res,handler);
+//        channelId channel= new channelId();
+//        channel.phone= MyApplication.getUserPhone();
+//        channel.id= s3;
+//        Gson gson= new Gson();
+//        String res= gson.toJson(channel);
+//        HttpUtils.pushChannelId(res,handler);
+        PushManager.listTags(context);
     }
 
 
@@ -62,7 +67,10 @@ public class PushInfo extends PushMessageReceiver{
 
     @Override
     public void onListTags(Context context, int i, List<String> list, String s) {
-
+        PushManager.delTags(context,list);
+        List<String> tags= new ArrayList<>();
+        tags.add(MyApplication.getUserPhone());
+        PushManager.setTags(context,tags);
     }
 
     @Override

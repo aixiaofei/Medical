@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.util.ImgUtils;
@@ -23,9 +21,7 @@ import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.MD5;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.db.OffLineUser;
-
 import java.io.IOException;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountManagement extends BaseActivity implements View.OnClickListener{

@@ -123,12 +123,10 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     private void startPushService(){
         BasicPushNotificationBuilder cBuilder= new BasicPushNotificationBuilder();
         cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
+        cBuilder.setNotificationDefaults(Notification.DEFAULT_SOUND);
         cBuilder.setNotificationDefaults(Notification.DEFAULT_VIBRATE);
         cBuilder.setStatusbarIcon(R.drawable.notification);
-        PushManager.setNotificationBuilder(getApplicationContext(),1,cBuilder);
-        List<String> tags= new ArrayList<>();
-        tags.add("安大");
-        PushManager.setTags(getApplicationContext(),tags);
+        PushManager.setDefaultNotificationBuilder(getApplicationContext(),cBuilder);
         PushManager.startWork(getApplicationContext(), PushConstants.LOGIN_TYPE_API_KEY, "GnIsxXgAHX6U2NsyMgP91o3n");
     }
 

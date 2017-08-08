@@ -194,7 +194,6 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
-                        finish();
                     }
                 });
         builder.create().show();

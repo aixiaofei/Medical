@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.util.FormatCheckUtils;
 import com.example.ai.dtest.base.MyApplication;
@@ -40,7 +38,7 @@ public class changePW extends Dialog implements View.OnClickListener{
 
     private EditText password;
 
-    private ImageView eye;
+    private eye eye;
 
     private changeListener listener;
 
@@ -82,7 +80,7 @@ public class changePW extends Dialog implements View.OnClickListener{
         sendMessage= (Button) findViewById(R.id.send_meassage);
         yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);
         password= (EditText) findViewById(R.id.user_password);
-        eye= (ImageView) findViewById(R.id.eye);
+        eye= findViewById(R.id.eye);
         Button change = (Button) findViewById(R.id.change);
         sendMessage.setOnClickListener(this);
         change.setOnClickListener(this);
@@ -115,21 +113,17 @@ public class changePW extends Dialog implements View.OnClickListener{
                 }
             }
         });
-        eye.setOnClickListener(new View.OnClickListener() {
+
+        eye.setListener(new eye.openListener() {
             @Override
-            public void onClick(View view) {
-                if(!isShow){
-                    isShow=true;
-                    eye.setImageResource(R.drawable.eye_open);
-                    password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                    password.setSelection(password.getText().length());
-                }
-                else {
-                    isShow=false;
-                    eye.setImageResource(R.drawable.eye_close);
-                    password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
-                    password.setSelection(password.getText().length());
-                }
+            public void openEye() {
+                password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                password.setSelection(password.getText().length());
+            }
+            @Override
+            public void closeEye() {
+                password.setInputType(EditorInfo.TYPE_CLASS_TEXT | EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+                password.setSelection(password.getText().length());
             }
         });
     }

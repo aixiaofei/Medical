@@ -88,6 +88,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:background="@null"
+            android:textColor="@color/colorBackground"
             android:hint="请输入真实姓名"
             android:textSize="15sp" />
     </LinearLayout>
@@ -120,7 +121,8 @@
             android:digits="0123456789xyzXYZ"
             android:background="@null"
             android:hint="请输入真实身份证号"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="@color/colorBackground"/>
     </LinearLayout>
 
     /*身份证设置*/
@@ -240,7 +242,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
-            android:hint="请选择常住地址"
+            android:text="请选择常住地址"
             android:textSize="15sp" />
 
         <ImageView
@@ -278,7 +280,8 @@
             android:layout_marginLeft="15dp"
             android:background="@null"
             android:hint="请填写具体住址"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="@color/colorBackground"/>
     </LinearLayout>
     /*住址设置*/
 
