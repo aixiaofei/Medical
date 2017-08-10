@@ -75,6 +75,8 @@ public class locationDialog extends Dialog implements View.OnClickListener{
 
     private boolean auto;
 
+
+
     public void setListener(selectLocationListener listener){
         this.listener= listener;
     }
@@ -96,16 +98,26 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                         queryProvince();
                     } else if (level == 1) {
                         List<City> data = gson.fromJson(res, new TypeToken<List<City>>(){}.getType());
-                        for (City city : data) {
-                            city.save();
+                        if(!data.isEmpty()) {
+                            for (City city : data) {
+                                city.save();
+                            }
+                            queryCity();
+                        }else {
+                            cityList.clear();
+                            adapterSrcond.notifyDataSetChanged();
                         }
-                        queryCity();
                     } else {
                         List<Country> data = gson.fromJson(res, new TypeToken<List<Country>>(){}.getType());
-                        for (Country country : data) {
-                            country.save();
+                        if(!data.isEmpty()) {
+                            for (Country country : data) {
+                                country.save();
+                            }
+                            queryCountry();
+                        }else {
+                            countryList.clear();
+                            adapterThird.notifyDataSetChanged();
                         }
-                        queryCountry();
                     }
                 }
             }else if(msg.what==100){
@@ -211,34 +223,48 @@ public class locationDialog extends Dialog implements View.OnClickListener{
         adapterFirst.setListener(new LocationAdapter.locationListener() {
             @Override
             public void process(int position) {
-                city.setText(null);
-                country.setText(null);
-                province.setText(provinceList.get(position));
-                selectProvince= DataSupport.where("cityname=?",provinceList.get(position)).findFirst(Province.class);
-                adapterFirst.setCurrentPostion(position);
-                adapterFirst.notifyDataSetChanged();
-                adapterSrcond.setCurrentPostion(-1);
-                adapterSrcond.notifyDataSetChanged();
+                if(selectProvince==null || !provinceList.get(position).equals(selectProvince.getCityname())) {
+                    city.setText(null);
+                    country.setText(null);
+                    province.setText(provinceList.get(position));
+                    selectProvince = DataSupport.where("cityname=?", provinceList.get(position)).findFirst(Province.class);
+                    adapterFirst.setCurrentPostion(position);
+                    adapterFirst.notifyDataSetChanged();
 
-                if(!countryList.isEmpty()){
-                    countryList.clear();
-                    adapterThird.notifyDataSetChanged();
+                    if (!cityList.isEmpty()) {
+                        adapterSrcond.setCurrentPostion(-1);
+                        cityList.clear();
+                        adapterSrcond.notifyDataSetChanged();
+                    }
+
+                    if (!countryList.isEmpty()) {
+                        adapterThird.setCurrentPostion(-1);
+                        countryList.clear();
+                        adapterThird.notifyDataSetChanged();
+                    }
+                    queryCity();
                 }
-                queryCity();
             }
         });
 
         adapterSrcond.setListener(new LocationAdapter.locationListener() {
             @Override
             public void process(int position) {
-                country.setText(null);
-                city.setText(cityList.get(position));
-                selectCity= DataSupport.where("cityname=?",cityList.get(position)).findFirst(City.class);
-                adapterSrcond.setCurrentPostion(position);
-                adapterSrcond.notifyDataSetChanged();
-                adapterThird.setCurrentPostion(-1);
-                adapterThird.notifyDataSetChanged();
-                queryCountry();
+                if(selectCity==null || !cityList.get(position).equals(selectCity.getCityname())) {
+                    country.setText(null);
+                    city.setText(cityList.get(position));
+                    selectCity = DataSupport.where("cityname=?", cityList.get(position)).findFirst(City.class);
+                    adapterSrcond.setCurrentPostion(position);
+                    adapterSrcond.notifyDataSetChanged();
+
+                    if (!countryList.isEmpty()) {
+                        adapterThird.setCurrentPostion(-1);
+                        countryList.clear();
+                        adapterThird.notifyDataSetChanged();
+                    }
+
+                    queryCountry();
+                }
             }
         });
         adapterThird.setListener(new LocationAdapter.locationListener() {
@@ -262,13 +288,25 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                 }
                 break;
             case R.id.select:
-                if(TextUtils.isEmpty(province.getText()) || TextUtils.isEmpty(city.getText())){
+                if(TextUtils.isEmpty(province.getText())){
                     Toast.makeText(context,"请继续选择",Toast.LENGTH_SHORT).show();
-                }else if(TextUtils.isEmpty(country.getText()) && !countryList.isEmpty()){
+                }else if(TextUtils.isEmpty(city.getText()) && !cityList.isEmpty()){
+                    Toast.makeText(context,"请继续选择",Toast.LENGTH_SHORT).show();
+                }
+                else if(TextUtils.isEmpty(country.getText()) && !countryList.isEmpty()){
                     Toast.makeText(context,"请继续选择",Toast.LENGTH_SHORT).show();
                 }else {
-                    String location= province.getText().toString()+"-"+city.getText().toString()+"-"+country.getText().toString();
-                    listener.complete(location);
+                    StringBuilder location= new StringBuilder();
+                    if(!TextUtils.isEmpty(province.getText())){
+                        location.append(province.getText().toString());
+                    }
+                    if(!TextUtils.isEmpty(city.getText())){
+                        location.append("-").append(city.getText().toString());
+                    }
+                    if(!TextUtils.isEmpty(country.getText())){
+                        location.append("-").append(country.getText().toString());
+                    }
+                    listener.complete(location.toString());
                 }
                 break;
             default:
@@ -284,7 +322,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                 provinceList.add(province.getCityname());
             }
             adapterFirst.notifyDataSetChanged();
-            recFirst.scrollToPosition(0);
+            recFirst.smoothScrollToPosition(0);
         }else {
             level=0;
             HttpUtils.getLocation("0",handler);
@@ -299,7 +337,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                 cityList.add(city.getCityname());
             }
             adapterSrcond.notifyDataSetChanged();
-            recSecond.scrollToPosition(0);
+            recSecond.smoothScrollToPosition(0);
         }else {
             level=1;
             HttpUtils.getLocation(selectProvince.getCitycode(),handler);
@@ -314,7 +352,7 @@ public class locationDialog extends Dialog implements View.OnClickListener{
                 countryList.add(country.getCityname());
             }
             adapterThird.notifyDataSetChanged();
-            recThird.scrollToPosition(0);
+            recThird.smoothScrollToPosition(0);
         }else {
             level=2;
             HttpUtils.getLocation(selectCity.getCitycode(),handler);

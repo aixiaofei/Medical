@@ -3,45 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <LinearLayout
-        android:id="@+id/selected"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentTop="true">
-
-        <TextView
-            android:id="@+id/province"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="13sp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/city"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="13sp"
-            android:layout_height="match_parent"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/country"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="13sp"
-            android:layout_height="match_parent"
-            android:gravity="center"/>
-
-    </LinearLayout>
-
     <LinearLayout
         android:id="@+id/first"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/selected">
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rec_first"
@@ -71,12 +38,43 @@
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
-
-    <RelativeLayout
-        android:layout_below="@+id/first"
+    <LinearLayout
+        android:id="@+id/selected"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/first">
+
+        <TextView
+            android:id="@+id/province"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/city"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:layout_height="match_parent"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/country"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="13sp"
+            android:layout_height="match_parent"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_below="@+id/selected"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
         <TextView

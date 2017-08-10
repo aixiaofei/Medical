@@ -6,7 +6,7 @@
     <LinearLayout
         android:id="@+id/first"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -35,7 +35,7 @@
     <RelativeLayout
         android:layout_below="@+id/first"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp">
 
@@ -43,7 +43,7 @@
             android:id="@+id/des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:gravity="center"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/department_second"
@@ -54,11 +54,10 @@
             android:id="@+id/department_first"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:gravity="center"
             android:layout_toRightOf="@+id/des"
-            android:layout_alignTop="@+id/department_second"
-            android:layout_marginLeft="15dp"/>
+            android:layout_alignTop="@+id/department_second" />
 
         <TextView
             android:id="@+id/department_second"
@@ -73,7 +72,7 @@
             android:id="@+id/select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:gravity="center"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/department_second"

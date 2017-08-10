@@ -55,23 +55,23 @@ import java.util.List;
 
 public class Login extends BaseActivity implements View.OnClickListener,CompoundButton.OnCheckedChangeListener {
 
-    Button login;
+    private Button login;
 
-    EditText user_phone;
+    private EditText user_phone;
 
-    EditText user_password;
+    private EditText user_password;
 
-    eye eye;
+    private eye eye;
 
-    CheckBox hold_password;
+    private CheckBox hold_password;
 
-    CheckBox hold_autologin;
+    private CheckBox hold_autologin;
 
-    TextView forget_password;
+    private TextView forget_password;
 
-    TextView return_register;
+    private TextView return_register;
 
-    okView ok;
+    private okView ok;
 
     private LocationClient client;
 
@@ -83,6 +83,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
 
     private loadDialog dialog;
 
+    //Handle处理线程消息
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -113,6 +114,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         }
     };
 
+    //启动时 携带不同的数据
     public static void actionStart(Context context,String user,String password){
         Intent intent= new Intent(context,Login.class);
         intent.putExtra("userName",user);
@@ -120,6 +122,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         context.startActivity(intent);
     }
 
+    //开启百度推送服务
     private void startPushService(){
         BasicPushNotificationBuilder cBuilder= new BasicPushNotificationBuilder();
         cBuilder.setNotificationFlags(Notification.FLAG_AUTO_CANCEL);
@@ -137,6 +140,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         Intent intent= getIntent();
         String name= intent.getStringExtra("userName");
         String password= intent.getStringExtra("password");
+
         login = (Button) findViewById(R.id.login);
         user_phone = (EditText) findViewById(R.id.name);
         user_password = (EditText) findViewById(R.id.password);
@@ -161,6 +165,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             user_password.setText(password);
             user_password.setSelection(password.length());
         }
+
+        //暴露接口修改 密码是否可以显示
         eye.setListener(new eye.openListener() {
             @Override
             public void openEye() {
@@ -175,7 +181,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         });
     }
 
-    TextWatcher phoneWather= new TextWatcher() {
+    //号码框 监听
+    private TextWatcher phoneWather= new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -202,7 +209,8 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         }
     };
 
-    TextWatcher passwordWatcher= new TextWatcher() {
+    //密码框 监听
+    private TextWatcher passwordWatcher= new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -252,6 +260,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         }
     }
 
+    //单选框 监听
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         switch (compoundButton.getId()){
@@ -283,13 +292,17 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         ok.clear();
     }
 
+    //尝试登陆
     private void tryLogin() {
         if (TextUtils.isEmpty(user_phone.getText().toString()) || TextUtils.isEmpty(user_password.getText().toString())) {
             Toast.makeText(MyApplication.getContext(), "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+        //记录下尝试登陆用户名和密码
         saveUserPhone=user_phone.getText().toString();
         savePassword=user_password.getText().toString();
+
+        //启动百度定位服务
         client= new LocationClient(Login.this);
         client.registerLocationListener(new LocationListener());
         LocationClientOption option = new LocationClientOption();
@@ -298,6 +311,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         client.start();
     }
 
+    //登录成功 存储本地用户数据库
     private void saveOfflineUser(UserLoginInfo userlogininfo, String token) {
         String userPhone = saveUserPhone;
         String userPassword_buf = savePassword;
@@ -336,6 +350,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         }
     }
 
+    //携带地址信息登陆
     private void isLocationLogin(String location,String latitude_longitude){
         String password= null;
         try {
@@ -369,6 +384,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         HttpUtils.login(user,handler);
     }
 
+    //无地址信息登陆
     private void noLocationLogin() {
         String password= null;
         try {
@@ -399,6 +415,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
         HttpUtils.login(user,handler);
     }
 
+    //百度定位服务回调接口
     private class LocationListener implements BDLocationListener {
         @Override
         public void onConnectHotSpotMessage(String s, int i) {

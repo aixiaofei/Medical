@@ -2,6 +2,7 @@ package com.example.ai.dtest.adapter;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.view.complete;
 import com.example.ai.dtest.view.load;
 
 import java.net.URI;
@@ -19,6 +21,8 @@ import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.ai.dtest.base.MyApplication.getContext;
 
 /**
  * Created by ai on 2017/7/9.
@@ -34,7 +38,9 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<DoctorCustom> mList;
 
-    private View footView;
+    private int isLoad;
+
+    private returnUp listener;
 
     public DocterAdapter(List<DoctorCustom> mList){
         this.mList=mList;
@@ -42,17 +48,16 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private int mFoot= 0;
 
-    public void setFootView(View view){
-        if(footView==null) {
-            footView = view;
-            mFoot += 1;
-        }
+    public int getIsLoad(){return isLoad;}
+
+    public void setFootView(int type){
+        isLoad = type;
+        mFoot += 1;
     }
 
     public void clearFootView(){
-        if(footView!=null){
-            footView=null;
-            mFoot-=1;
+        if(mFoot==1) {
+            mFoot -= 1;
         }
     }
 
@@ -88,19 +93,25 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    private static class footViewHolder extends RecyclerView.ViewHolder {
-        footViewHolder(View itemView) {
+    private static class loadViewHolder extends RecyclerView.ViewHolder {
+        load loading;
+        complete complete;
+        loadViewHolder(View itemView) {
             super(itemView);
+            loading= itemView.findViewById(R.id.load);
+            complete= itemView.findViewById(R.id.complete);
         }
     }
 
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType==TYPE_FOOT){
-            load loading = footView.findViewById(R.id.load);
-            loading.loadAnima();
-            return new footViewHolder(footView);
-        }else {
+        if (viewType == TYPE_FOOT) {
+            View loadView= LayoutInflater.from(getContext()).inflate(R.layout.loading,parent,false);
+            loadViewHolder holder = new loadViewHolder(loadView);
+            holder.loading.loadAnima();
+            return holder;
+        }  else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info, parent, false);
             return new normalViewHolder(view);
         }
@@ -123,15 +134,32 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }else {
                 holder.docter_distance.setText(new DecimalFormat("0").format(distance)+"m");
             }
+        }else if(holder1 instanceof loadViewHolder){
+            loadViewHolder holder= (loadViewHolder) holder1;
+            if(isLoad==0){
+                holder.loading.setVisibility(View.GONE);
+                holder.complete.setVisibility(View.VISIBLE);
+                listener.goUp();
+            }else {
+                holder.loading.setVisibility(View.VISIBLE);
+                holder.complete.setVisibility(View.GONE);
+            }
         }
+    }
+
+    public void setListener(returnUp listener){
+        this.listener=listener;
+    }
+
+    public interface returnUp{
+        void goUp();
     }
 
     private void loadImage(CircleImageView imageView,int doctorId){
         Uri uri= Uri.parse(IMAGEURI+doctorId);
-        Glide.with(MyApplication.getContext())
+        Glide.with(getContext())
                 .load(uri)
                 .error(R.drawable.defaultuserimage)
-                .diskCacheStrategy(DiskCacheStrategy.NONE )
                 .into(imageView);
     }
 
