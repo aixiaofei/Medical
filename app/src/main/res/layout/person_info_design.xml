@@ -10,37 +10,35 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@color/colorButton_background"
-        android:layout_alignParentTop="true"
-        >
+        android:layout_alignParentTop="true">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:gravity="center">
-            <ImageView
-                android:id="@+id/design_back_fig"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/back_white"
-                android:layout_alignParentLeft="true" />
-
-            <TextView
-                android:id="@+id/design_back_text"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:text="返回"
-                android:textColor="@color/colorWhite"
-                android:layout_gravity="center"
-                android:layout_toRightOf="@id/design_back_fig"
-                android:textSize="18sp"/>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/design_back_fig"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_white"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
 
         <TextView
-            android:layout_width="155dp"
+            android:id="@+id/design_back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="返回"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:layout_toRightOf="@id/design_back_fig"
+            android:textSize="16sp"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="个人信息"
+            android:text="个人信息修改"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:gravity="center"

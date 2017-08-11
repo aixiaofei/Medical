@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginLeft="8dp"
-            android:text="病人信息"
+            android:text="亲属信息"
             android:textSize="16sp"/>
         <TextView
             android:id="@+id/change_patient"

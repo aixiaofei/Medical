@@ -89,9 +89,7 @@
             android:launchMode="singleTask"/>
 
         <activity android:name=".PatientInformation" />
-        <activity android:name=".test.TestDatabase">
-
-        </activity>
+        <activity android:name=".ReleaseCondition"/>
 
 
         <!-- push service start -->

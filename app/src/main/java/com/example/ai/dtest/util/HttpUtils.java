@@ -15,6 +15,7 @@ import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.data.FamilyInfo;
 import com.example.ai.dtest.data.UerInfo;
+import com.example.ai.dtest.data.Usersick;
 import com.example.ai.dtest.db.Province;
 import com.google.gson.Gson;
 import java.io.File;
@@ -53,6 +54,8 @@ public class HttpUtils {
     private static final String DEFAMILYINFO= SOURCEIP+"/internetmedical/user/deletefamily"; //删除家人信息接口
     private static final String GETLOCATION = SOURCEIP + "/internetmedical/user/findcities"; // 查询位置信息接口
     private static final String PUSHCHANNELID = SOURCEIP + "/internetmedical/user/pullhannelId"; // 推送客户端ID接口
+
+    private static final String ADDCONDITION= SOURCEIP +"/internetmedical/user/addsick"; // 添加病情接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
@@ -96,8 +99,10 @@ public class HttpUtils {
     public static final int DEFAMILYINFOFA=34; // 删除家人信息失败
     public static final int DEFAMILYINFOSU=35; // 删除家人信息成功
     public static final int GETLOCATIONSU=36; //获取位置信息成功
-    public static final int PUSHCHANNELIDFA=37;  // 推送客户端ID失败
-    public static final int PUSHCHANNELIDSU= 38; // 推送客户端ID成功
+//    public static final int PUSHCHANNELIDFA=37;  // 推送客户端ID失败
+//    public static final int PUSHCHANNELIDSU= 38; // 推送客户端ID成功
+    public static final int ADDCONDITIONFA= 39; // 添加病情失败
+    public static final int ADDCONDITIONSU=40;// 添加病情成功
 
 
 
@@ -841,28 +846,68 @@ public class HttpUtils {
         List<Province> data;
     }
 
-    //推送客户端ID信息
-    static void pushChannelId(String info, final Handler handler){
-        RequestBody requestBody = RequestBody.create(JSON,info);
-        Request request = new Request.Builder().url(PUSHCHANNELID).post(requestBody).build();
+//    //推送客户端ID信息
+//    static void pushChannelId(String info, final Handler handler){
+//        RequestBody requestBody = RequestBody.create(JSON,info);
+//        Request request = new Request.Builder().url(PUSHCHANNELID).post(requestBody).build();
+//        Call call = okHttpClient.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Message message = new Message();
+//                message.what= PUSHCHANNELIDFA;
+//                handler.sendMessage(message);
+//            }
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                String res= response.body().string();
+//                if("1".equals(res)) {
+//                    Message message = new Message();
+//                    message.what= PUSHCHANNELIDSU;
+//                    handler.sendMessage(message);
+//                }else {
+//                    Message message = new Message();
+//                    message.what= PUSHCHANNELIDFA;
+//                    handler.sendMessage(message);
+//                }
+//            }
+//        });
+//    }
+
+    //查询位置信息
+    public static void addCondition(Usersick info,String[] paths,final Handler handler){
+        String[] Path={"first.png","second.png","third.png","forth.png"};
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("phone",info.getPhone())
+                .addFormDataPart("familyid",info.getFamliyid())
+                .addFormDataPart("usersickdesc",info.getUsersickdesc())
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[0],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[0])))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[1],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[1])))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[2],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[2])))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[3],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[3])))
+                .build();
+        Request request = new Request.Builder().url(ADDCONDITION).post(requestBody).build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 Message message = new Message();
-                message.what= PUSHCHANNELIDFA;
+                message.what= ADDCONDITIONFA;
                 handler.sendMessage(message);
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String res= response.body().string();
-                if("1".equals(res)) {
+                Gson gson= new Gson();
+                State state= gson.fromJson(res,State.class);
+                if("1".equals(state.state)) {
                     Message message = new Message();
-                    message.what= PUSHCHANNELIDSU;
+                    message.what= ADDCONDITIONSU;
                     handler.sendMessage(message);
                 }else {
                     Message message = new Message();
-                    message.what= PUSHCHANNELIDFA;
+                    message.what= ADDCONDITIONFA;
                     handler.sendMessage(message);
                 }
             }

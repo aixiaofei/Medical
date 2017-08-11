@@ -87,7 +87,7 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
         recyclerView = (RecyclerView) findViewById(R.id.patient_show);
         final LinearLayoutManager manager = new LinearLayoutManager(this);
         mList = new ArrayList<>();
-        adapter = new FamilyAdapter(this,R.layout.patient_info_show, mList);
+        adapter = new FamilyAdapter(this,R.layout.patient_info_show, mList,false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
@@ -104,6 +104,11 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
             public void delete(int position) {
                 FamilyInfo info = mList.get(position);
                 showDEDialog(info);
+            }
+
+            @Override
+            public void click(int position) {
+
             }
         });
 

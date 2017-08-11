@@ -34,6 +34,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.BaseActivity;
+import com.example.ai.dtest.frag.ConditionShow;
 import com.example.ai.dtest.frag.DoctorList;
 import com.example.ai.dtest.frag.Map;
 import com.example.ai.dtest.util.HttpUtils;
@@ -61,6 +62,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private ImageButton homePageFig;
 
     private TextView homePageText;
+
+    private ImageButton releaseConditionFig;
+
+    private TextView releaseConditionText;
 
     private ImageView mapFig;
 
@@ -133,6 +138,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         homePageText.setOnClickListener(this);
         homePageText.setSelected(true);
 
+        releaseConditionFig= (ImageButton) findViewById(R.id.search_doctor_page_pic);
+        releaseConditionFig.setOnClickListener(this);
+
+        releaseConditionText= (TextView) findViewById(R.id.search_doctor_page_text);
+        releaseConditionText.setOnClickListener(this);
+
         Button myPage= (Button) findViewById(R.id.my_page_pic);
         myPage.setOnClickListener(this);
 
@@ -196,6 +207,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.home_pag_text:
                 goHomePage();
+                break;
+            case R.id.search_doctor_page_pic:
+                goRelease();
+                break;
+            case R.id.search_doctor_page_text:
+                goRelease();
                 break;
             default:
                 break;
@@ -281,6 +298,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
         transaction.commit();
     }
+
+//    public void  addFragment(Fragment fragment){
+//        FragmentManager manager= getSupportFragmentManager();
+//        FragmentTransaction transaction= manager.beginTransaction();
+//        transaction.replace(R.id.main,fragment);
+//        transaction.commit();
+//    }
 
     private class LocationListener implements BDLocationListener {
         @Override
@@ -398,6 +422,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         tag=0;
     }
 
+    private void goRelease(){
+        addFragment(new ConditionShow());
+    }
+
     private void goMap(){
         if(mapText.getText().toString().equals(MAP)) {
             mapFig.setVisibility(View.INVISIBLE);
@@ -433,9 +461,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         set.setDuration(300);
         set.playTogether(scaleX,scaleY);
         set.start();
-    }
-
-    private void locAnima(){
-
     }
 }

@@ -109,7 +109,7 @@
                 android:layout_alignTop="@+id/search_doctor_page_pic"
                 android:layout_marginRight="45dp"
                 android:background="@drawable/home_page" />
-            <Button
+            <ImageButton
                 android:id="@+id/search_doctor_page_pic"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
@@ -178,7 +178,8 @@
                 android:layout_marginRight="39dp"
                 android:layout_alignTop="@+id/my_doctor_page_text"
                 android:layout_toLeftOf="@+id/my_doctor_page_text"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="@color/default_text_seclector"/>
             <TextView
                 android:id="@+id/my_doctor_page_text"
                 android:layout_width="30dp"

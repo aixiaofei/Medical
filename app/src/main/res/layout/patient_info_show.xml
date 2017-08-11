@@ -58,6 +58,16 @@
             android:background="@drawable/delete_family"
             android:contentDescription="delete" />
 
+        <CheckBox
+            android:id="@+id/select"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@+id/delete_info"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:checked="false"
+            android:layout_marginLeft="10dp"/>
+
     </RelativeLayout>
 
     <View

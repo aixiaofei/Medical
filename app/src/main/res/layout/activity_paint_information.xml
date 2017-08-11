@@ -29,7 +29,7 @@
             android:gravity="center"
             android:textColor="@color/colorWhite"
             android:layout_toRightOf="@id/design_back_fig"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_alignTop="@+id/title"
             android:layout_marginTop="5dp"/>
 
@@ -37,7 +37,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="病人信息显示"
+            android:text="亲属信息显示"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:gravity="center"
@@ -63,7 +63,7 @@
         android:layout_below="@+id/patient_show"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:text="添加病人信息"
+        android:text="添加亲属信息"
         android:gravity="center"
         android:textColor="#FFFFFF"
         android:background="@drawable/rigster_login_background"/>

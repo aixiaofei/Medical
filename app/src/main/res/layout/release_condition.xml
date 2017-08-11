@@ -1,0 +1,236 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--/*标题栏设置*/-->
+    <RelativeLayout
+        android:id="@+id/illness_top"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorButton_background"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/design_back_fig"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_white"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/design_back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="返回"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:layout_toRightOf="@id/design_back_fig"
+            android:textSize="16sp"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="发布病情"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <!--/*标题栏设置*/-->
+
+    <EditText
+        android:id="@+id/illness_remind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/release_illness_hint_remind"
+        android:layout_below="@id/illness_top"
+        android:layout_margin="8dp"
+        android:background="@null"
+        android:gravity="top"
+        android:textSize="14sp"
+        android:maxLines="10"/>
+
+    <RelativeLayout
+        android:id="@+id/patient"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@id/illness_remind"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/patient_dec"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:text="就诊人:"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
+            android:id="@+id/patient_name"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/patient_dec"/>
+
+        <Button
+            android:id="@+id/add_patient"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/addition"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/department"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_below="@id/patient"
+        android:layout_marginTop="5dp"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/department_dec"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:text="科室:"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp" />
+
+        <TextView
+            android:id="@+id/department_info"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/department_dec"/>
+
+        <Button
+            android:id="@+id/add_department"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="@drawable/addition"
+            android:gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/picture_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/department">
+
+        <ImageView
+            android:id="@+id/add_picture"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:background="@drawable/add_picture" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:text="@string/add_picture_remind"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/show_fig"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/picture_part">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/info_first"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/info_second"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/info_third"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/info_forth"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/submit_button"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/show_fig"
+        android:background="@drawable/button_shape"
+        android:text="提交"
+        android:textColor="@color/colorWhite"
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>

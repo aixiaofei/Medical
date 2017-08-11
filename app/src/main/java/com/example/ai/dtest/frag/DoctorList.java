@@ -19,6 +19,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.ai.dtest.adapter.DocterAdapter;
 import com.example.ai.dtest.R;
+import com.example.ai.dtest.base.BaseFragment;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.HttpUtils;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DoctorList extends Fragment implements View.OnClickListener{
+public class DoctorList extends BaseFragment implements View.OnClickListener{
 
     private LocationClient client;
 

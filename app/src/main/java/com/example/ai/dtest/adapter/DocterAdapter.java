@@ -2,6 +2,7 @@ package com.example.ai.dtest.adapter;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +75,6 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         View docter_view;
         CircleImageView docter_fig;
         TextView docter_name;
-        TextView docter_age;
         TextView docter_keshi;
         TextView docter_hosipital;
         TextView docter_specialty;
@@ -84,8 +84,11 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             super(view);
             docter_view=view;
             docter_fig= (CircleImageView) view.findViewById(R.id.doctor_photo);
+
             docter_name= (TextView) view.findViewById(R.id.docter_name);
-            docter_age= (TextView) view.findViewById(R.id.docter_age);
+            TextPaint paint= docter_name.getPaint();
+            paint.setFakeBoldText(true);
+
             docter_keshi= (TextView) view.findViewById(R.id.docter_keshi);
             docter_hosipital= (TextView) view.findViewById(R.id.docter_hosipital);
             docter_specialty= (TextView) view.findViewById(R.id.docter_specialty);
@@ -117,6 +120,7 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder1, int position) {
         if(holder1 instanceof normalViewHolder){
@@ -124,7 +128,6 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             normalViewHolder holder= (normalViewHolder) holder1;
             loadImage(holder.docter_fig,docter.getDocloginid());
             holder.docter_name.setText(docter.getDocname());
-            holder.docter_age.setText(docter.getDocage().toString());
             holder.docter_keshi.setText(docter.getDocdept());
             holder.docter_hosipital.setText(docter.getDochosp());
             holder.docter_specialty.setText(docter.getDocexpert());

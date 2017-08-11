@@ -31,6 +31,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.example.ai.dtest.MainActivity;
 import com.example.ai.dtest.R;
+import com.example.ai.dtest.base.BaseFragment;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.frag.DoctorList;
@@ -40,7 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
-public class Map extends Fragment {
+public class Map extends BaseFragment {
 
     private MapView mapView;
 
@@ -141,6 +142,24 @@ public class Map extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            mapView.onPause();
+            map.setMyLocationEnabled(false);
+            if(client.isStarted()){
+                client.stop();
+            }
+        }else {
+            mapView.onResume();
+            map.setMyLocationEnabled(true);
+            if(!client.isStarted()){
+                client.start();
+            }
+        }
     }
 
     @Override
