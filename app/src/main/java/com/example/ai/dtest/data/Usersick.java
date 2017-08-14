@@ -1,6 +1,13 @@
 package com.example.ai.dtest.data;
 
-public class Usersick {
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class Usersick implements Serializable{
 
     private String phone;
 
@@ -16,7 +23,11 @@ public class Usersick {
 
     private Integer userorderid;
 
-    private Integer userloginid;
+    private String familymale;
+
+    private String familyname;
+
+    private String familyage;
 
     public String getPhone() {
         return phone;
@@ -74,11 +85,40 @@ public class Usersick {
         this.userorderid = userorderid;
     }
 
-    public Integer getUserloginid() {
-        return userloginid;
+
+    public String getFamilymale() {
+        return familymale;
     }
 
-    public void setUserloginid(Integer userloginid) {
-        this.userloginid = userloginid;
+    public void setFamilymale(String familymale) {
+        this.familymale = familymale;
+    }
+
+    public String getFamilyname() {
+        return familyname;
+    }
+
+    public void setFamilyname(String familyname) {
+        this.familyname = familyname;
+    }
+
+    public String getFamilyage() {
+        return familyage;
+    }
+
+    public void setFamilyage(String familyage) {
+        this.familyage = familyage;
+    }
+
+    public Object deepCopy() throws IOException, ClassNotFoundException {
+        //字节数组输出流，暂存到内存中
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        //序列化
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(this);
+        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+        ObjectInputStream ois = new ObjectInputStream(bis);
+        //反序列化
+        return ois.readObject();
     }
 }

@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <TextView
+    <RelativeLayout
         android:id="@+id/patient_info_dec"
         android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:layout_marginLeft="10dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:text="就诊人信息:"
-        android:gravity="center_vertical"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="2dp"/>
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:text="就诊人信息:"
+            android:layout_centerVertical="true" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/patient_info"
@@ -30,7 +37,7 @@
             android:layout_alignParentLeft="true"
             android:textSize="14sp"
             android:gravity="center_vertical"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:id="@+id/patient_male"
@@ -54,16 +61,13 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:layout_below="@+id/patient_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-
         <LinearLayout
+            android:id="@+id/info"
             android:orientation="vertical"
+            android:layout_below="@+id/patient_info"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
             <TextView
                 android:id="@+id/patient_info_dec"
@@ -73,7 +77,6 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="病情信息:"
-                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"/>
 
             <TextView
@@ -83,6 +86,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
+                android:maxLines="10"
                 android:textSize="14sp"/>
 
             <TextView
@@ -108,8 +112,8 @@
 
                     <ImageView
                         android:id="@+id/info1"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"/>
@@ -122,8 +126,8 @@
 
                     <ImageView
                         android:id="@+id/info2"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"/>
@@ -136,8 +140,8 @@
 
                     <ImageView
                         android:id="@+id/info3"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"/>
@@ -150,8 +154,8 @@
 
                     <ImageView
                         android:id="@+id/info4"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_centerInParent="true"
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"/>
@@ -161,7 +165,11 @@
 
         </LinearLayout>
 
-    </ScrollView>
-
+    <View
+        android:layout_below="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/colorBackground"/>
 
 </RelativeLayout>

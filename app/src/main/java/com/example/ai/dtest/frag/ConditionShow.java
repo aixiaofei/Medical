@@ -2,6 +2,8 @@ package com.example.ai.dtest.frag;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ai.dtest.MainActivity;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.ReleaseCondition;
+import com.example.ai.dtest.adapter.ConditionAdapter;
 import com.example.ai.dtest.base.BaseFragment;
+import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.data.FamilyInfo;
 import com.example.ai.dtest.data.Usersick;
+import com.example.ai.dtest.util.HttpUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +39,30 @@ public class ConditionShow extends BaseFragment{
     private List<Usersick> mList;
 
     private RecyclerView recyclerView;
+
+    private ConditionAdapter adapter;
+
+    private Handler handler= new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case HttpUtils.PULLCONDITIONFA:
+                    Toast.makeText(getContext(),"更新信息失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case HttpUtils.PULLCONDITIONSU:
+                    mList.clear();
+                    Bundle bundle= msg.getData();
+                    String res= bundle.getString("result");
+                    Gson gson= new Gson();
+                    List<Usersick> data= gson.fromJson(res,new TypeToken<List<Usersick>>(){}.getType());
+                    deepclone(data);
+                    adapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,8 +77,9 @@ public class ConditionShow extends BaseFragment{
 
         recyclerView= (RecyclerView) view.findViewById(R.id.condition_show);
         LinearLayoutManager manager= new LinearLayoutManager(getContext());
-
+        adapter= new ConditionAdapter(getContext(),R.layout.condition_item,mList);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
 
         TextView release= (TextView) view.findViewById(R.id.release);
         release.setOnClickListener(new View.OnClickListener() {
@@ -59,5 +95,16 @@ public class ConditionShow extends BaseFragment{
     @Override
     public void onStart() {
         super.onStart();
+        HttpUtils.pullCondition(MyApplication.getUserPhone(),handler);
+    }
+
+    private void deepclone(List<Usersick> origin){
+        for(Usersick i:origin){
+            try {
+                mList.add((Usersick) i.deepCopy());
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

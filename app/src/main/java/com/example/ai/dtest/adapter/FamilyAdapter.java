@@ -103,6 +103,15 @@ public class FamilyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     notifyDataSetChanged();
                 }
             });
+            holder.select.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = holder.getAdapterPosition();
+                    listener.click(position);
+                    currentPosition=position;
+                    notifyDataSetChanged();
+                }
+            });
         }
         return holder;
     }

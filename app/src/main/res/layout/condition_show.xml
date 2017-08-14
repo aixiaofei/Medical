@@ -9,15 +9,22 @@
         android:layout_height="30dp"
         android:text="已发布病情:"
         android:textSize="16sp"
+        android:textColor="@android:color/black"
         android:gravity="center_vertical"
         android:layout_marginStart="10dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:background="@color/colorBackground"
+        android:layout_below="@+id/information_top"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/condition_show"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:scrollbars="vertical"
         android:scrollbarStyle="outsideOverlay"
         android:layout_below="@+id/information_top"

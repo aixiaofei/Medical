@@ -54,7 +54,7 @@ public class HttpUtils {
     private static final String DEFAMILYINFO= SOURCEIP+"/internetmedical/user/deletefamily"; //删除家人信息接口
     private static final String GETLOCATION = SOURCEIP + "/internetmedical/user/findcities"; // 查询位置信息接口
     private static final String PUSHCHANNELID = SOURCEIP + "/internetmedical/user/pullhannelId"; // 推送客户端ID接口
-
+    private static final String PULLCONDITION= SOURCEIP +"/internetmedical/user/getsick"; // 查询病情接口
     private static final String ADDCONDITION= SOURCEIP +"/internetmedical/user/addsick"; // 添加病情接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
@@ -101,8 +101,10 @@ public class HttpUtils {
     public static final int GETLOCATIONSU=36; //获取位置信息成功
 //    public static final int PUSHCHANNELIDFA=37;  // 推送客户端ID失败
 //    public static final int PUSHCHANNELIDSU= 38; // 推送客户端ID成功
-    public static final int ADDCONDITIONFA= 39; // 添加病情失败
-    public static final int ADDCONDITIONSU=40;// 添加病情成功
+    public static final int PULLCONDITIONFA =39; // 查询病情失败
+    public static final int PULLCONDITIONSU =40; // 查询病情成功
+    public static final int ADDCONDITIONFA= 41; // 添加病情失败
+    public static final int ADDCONDITIONSU= 42;// 添加病情成功
 
 
 
@@ -874,24 +876,71 @@ public class HttpUtils {
 //        });
 //    }
 
-    //查询位置信息
+
+    //查询病情信息
+    public static void pullCondition(String phone,final Handler handler){
+        Gson gson =new Gson();
+        Phone phone1= new Phone();
+        phone1.phone=phone;
+        String res= gson.toJson(phone1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PULLCONDITION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PULLCONDITIONFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                pullCondition condition= gson.fromJson(res,pullCondition.class);
+                String data= gson.toJson(condition.data);
+                if(condition.state.equals("1")) {
+                    Message message = new Message();
+                    message.what= PULLCONDITIONSU;
+                    Bundle bundle= new Bundle();
+                    bundle.putString("result",data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PULLCONDITIONFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class pullCondition{
+        String state;
+        List<Usersick> data;
+    }
+
+    //添加病情信息
     public static void addCondition(Usersick info,String[] paths,final Handler handler){
         String[] Path={"first.png","second.png","third.png","forth.png"};
-        RequestBody requestBody = new MultipartBody.Builder()
+        MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("phone",info.getPhone())
                 .addFormDataPart("familyid",info.getFamliyid())
-                .addFormDataPart("usersickdesc",info.getUsersickdesc())
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[0],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[0])))
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[1],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[1])))
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[2],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[2])))
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[3],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[3])))
-                .build();
+                .addFormDataPart("usersickdesc",info.getUsersickdesc());
+        for(int i=0;i<paths.length;i++){
+            if(!TextUtils.isEmpty(paths[i])){
+                Log.d("ai",paths[i]);
+                builder.addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[i],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[i])));
+            }
+        }
+        RequestBody requestBody= builder.build();
         Request request = new Request.Builder().url(ADDCONDITION).post(requestBody).build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Log.d("ai","failure");
                 Message message = new Message();
                 message.what= ADDCONDITIONFA;
                 handler.sendMessage(message);
@@ -902,6 +951,7 @@ public class HttpUtils {
                 Gson gson= new Gson();
                 State state= gson.fromJson(res,State.class);
                 if("1".equals(state.state)) {
+                    Log.d("ai","sucess");
                     Message message = new Message();
                     message.what= ADDCONDITIONSU;
                     handler.sendMessage(message);

@@ -268,17 +268,6 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
             Toast.makeText(this,"请继续填写信息!",Toast.LENGTH_SHORT).show();
             return;
         }
-        boolean figIsSure=true;
-        for(String path:selectPath){
-            if(path.isEmpty()){
-                figIsSure=false;
-                break;
-            }
-        }
-        if(!figIsSure){
-            Toast.makeText(this,"请继续选择照片!",Toast.LENGTH_SHORT).show();
-            return;
-        }
         Usersick info= new Usersick();
         info.setFamliyid(currentInfo.getFamilyid());
         info.setPhone(MyApplication.getUserPhone());
