@@ -55,7 +55,9 @@ public class HttpUtils {
     private static final String GETLOCATION = SOURCEIP + "/internetmedical/user/findcities"; // 查询位置信息接口
     private static final String PUSHCHANNELID = SOURCEIP + "/internetmedical/user/pullhannelId"; // 推送客户端ID接口
     private static final String PULLCONDITION= SOURCEIP +"/internetmedical/user/getsick"; // 查询病情接口
+    private static final String PULLONECONDITION= SOURCEIP +"/internetmedical/user/getonesick"; // 查询单个病情接口
     private static final String ADDCONDITION= SOURCEIP +"/internetmedical/user/addsick"; // 添加病情接口
+    private static final String DECONDITION= SOURCEIP +"/internetmedical/user/deletesick"; // 删除病情接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
@@ -103,8 +105,12 @@ public class HttpUtils {
 //    public static final int PUSHCHANNELIDSU= 38; // 推送客户端ID成功
     public static final int PULLCONDITIONFA =39; // 查询病情失败
     public static final int PULLCONDITIONSU =40; // 查询病情成功
-    public static final int ADDCONDITIONFA= 41; // 添加病情失败
-    public static final int ADDCONDITIONSU= 42;// 添加病情成功
+    public static final int PULLONECONFA=41; // 查询单个病情失败
+    public static final int PULLONECONSU=42; // 查询单个病情成功
+    public static final int ADDCONDITIONFA= 43; // 添加病情失败
+    public static final int ADDCONDITIONSU= 44;// 添加病情成功
+    public static final int DECONDITIONFA=45; // 删除病情失败
+    public static final int DECONDITIONSU=46; // 删除病情成功
 
 
 
@@ -656,7 +662,7 @@ public class HttpUtils {
     }
 
     //上传用户信息
-    public static void pushUserInfo(UerInfo info, List<String> figPath, final Handler handler){
+    public static void pushUserInfo(UerInfo info, String[] figPath, final Handler handler){
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("phone",info.getUserphone())
@@ -665,8 +671,8 @@ public class HttpUtils {
                 .addFormDataPart("userage",info.getUserage())
                 .addFormDataPart("usermale",info.getUsermale())
                 .addFormDataPart("useradr",info.getUseradr())
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"top.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath.get(0))))
-                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"down.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath.get(1))))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"top.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath[0])))
+                .addFormDataPart("pictureFile", MyApplication.getUserPhone()+"down.png",RequestBody.create(MEDIA_TYPE_PNG, new File(figPath[1])))
                 .build();
         Request request = new Request.Builder().url(PUSHUSERINFO).post(requestBody).build();
         Call call = okHttpClient.newCall(request);
@@ -920,6 +926,48 @@ public class HttpUtils {
         List<Usersick> data;
     }
 
+    //查询单个病情信息
+    public static void pullOneCondition(String id,final Handler handler){
+        Gson gson =new Gson();
+        Id id1= new Id();
+        id1.id=id;
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PULLONECONDITION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PULLONECONFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                singleUsersick usersick= gson.fromJson(res,singleUsersick.class);
+                if(usersick.state.equals("1")) {
+                    Message message = new Message();
+                    message.what= PULLONECONSU;
+                    Bundle bundle= new Bundle();
+                    bundle.putSerializable("result",usersick.data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PULLONECONFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class singleUsersick{
+        String state;
+        Usersick data;
+    }
+
     //添加病情信息
     public static void addCondition(Usersick info,String[] paths,final Handler handler){
         String[] Path={"first.png","second.png","third.png","forth.png"};
@@ -927,11 +975,15 @@ public class HttpUtils {
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("phone",info.getPhone())
                 .addFormDataPart("familyid",info.getFamliyid())
-                .addFormDataPart("usersickdesc",info.getUsersickdesc());
+                .addFormDataPart("usersickdesc",info.getUsersickdesc())
+                .addFormDataPart("usersicktime",info.getUsersicktime());
+        if(!TextUtils.isEmpty(info.getUsersickid())){
+            builder.addFormDataPart("usersickid",info.getUsersickid());
+        }
         for(int i=0;i<paths.length;i++){
             if(!TextUtils.isEmpty(paths[i])){
                 Log.d("ai",paths[i]);
-                builder.addFormDataPart("pictureFile", MyApplication.getUserPhone()+Path[i],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[i])));
+                builder.addFormDataPart("pictureFile",MyApplication.getUserPhone()+Path[i],RequestBody.create(MEDIA_TYPE_PNG, new File(paths[i])));
             }
         }
         RequestBody requestBody= builder.build();
@@ -958,6 +1010,40 @@ public class HttpUtils {
                 }else {
                     Message message = new Message();
                     message.what= ADDCONDITIONFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //删除病情信息
+    public static void deleteCondition(String id,final Handler handler){
+        Gson gson =new Gson();
+        Id id1= new Id();
+        id1.id=id;
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(DECONDITION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= DECONDITIONFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State state= gson.fromJson(res,State.class);
+                if(state.state.equals("1")) {
+                    Message message = new Message();
+                    message.what= DECONDITIONSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= DECONDITIONFA;
                     handler.sendMessage(message);
                 }
             }

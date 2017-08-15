@@ -12,7 +12,7 @@
             android:background="@color/colorButton_background"
             android:layout_alignParentTop="true">
 
-            /*位置设置*/
+            <!--/*位置设置*/-->
             <ImageView
                 android:id="@+id/map_fig"
                 android:layout_width="16dp"

@@ -62,25 +62,25 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
 
     private EditText addressDown;
 
-    private ImageView identifyTop;
-
-    private ImageView identifyDown;
+    private ImageView[] imageViews=new ImageView[2];
 
     private ImageView addIdentify;
 
-    private List<String> identifyFig= new ArrayList<>();
+    private String[] identifyFig= new String[2];
 
     private int figNumber=0;
 
-    private static final int firstFigCompleted=1;
-
-    private static final int secondFigCompleted=2;
-
-    private List<Bitmap> fig;
+    private Bitmap[] fig= new Bitmap[2];
 
     private ProgressDialog dialog;
 
     private locationDialog lDialog;
+
+    private int currentFig;
+
+    private static final String[] paths={"top","down"};
+
+    private static final int[] signal={1,2};
 
     private Handler handler= new Handler(){
         @Override
@@ -104,23 +104,25 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
                     for(Bitmap bitmap:fig){
                         ImgUtils.recycleBitmap(bitmap);
                     }
-                    File top= new File(identifyPath,MyApplication.getUserPhone() + "top.png");
-                    if(top.exists()){
-                        top.delete();
+                    for(String name:paths){
+                        File file= new File(identifyPath,MyApplication.getUserPhone() + name+".png");
+                        if(file.exists()){
+                            file.delete();
+                        }
                     }
-                    File down= new File(identifyPath,MyApplication.getUserPhone() + "down.png");
-                    if(down.exists()){
-                        down.delete();
+                    File file= new File(cameraIdentify,"camera.png");
+                    if(file.exists()){
+                        file.delete();
                     }
                     Intent intent= new Intent(InformationDesign.this,InformationShow.class);
                     startActivity(intent);
                     finish();
                     break;
-                case firstFigCompleted:
-                    identifyFig.add(identifyPath + File.separator + MyApplication.getUserPhone() + "top.png");
+                case 1:
+                    identifyFig[0]=(identifyPath + File.separator + MyApplication.getUserPhone() + paths[0]+".png");
                     break;
-                case secondFigCompleted:
-                    identifyFig.add(identifyPath + File.separator + MyApplication.getUserPhone() + "down.png");
+                case 2:
+                    identifyFig[1]=(identifyPath + File.separator + MyApplication.getUserPhone() + paths[1]+".png");
                     break;
                 default:
                     break;
@@ -138,8 +140,12 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         addressTop= (TextView) findViewById(R.id.address_top);
         addressDown= (EditText) findViewById(R.id.address_down);
         addIdentify= (ImageView) findViewById(R.id.add_identify);
-        identifyTop= (ImageView) findViewById(R.id.identify_top);
-        identifyDown= (ImageView) findViewById(R.id.identify_down);
+
+        imageViews[0]=(ImageView) findViewById(R.id.identify_top);
+        imageViews[1]= (ImageView) findViewById(R.id.identify_down);
+        imageViews[0].setOnClickListener(this);
+        imageViews[1].setOnClickListener(this);
+
         ImageView backFig= (ImageView) findViewById(R.id.design_back_fig);
         TextView backText= (TextView) findViewById(R.id.design_back_text);
         ImageView selectAddress= (ImageView) findViewById(R.id.select_address);
@@ -200,6 +206,12 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
             case R.id.select_sex:
                 showDialog();
                 break;
+            case R.id.identify_top:
+                showDeleteDialog(1);
+                break;
+            case R.id.identify_down:
+                showDeleteDialog(2);
+                break;
             default:
                 break;
         }
@@ -236,8 +248,43 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
         dialog.show();
     }
 
+    private void showDeleteDialog(final int position) {
+        if(imageViews[position-1].getDrawable()!=null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.myDialog);
+            builder.setMessage("确认删除此照片!")
+                    .setTitle("提示")
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                            ImgUtils.recycleBitmap(fig[position-1]);
+                            fig[position-1]=null;
+                            imageViews[position-1].setImageDrawable(null);
+                            identifyFig[position-1]=null;
+                            figNumber-=1;
+                            if(figNumber<2){
+                                addIdentify.setClickable(true);
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+            builder.create().show();
+        }
+    }
+
     private void captureIdentify(){
         ImgUtils.getImageFromCamera(this,cameraIdentify);
+        for(int i=0;i<imageViews.length;i++){
+            if(imageViews[i].getDrawable()==null){
+                currentFig=i+1;
+                break;
+            }
+        }
     }
 
     @Override
@@ -247,100 +294,128 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
             case ImgUtils.TAKE_PHOTO:
                 if(resultCode==RESULT_OK){
                     if(Build.VERSION.SDK_INT>=24){
-                        isOnN();
+                        Uri imageUri= FileProvider.getUriForFile(this,"com.example.ai.dtest.fileprovider",new File(cameraIdentify,"camera.png"));
+                        processFig(imageUri);
                     }
                     else {
-                        isOffN();
+                        Uri imageUri= Uri.fromFile(new File(cameraIdentify,"camera.png"));
+                        processFig(imageUri);
                     }
                 }
         }
     }
 
-    private void isOnN(){
+    private void processFig(Uri imageUri){
         figNumber+=1;
         if(figNumber==2){
             addIdentify.setClickable(false);
         }
-        Uri imageUri= FileProvider.getUriForFile(this,"com.example.ai.dtest.fileprovider",new File(cameraIdentify,"camera.png"));
         try {
             final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-            if(fig==null){
-                fig=new ArrayList<>();
-            }
-            fig.add(bitmap);
-            if (figNumber == 1) {
-                identifyTop.setImageBitmap(bitmap);
-                final String fileName = MyApplication.getUserPhone() + "top";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
-                        Message message= new Message();
-                        message.what= firstFigCompleted;
-                        handler.sendMessage(message);
-                    }
-                }).start();
-            } else {
-                identifyDown.setImageBitmap(bitmap);
-                final String fileName = MyApplication.getUserPhone() + "down";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
-                        Message message= new Message();
-                        message.what= secondFigCompleted;
-                        handler.sendMessage(message);
-                    }
-                }).start();
-            }
+            fig[currentFig-1]=bitmap;
+            imageViews[currentFig-1].setImageBitmap(bitmap);
+            final String fileName = MyApplication.getUserPhone()+paths[currentFig-1];
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ImgUtils.saveImageToGallery(fileName,identifyPath, bitmap);
+                    Message message= new Message();
+                    message.what= signal[currentFig-1];
+                    handler.sendMessage(message);
+                }
+            }).start();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    private void isOffN(){
-        figNumber+=1;
-        if(figNumber==2){
-            addIdentify.setClickable(false);
-        }
-        Uri imageUri= Uri.fromFile(new File(cameraIdentify,"camera.png"));
-        try {
-            final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-            if(fig==null){
-                fig=new ArrayList<>();
-            }
-            fig.add(bitmap);
-            if (figNumber == 1) {
-                identifyTop.setImageBitmap(bitmap);
-                final String fileName = MyApplication.getUserPhone() + "top";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
-                        Message message= new Message();
-                        message.what= firstFigCompleted;
-                        handler.sendMessage(message);
-                    }
-                }).start();
-            } else {
-                identifyDown.setImageBitmap(bitmap);
-                final String fileName = MyApplication.getUserPhone() + "down";
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
-                        Message message= new Message();
-                        message.what= secondFigCompleted;
-                        handler.sendMessage(message);
-                    }
-                }).start();
-            }
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
+
+//    private void isOnN(){
+//        figNumber+=1;
+//        if(figNumber==2){
+//            addIdentify.setClickable(false);
+//        }
+//        Uri imageUri= FileProvider.getUriForFile(this,"com.example.ai.dtest.fileprovider",new File(cameraIdentify,"camera.png"));
+//        try {
+//            final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+//            if(fig==null){
+//                fig=new ArrayList<>();
+//            }
+//            fig.add(bitmap);
+//            if (figNumber == 1) {
+//                identifyTop.setImageBitmap(bitmap);
+//                final String fileName = MyApplication.getUserPhone() + "top";
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
+//                        Message message= new Message();
+//                        message.what= firstFigCompleted;
+//                        handler.sendMessage(message);
+//                    }
+//                }).start();
+//            } else {
+//                identifyDown.setImageBitmap(bitmap);
+//                final String fileName = MyApplication.getUserPhone() + "down";
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
+//                        Message message= new Message();
+//                        message.what= secondFigCompleted;
+//                        handler.sendMessage(message);
+//                    }
+//                }).start();
+//            }
+//        }
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    private void isOffN(){
+//        figNumber+=1;
+//        if(figNumber==2){
+//            addIdentify.setClickable(false);
+//        }
+//        Uri imageUri= Uri.fromFile(new File(cameraIdentify,"camera.png"));
+//        try {
+//            final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+//            if(fig==null){
+//                fig=new ArrayList<>();
+//            }
+//            fig.add(bitmap);
+//            if (figNumber == 1) {
+//                identifyTop.setImageBitmap(bitmap);
+//                final String fileName = MyApplication.getUserPhone() + "top";
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
+//                        Message message= new Message();
+//                        message.what= firstFigCompleted;
+//                        handler.sendMessage(message);
+//                    }
+//                }).start();
+//            } else {
+//                identifyDown.setImageBitmap(bitmap);
+//                final String fileName = MyApplication.getUserPhone() + "down";
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ImgUtils.saveImageToGallery(fileName, identifyPath, bitmap);
+//                        Message message= new Message();
+//                        message.what= secondFigCompleted;
+//                        handler.sendMessage(message);
+//                    }
+//                }).start();
+//            }
+//        }
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void canNextStep(){
         if(TextUtils.isEmpty(userName.getText().toString())||TextUtils.isEmpty(identify.getText().toString())){
@@ -355,7 +430,14 @@ public class InformationDesign extends BaseActivity implements View.OnClickListe
             Toast.makeText(InformationDesign.this, "姓名或身份证不合法", Toast.LENGTH_LONG).show();
             return;
         }
-        if(identifyFig.size()<2){
+        boolean can= true;
+        for(String path:identifyFig){
+            if(TextUtils.isEmpty(path)){
+                can=false;
+                break;
+            }
+        }
+        if(!can){
             Toast.makeText(InformationDesign.this, "请上传身份证照片", Toast.LENGTH_LONG).show();
             return;
         }

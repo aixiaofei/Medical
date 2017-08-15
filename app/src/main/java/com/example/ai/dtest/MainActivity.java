@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -129,8 +130,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         mapText.setOnClickListener(this);
 
         homePageFig= (ImageButton) findViewById(R.id.home_page_pic);
-        Drawable src = homePageFig.getBackground();
-        ImgUtils.tintDrawable(src, getResources().getColorStateList(R.color.button_selector));
+        Drawable srcHome = homePageFig.getBackground();
+        ImgUtils.tintDrawable(srcHome, getResources().getColorStateList(R.color.button_selector));
         startAnima(homePageFig);
         homePageFig.setOnClickListener(this);
 
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         homePageText.setSelected(true);
 
         releaseConditionFig= (ImageButton) findViewById(R.id.search_doctor_page_pic);
+        Drawable srcCondition = releaseConditionFig.getBackground();
+        ImgUtils.tintDrawable(srcCondition, getResources().getColorStateList(R.color.button_selector));
         releaseConditionFig.setOnClickListener(this);
 
         releaseConditionText= (TextView) findViewById(R.id.search_doctor_page_text);
@@ -262,7 +265,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
 
     private void init(){
-        if(MyApplication.getUserPhone()==null){
+        if(TextUtils.isEmpty(MyApplication.getUserPhone())){
             OffLineUser offLineUsers = DataSupport.where("isAutoLogin =?","1").findFirst(OffLineUser.class);
             if (offLineUsers!=null){
                 client= new LocationClient(MainActivity.this);
@@ -415,25 +418,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         if(tag==1){
             mapFig.setVisibility(View.VISIBLE);
             mapText.setText(MAP);
+        }else if(tag==2){
+            stopAnima(releaseConditionFig);
+            releaseConditionText.setSelected(false);
         }
+
         startAnima(homePageFig);
         homePageText.setSelected(true);
         addFragment(new DoctorList());
         tag=0;
     }
 
-    private void goRelease(){
-        addFragment(new ConditionShow());
-    }
-
     private void goMap(){
         if(mapText.getText().toString().equals(MAP)) {
-            mapFig.setVisibility(View.INVISIBLE);
-            mapText.setText(LIST);
             if(tag==0) {
                 stopAnima(homePageFig);
                 homePageText.setSelected(false);
+            }else if(tag==2){
+                stopAnima(releaseConditionFig);
+                releaseConditionText.setSelected(false);
             }
+
+            mapFig.setVisibility(View.INVISIBLE);
+            mapText.setText(LIST);
             addFragment(new Map());
             tag=1;
         }else {
@@ -441,6 +448,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             mapText.setText(MAP);
             goHomePage();
         }
+    }
+
+    private void goRelease(){
+        if(tag==0){
+            stopAnima(homePageFig);
+            homePageText.setSelected(false);
+        }else if(tag==1){
+            mapFig.setVisibility(View.VISIBLE);
+            mapText.setText(MAP);
+        }
+
+        startAnima(releaseConditionFig);
+        releaseConditionText.setSelected(true);
+        addFragment(new ConditionShow());
+        tag=2;
     }
 
     private void startAnima(View view){

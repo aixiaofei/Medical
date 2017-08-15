@@ -1,10 +1,12 @@
 package com.example.ai.dtest;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,16 +21,25 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.FamilyInfo;
 import com.example.ai.dtest.data.Usersick;
+import com.example.ai.dtest.frag.ConditionShow;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
 import com.example.ai.dtest.util.getImagePath;
 import com.example.ai.dtest.view.selectFamilyInfo;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static com.example.ai.dtest.base.MyApplication.getContext;
 import static com.example.ai.dtest.util.ImgUtils.cameraIdentify;
 import static com.example.ai.dtest.util.ImgUtils.identifyPath;
 
@@ -37,6 +48,8 @@ import static com.example.ai.dtest.util.ImgUtils.identifyPath;
  */
 
 public class ReleaseCondition extends BaseActivity implements View.OnClickListener{
+
+    private Usersick lastInfo;
 
     private EditText conditionDec;
 
@@ -52,59 +65,69 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
 
     private ImageView[] fig= new ImageView[4];
 
-    private TextView submit;
-
     private FamilyInfo currentInfo;
 
     private int currentFig;
 
     private String[] selectPath= new String[4];
 
-    private Bitmap[] selectBitmap= new Bitmap[4];
-
     private int figNumber;
 
-    private static final String[] paths={"first.png","second.png","third.png","forth.png"};
+    private static final String[] paths={"first","second","third","forth"};
 
-    private static final int[] signal= {1,2,3,4};
+    private static final int CONPLETE= 100;
+
+    private static final String IMAGEURI= HttpUtils.SOURCEIP+ "/internetmedical/user/getsickpic/";
 
     private ProgressDialog dialog;
+
+    private int startMode;
+
+    private List<String> choosePhoto= new ArrayList<>();
 
     private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1:
-                    selectPath[0]=(identifyPath + File.separator + MyApplication.getUserPhone()+paths[0]);
-                    break;
-                case 2:
-                    selectPath[1]=(identifyPath + File.separator + MyApplication.getUserPhone()+paths[1]);
-                    break;
-                case 3:
-                    selectPath[2]=(identifyPath + File.separator + MyApplication.getUserPhone()+paths[2]);
-                    break;
-                case 4:
-                    selectPath[3]=(identifyPath + File.separator + MyApplication.getUserPhone()+paths[3]);
+                case 100:
+                    submit();
                     break;
                 case HttpUtils.ADDCONDITIONFA:
                     dialog.cancel();
-                    Toast.makeText(ReleaseCondition.this, "上传失败", Toast.LENGTH_LONG).show();
+                    if(startMode==0) {
+                        Toast.makeText(ReleaseCondition.this, "上传失败", Toast.LENGTH_LONG).show();
+                    }else if(startMode==1){
+                        Toast.makeText(ReleaseCondition.this, "修改失败", Toast.LENGTH_LONG).show();
+                    }
                     break;
                 case HttpUtils.ADDCONDITIONSU:
                     dialog.cancel();
-                    Toast.makeText(ReleaseCondition.this, "上传成功", Toast.LENGTH_LONG).show();
-                    for(Bitmap bitmap:selectBitmap){
-                        ImgUtils.recycleBitmap(bitmap);
+                    if(startMode==0) {
+                        Toast.makeText(ReleaseCondition.this, "上传成功", Toast.LENGTH_LONG).show();
+                    }else if(startMode==1){
+                        Toast.makeText(ReleaseCondition.this, "修改成功", Toast.LENGTH_LONG).show();
                     }
+                    clean();
                     for(String name:paths){
-                        File file= new File(identifyPath,MyApplication.getUserPhone() + name);
+                        File file= new File(identifyPath,MyApplication.getUserPhone() + name+".png");
                         if(file.exists()){
                             file.delete();
                         }
                     }
+                    File file= new File(cameraIdentify,"camera.png");
+                    if(file.exists()){
+                        file.delete();
+                    }
                     Intent intent= new Intent(ReleaseCondition.this,MainActivity.class);
                     startActivity(intent);
                     finish();
+                    break;
+                case HttpUtils.PULLONECONFA:
+                    break;
+                case HttpUtils.PULLONECONSU:
+                    Bundle bundle= msg.getData();
+                    lastInfo= (Usersick) bundle.getSerializable("result");
+                    initInfo();
                     break;
                 default:
                     break;
@@ -112,10 +135,18 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         }
     };
 
+    public static void actionStart(Context context,String startMode,String id){
+        Intent intent= new Intent(context,ReleaseCondition.class);
+        intent.putExtra("mode",startMode);
+        intent.putExtra("id",id);
+        context.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.release_condition);
+        Intent intent= getIntent();
 
         ImageView backFig= (ImageView) findViewById(R.id.design_back_fig);
         TextView backText= (TextView) findViewById(R.id.design_back_text);
@@ -138,12 +169,63 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         fig[2]=(ImageView) findViewById(R.id.info_third);
         fig[3]=(ImageView) findViewById(R.id.info_forth);
 
-        submit= (TextView) findViewById(R.id.submit_button);
+        TextView submit = (TextView) findViewById(R.id.submit_button);
         fig[0].setOnClickListener(this);
         fig[1].setOnClickListener(this);
         fig[2].setOnClickListener(this);
         fig[3].setOnClickListener(this);
         submit.setOnClickListener(this);
+
+        process(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clean();
+    }
+
+    private void process(Intent intent){
+        String mode= intent.getStringExtra("mode");
+        if(mode.equals(ConditionShow.ADD)){
+            startMode=0;
+        }else if(mode.equals(ConditionShow.CHANGE)){
+            String id= intent.getStringExtra("id");
+            startMode=1;
+            HttpUtils.pullOneCondition(id,handler);
+        }
+    }
+
+    private void initInfo(){
+        conditionDec.setText(lastInfo.getUsersickdesc());
+        conditionDec.setSelection(lastInfo.getUsersickdesc().length());
+        name.setText(lastInfo.getFamilyname());
+        String[] paths= lastInfo.getUsersickpic().split(",");
+        for(int i=0;i<paths.length;i++){
+            if(!TextUtils.isEmpty(paths[i])){
+                loadImage(fig[i],IMAGEURI+paths[i]);
+                figNumber+=1;
+            }
+        }
+        if(figNumber==4){
+            addPicture.setClickable(false);
+        }
+    }
+
+    private void loadImage(ImageView imageView,String path){
+        Uri uri= Uri.parse(path);
+        Glide.with(getContext())
+                .load(uri)
+                .into(imageView);
+    }
+
+    private void clean(){
+        for (ImageView aFig : fig) {
+            if(aFig.getDrawable() instanceof BitmapDrawable){
+                Bitmap bitmap= ((BitmapDrawable) aFig.getDrawable()).getBitmap();
+                ImgUtils.recycleBitmap(bitmap);
+            }
+        }
     }
 
     @Override
@@ -243,10 +325,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.cancel();
-                            ImgUtils.recycleBitmap(selectBitmap[position-1]);
-                            selectBitmap[position-1]=null;
                             fig[position-1].setImageDrawable(null);
-                            selectPath[position-1]=null;
                             figNumber-=1;
                             if(figNumber<4){
                                 addPicture.setClickable(true);
@@ -268,16 +347,55 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
             Toast.makeText(this,"请继续填写信息!",Toast.LENGTH_SHORT).show();
             return;
         }
-        Usersick info= new Usersick();
-        info.setFamliyid(currentInfo.getFamilyid());
-        info.setPhone(MyApplication.getUserPhone());
-        info.setUsersickdesc(conditionDec.getText().toString());
-        HttpUtils.addCondition(info,selectPath,handler);
         dialog= new ProgressDialog(this,R.style.myDialog);
         dialog.setMessage("上传中...");
         dialog.setIndeterminate(true);
         dialog.setCancelable(false);
         dialog.show();
+        saveImage();
+    }
+
+    private void submit(){
+        Usersick info= new Usersick();
+        if(currentInfo!=null) {
+            info.setFamliyid(currentInfo.getFamilyid());
+        }else {
+            info.setFamliyid(lastInfo.getFamliyid());
+        }
+        if(startMode==1){
+            info.setUsersickid(lastInfo.getUsersickid());
+        }
+        info.setPhone(MyApplication.getUserPhone());
+        info.setUsersickdesc(conditionDec.getText().toString());
+        Date buf_date= new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String date = sdf.format(buf_date);
+        info.setUsersicktime(date);
+        HttpUtils.addCondition(info,selectPath,handler);
+    }
+
+    private void saveImage(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i=0;i<fig.length;i++){
+                    if(fig[i].getDrawable()!=null){
+                        final String fileName = MyApplication.getUserPhone()+paths[i];
+                        Bitmap bitmap=null;
+                        if(fig[i].getDrawable() instanceof BitmapDrawable){
+                            bitmap= ((BitmapDrawable) fig[i].getDrawable()).getBitmap();
+                        }else if(fig[i].getDrawable() instanceof GlideBitmapDrawable){
+                            bitmap=((GlideBitmapDrawable) fig[i].getDrawable()).getBitmap();
+                        }
+                        ImgUtils.saveImageToGallery(fileName,identifyPath,bitmap);
+                        selectPath[i]=(identifyPath + File.separator + MyApplication.getUserPhone()+paths[i]+".png");
+                    }
+                }
+                Message message= new Message();
+                message.what= CONPLETE;
+                handler.sendMessage(message);
+            }
+        }).start();
     }
 
     private void processFig(Uri imageUri){
@@ -287,18 +405,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         }
         try {
             final Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
-            selectBitmap[currentFig-1]=bitmap;
             fig[currentFig-1].setImageBitmap(bitmap);
-            final String fileName = MyApplication.getUserPhone()+paths[currentFig-1];
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ImgUtils.saveImageToGallery(fileName,identifyPath, bitmap);
-                    Message message= new Message();
-                    message.what= signal[currentFig-1];
-                    handler.sendMessage(message);
-                }
-            }).start();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -325,7 +432,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
                 if(resultCode==RESULT_OK){
                     String imagePath = getImagePath.getPath(ReleaseCondition.this, data.getData());
                     boolean canSelect=true;
-                    for(String path:selectPath){
+                    for(String path:choosePhoto){
                         if(!TextUtils.isEmpty(path) && path.equals(imagePath)){
                             canSelect=false;
                             break;
@@ -337,9 +444,8 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
                             addPicture.setClickable(false);
                         }
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                        selectBitmap[currentFig-1]=bitmap;
                         fig[currentFig-1].setImageBitmap(bitmap);
-                        selectPath[currentFig-1]=imagePath;
+                        choosePhoto.add(imagePath);
                     }
                     else {
                         Toast.makeText(this,"请不要选择重复图片!",Toast.LENGTH_SHORT).show();

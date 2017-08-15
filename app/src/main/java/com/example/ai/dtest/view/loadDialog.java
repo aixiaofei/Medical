@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
+import android.view.View;
 
 import com.example.ai.dtest.R;
 
@@ -29,6 +30,9 @@ public class loadDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
         loading= (load) findViewById(R.id.load);
+        loading.setVisibility(View.VISIBLE);
+        complete complete= (complete) findViewById(R.id.complete);
+        complete.setVisibility(View.GONE);
         setCanceledOnTouchOutside(false);
         setCancelable(true);
     }

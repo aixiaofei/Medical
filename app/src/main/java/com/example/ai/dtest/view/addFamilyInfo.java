@@ -55,7 +55,7 @@ public class addFamilyInfo extends Dialog implements View.OnClickListener{
         add= (Button) findViewById(R.id.add);
         male.setOnClickListener(this);
         add.setOnClickListener(this);
-        listener.init(name,male,age);
+        listener.init(name,male,age,add);
     }
 
     @Override
@@ -106,6 +106,6 @@ public class addFamilyInfo extends Dialog implements View.OnClickListener{
 
     public interface addFamilyInfoListener{
         void add(String name,String male,String age);
-        void init(EditText name,TextView male,EditText age);
+        void init(EditText name,TextView male,EditText age,Button add);
     }
 }

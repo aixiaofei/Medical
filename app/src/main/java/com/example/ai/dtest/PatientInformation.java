@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -136,10 +137,8 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
         info= new addFamilyInfo(this);
         info.setListener(new addFamilyInfo.addFamilyInfoListener() {
             @Override
-            public void init(EditText name, TextView male, EditText age) {
-
+            public void init(EditText name, TextView male, EditText age,Button add) {
             }
-
             @Override
             public void add(String name, String male, String age) {
                 FamilyInfo familyInfo= new FamilyInfo();
@@ -161,10 +160,11 @@ public class PatientInformation extends BaseActivity implements View.OnClickList
         final String id= familyInfo_O.getFamilyid();
         info.setListener(new addFamilyInfo.addFamilyInfoListener() {
             @Override
-            public void init(EditText name, TextView male, EditText age) {
+            public void init(EditText name, TextView male, EditText age, Button add) {
                 name.setText(familyInfo_O.getFamilyname());
                 male.setText(familyInfo_O.getFamilymale());
                 age.setText(familyInfo_O.getFamilyage());
+                add.setText("修改");
             }
             @Override
             public void add(String name, String male, String age) {

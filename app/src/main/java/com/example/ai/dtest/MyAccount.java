@@ -37,7 +37,6 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case HttpUtils.PUSHIMAGESUCESS:
-                    Log.d("ai","22");
                     Toast.makeText(MyAccount.this,"修改头像成功",Toast.LENGTH_SHORT).show();
                     final Bitmap bitmapBuf1 = BitmapFactory.decodeFile(cropImage+File.separator+"crop.png");
                     userImage.setImageBitmap(bitmapBuf1);
@@ -50,6 +49,14 @@ public class MyAccount extends BaseActivity implements View.OnClickListener{
                             ImgUtils.saveImageToGallery(MyApplication.getUserPhone(),imagePath,bitmapBuf1);
                         }
                     }).start();
+                    File file1= new File(cameraImage,"camera.png");
+                    if(file1.exists()){
+                        file1.delete();
+                    }
+                    File file2= new File(cropImage,"crop.png");
+                    if(file2.exists()){
+                        file2.delete();
+                    }
                     break;
                 case HttpUtils.PUSHIMAGEFAILURE:
                     Toast.makeText(MyAccount.this,"上传失败",Toast.LENGTH_SHORT).show();

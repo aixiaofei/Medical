@@ -43,7 +43,7 @@ public class ImgUtils {
     public static final String identifyPath= MyApplication.getContext().getExternalCacheDir()+File.separator+"identify";
 
     //保存文件到指定路径
-    public static boolean saveImageToGallery(String userPhone, String Path,Bitmap bmp) {
+    public static boolean saveImageToGallery(String userPhone,String Path,Bitmap bmp) {
         boolean isSuccess=false;
         // 首先保存图片
         File appDir = new File(Path);

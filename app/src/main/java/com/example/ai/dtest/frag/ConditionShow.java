@@ -1,11 +1,13 @@
 package com.example.ai.dtest.frag;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +38,10 @@ import java.util.List;
 
 public class ConditionShow extends BaseFragment{
 
+    public static final String ADD = "add";
+
+    public static final String CHANGE= "change";
+
     private List<Usersick> mList;
 
     private RecyclerView recyclerView;
@@ -58,6 +64,12 @@ public class ConditionShow extends BaseFragment{
                     deepclone(data);
                     adapter.notifyDataSetChanged();
                     break;
+                case HttpUtils.DECONDITIONFA:
+                    Toast.makeText(getContext(),"删除病情失败",Toast.LENGTH_SHORT).show();
+                    break;
+                case HttpUtils.DECONDITIONSU:
+                    Toast.makeText(getContext(),"删除病情成功",Toast.LENGTH_SHORT).show();
+                    HttpUtils.pullCondition(MyApplication.getUserPhone(),handler);
                 default:
                     break;
             }
@@ -80,16 +92,51 @@ public class ConditionShow extends BaseFragment{
         adapter= new ConditionAdapter(getContext(),R.layout.condition_item,mList);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
+        initListener();
 
         TextView release= (TextView) view.findViewById(R.id.release);
         release.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(getActivity(), ReleaseCondition.class);
-                startActivity(intent);
+                ReleaseCondition.actionStart(getContext(),ADD,null);
             }
         });
         return view;
+    }
+
+    private void initListener(){
+        adapter.setListener(new ConditionAdapter.conditionListener() {
+            @Override
+            public void change(int position) {
+                String id= mList.get(position).getUsersickid();
+                ReleaseCondition.actionStart(getContext(),CHANGE,id);
+            }
+
+            @Override
+            public void delete(int position) {
+                showDEDialog(mList.get(position));
+            }
+        });
+    }
+
+    private void showDEDialog(final Usersick info){
+        AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.myDialog);
+        builder.setMessage("确认删除此病情")
+                .setTitle("提示")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        HttpUtils.deleteCondition(info.getUsersickid(),handler);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     @Override

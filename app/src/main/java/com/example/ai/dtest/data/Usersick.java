@@ -11,7 +11,7 @@ public class Usersick implements Serializable{
 
     private String phone;
 
-    private Integer usersickid;
+    private String usersickid;
 
     private String usersickdesc;
 
@@ -19,7 +19,7 @@ public class Usersick implements Serializable{
 
     private String usersickdept;
 
-    private String famliyid;
+    private String familyid;
 
     private Integer userorderid;
 
@@ -28,6 +28,8 @@ public class Usersick implements Serializable{
     private String familyname;
 
     private String familyage;
+
+    private String usersicktime;
 
     public String getPhone() {
         return phone;
@@ -38,18 +40,18 @@ public class Usersick implements Serializable{
     }
 
     public String getFamliyid() {
-        return famliyid;
+        return familyid;
     }
 
     public void setFamliyid(String famliyid) {
-        this.famliyid = famliyid;
+        this.familyid = famliyid;
     }
 
-    public Integer getUsersickid() {
+    public String getUsersickid() {
         return usersickid;
     }
 
-    public void setUsersickid(Integer usersickid) {
+    public void setUsersickid(String usersickid) {
         this.usersickid = usersickid;
     }
 
@@ -108,6 +110,14 @@ public class Usersick implements Serializable{
 
     public void setFamilyage(String familyage) {
         this.familyage = familyage;
+    }
+
+    public String getUsersicktime() {
+        return usersicktime;
+    }
+
+    public void setUsersicktime(String usersicktime) {
+        this.usersicktime = usersicktime;
     }
 
     public Object deepCopy() throws IOException, ClassNotFoundException {

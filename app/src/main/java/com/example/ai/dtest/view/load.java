@@ -2,7 +2,6 @@ package com.example.ai.dtest.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -14,9 +13,9 @@ import android.graphics.PathMeasure;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.MyApplication;
 
@@ -70,13 +69,13 @@ public class load extends View {
 
     private void initPaint(){
         circlePaint= new Paint();
-        circlePaint.setColor(MyApplication.getContext().getResources().getColor(com.example.ai.dtest.R.color.colorPrimary));
+        circlePaint.setColor(context.getResources().getColor(com.example.ai.dtest.R.color.colorPrimary));
         circlePaint.setStrokeWidth(dp2px(2));
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Paint.Style.STROKE);
 
         fillPaint= new Paint();
-        fillPaint.setColor(MyApplication.getContext().getResources().getColor(com.example.ai.dtest.R.color.colorPrimary));
+        fillPaint.setColor(context.getResources().getColor(com.example.ai.dtest.R.color.colorPrimary));
         fillPaint.setStrokeWidth(dp2px(2));
         fillPaint.setAntiAlias(true);
         fillPaint.setStyle(Paint.Style.FILL);
