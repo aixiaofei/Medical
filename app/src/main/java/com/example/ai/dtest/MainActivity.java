@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.LOGINSUCESS:
-                    addFragment(new DoctorList());
+//                    addFragment(new DoctorList());
                     Bundle login_sucess_bundle= msg.getData();
                     String buf2= login_sucess_bundle.getString("user");
                     UserLoginInfo userlogininfo= gson.fromJson(buf2,UserLoginInfo.class);
@@ -276,9 +276,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 client.setLocOption(option);
                 client.start();
             }
-        }else {
-            addFragment(new DoctorList());
         }
+        addFragment(new DoctorList());
     }
 
     public void addFragment(Fragment fragment){

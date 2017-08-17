@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--/*标题栏设置*/-->
+    <RelativeLayout
+        android:id="@+id/information_top"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorButton_background"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/design_back_fig"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_white"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/design_back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="返回"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:layout_toRightOf="@id/design_back_fig"
+            android:textSize="16sp"
+            android:layout_alignTop="@+id/title"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="医生主页"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <!--/*标题栏设置*/-->
+
+    <!--/*医生界面设置*/-->
+    <LinearLayout
+        android:id="@+id/list_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/information_top"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorButton_background">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/doctor_photo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="75dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/docter_name"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/docter_keshi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/docter_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/docter_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_1"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                card_view:contentPadding="5dp"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardBackgroundColor="@android:color/white">
+
+                <TextView
+                    android:id="@+id/desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+            </android.support.v7.widget.CardView>
+
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                card_view:contentPadding="5dp"
+                android:layout_marginBottom="10dp"
+                card_view:cardUseCompatPadding="true"
+                card_view:cardBackgroundColor="@android:color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/desc"
+                    android:background="@android:color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:gravity="center_vertical"
+                        android:text="坐诊地点"
+                        android:textSize="14sp"
+                        android:layout_marginTop="5dp"/>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/hosipital"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center_vertical"
+                            android:textSize="15sp" />
+
+                        <ImageView
+                            android:id="@+id/down_pull"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true" />
+                    </RelativeLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/date"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"/>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

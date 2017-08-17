@@ -29,6 +29,11 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapResource;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.ai.dtest.MainActivity;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.BaseFragment;
@@ -39,7 +44,10 @@ import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.lang.annotation.Target;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Map extends BaseFragment {
 
@@ -50,6 +58,8 @@ public class Map extends BaseFragment {
     private boolean isFirstLocate= true;
 
     private LocationClient client;
+
+    private static final String IMAGEURI= HttpUtils.SOURCEIP+ "/internetmedical/user/getdoctorpix/";
 
     private Handler handler= new Handler(){
         @Override
@@ -62,22 +72,35 @@ public class Map extends BaseFragment {
                     Gson gson= new Gson();
                     Bundle update_bundle= msg.getData();
                     String buf= update_bundle.getString("result");
-                    List<DoctorCustom> doctor= gson.fromJson(buf, new TypeToken<List<DoctorCustom>>(){}.getType());
-                    if(doctor!=null) {
-                        Bitmap bitmap = zoonBitmap(R.drawable.doctor);
-                        BitmapDescriptor bitmapDescriptor= BitmapDescriptorFactory.fromBitmap(bitmap);
-                        List<Marker> markers= map.getMarkersInBounds(map.getMapStatus().bound);
-                        if(markers!=null) {
+                    final List<DoctorCustom> doctor= gson.fromJson(buf, new TypeToken<List<DoctorCustom>>(){}.getType());
+                    if (doctor != null) {
+                        List<Marker> markers = map.getMarkersInBounds(map.getMapStatus().bound);
+                        if (markers != null) {
                             for (Marker i : markers) {
                                 i.remove();
                             }
                         }
-                        for (DoctorCustom i : doctor) {
-                            LatLng point = new LatLng(Double.valueOf(i.getDocloginlat()), Double.valueOf(i.getDocloginlon()));
-                            OverlayOptions options= new MarkerOptions().position(point).title("haha").visible(true).perspective(true).icon(bitmapDescriptor);
-                            map.addOverlay(options);
-                        }
-                        ImgUtils.recycleBitmap(bitmap);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (DoctorCustom i:doctor) {
+                                    Bitmap bitmap=null;
+                                    try {
+                                         bitmap = Glide.with(getContext())
+                                                .load(IMAGEURI + i.getDocloginid())
+                                                .asBitmap()
+                                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                                .into(64,64).get();
+                                    } catch (InterruptedException|ExecutionException e) {
+                                        e.printStackTrace();
+                                    }
+                                    BitmapDescriptor descriptor= BitmapDescriptorFactory.fromBitmap(bitmap);
+                                    LatLng point = new LatLng(Double.valueOf(i.getDoclat()), Double.valueOf(i.getDoclon()));
+                                    OverlayOptions options = new MarkerOptions().position(point).title("haha").visible(true).perspective(false).icon(descriptor);
+                                    map.addOverlay(options);
+                                }
+                            }
+                        }).start();
                     }
                     break;
                 default:
@@ -111,7 +134,7 @@ public class Map extends BaseFragment {
         client= new LocationClient(MyApplication.getContext());
         client.registerLocationListener(new LocationListener());
         LocationClientOption option= new LocationClientOption();
-        option.setScanSpan(2000);
+        option.setScanSpan(1000);
         option.setOpenGps(true);
         option.setNeedDeviceDirect(true);
         option.setIsNeedAddress(true);

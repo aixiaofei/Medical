@@ -118,7 +118,7 @@ public class ConditionShow extends BaseFragment{
             }
         });
     }
-
+    
     private void showDEDialog(final Usersick info){
         AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.myDialog);
         builder.setMessage("确认删除此病情")

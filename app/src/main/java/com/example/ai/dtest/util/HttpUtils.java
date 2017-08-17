@@ -40,6 +40,7 @@ public class HttpUtils {
     private static final String SERVER_URL_CANREGISTER= SOURCEIP+"/internetmedical/user/phonetest"; // 判断是否可注册接口
     private static final String SERVER_URL_REGISTER = SOURCEIP+"/internetmedical/user/register"; //用户注册接口
     private static final String DOCTERUPDATEDEFAULT = SOURCEIP+"/internetmedical/user/doctors"; //主页面查询接口
+    private static final String SINGLEDOCTOR = SOURCEIP+"/internetmedical/user/doctor"; //单个医生查询接口
     private static final String DOCTERUPDATEMAP = SOURCEIP+"/internetmedical/user/mapdoctors"; //地图模式查询接口
     private static final String PUSHIMAGE = SOURCEIP+"/internetmedical/user/pullpix"; // 上传图片接口
     private static final String PULLIMAGE= SOURCEIP+"/internetmedical/user/pushpix"; //下载图片接口
@@ -111,6 +112,8 @@ public class HttpUtils {
     public static final int ADDCONDITIONSU= 44;// 添加病情成功
     public static final int DECONDITIONFA=45; // 删除病情失败
     public static final int DECONDITIONSU=46; // 删除病情成功
+    public static final int SINGLEDOFA= 47; // 查询单个医生失败
+    public static final int SINGLEDOSU=48; // 查询耽搁意思成功
 
 
 
@@ -344,6 +347,52 @@ public class HttpUtils {
                 }
             }
         });
+    }
+
+    //单个医生请求
+    public static void singleDocterUpdata(int id,final Handler handler) {
+        Id id1= new Id();
+        id1.id= Integer.toString(id);
+        Gson gson= new Gson();
+        String res= gson.toJson(id1);
+        RequestBody responseBody = RequestBody.create(JSON, res);
+        Request request = new Request.Builder().url(SINGLEDOCTOR).post(responseBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                Message message = new Message();
+                message.what = SINGLEDOFA;
+                handler.sendMessage(message);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String buf = response.body().string();
+                Gson gson = new Gson();
+                singleDoctor docter = gson.fromJson(buf, singleDoctor.class);
+                if (docter.state.equals("1")) {
+                    Log.d("ai", "成功");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("result",docter.data);
+                    Message message = new Message();
+                    message.what = SINGLEDOSU;
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                } else {
+                    Log.d("ai", "失败");
+                    Message message = new Message();
+                    message.what = SINGLEDOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class singleDoctor{
+        String state;
+        DoctorCustom data;
     }
 
     private static class date{

@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
@@ -216,6 +217,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         Uri uri= Uri.parse(path);
         Glide.with(getContext())
                 .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
     }
 

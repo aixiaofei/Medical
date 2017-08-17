@@ -17,6 +17,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.example.ai.dtest.DoctorHomePage;
 import com.example.ai.dtest.adapter.DocterAdapter;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.base.BaseFragment;
@@ -201,6 +202,11 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         adapter.setListener(new DocterAdapter.returnUp() {
+            @Override
+            public void goDoctorHomePage(int position) {
+                DoctorHomePage.actionStart(getContext(),mList.get(position).getDocloginid());
+            }
+
             @Override
             public void goUp() {
                 if(linearLayoutManager.findFirstVisibleItemPosition()>0) {

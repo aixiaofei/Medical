@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.ai.dtest.PatientInformation;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.data.Usersick;
@@ -143,6 +144,7 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         Uri uri= Uri.parse(path);
         Glide.with(getContext())
                 .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
     }
 

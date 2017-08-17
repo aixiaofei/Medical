@@ -116,7 +116,57 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return holder;
         }  else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctor_info, parent, false);
-            return new normalViewHolder(view);
+            final normalViewHolder holder= new normalViewHolder(view);
+            holder.docter_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_fig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_hosipital.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_keshi.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_specialty.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            holder.docter_distance.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position=holder.getAdapterPosition();
+                    listener.goDoctorHomePage(position);
+                }
+            });
+            return holder;
         }
     }
 
@@ -131,7 +181,7 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             holder.docter_keshi.setText(docter.getDocdept());
             holder.docter_hosipital.setText(docter.getDochosp());
             holder.docter_specialty.setText(docter.getDocexpert());
-            Double distance= Double.valueOf(docter.getDistance());
+            Double distance= Double.valueOf(docter.getDocdistance());
             if(distance>=1000){
                 holder.docter_distance.setText(new DecimalFormat("0.0").format(distance/1000)+"km");
             }else {
@@ -155,6 +205,7 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public interface returnUp{
+        void goDoctorHomePage(int position);
         void goUp();
     }
 
@@ -163,6 +214,7 @@ public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Glide.with(getContext())
                 .load(uri)
                 .error(R.drawable.defaultuserimage)
+                .diskCacheStrategy( DiskCacheStrategy.NONE )
                 .into(imageView);
     }
 
