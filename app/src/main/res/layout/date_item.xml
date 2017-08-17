@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/date_item_shape"
+    android:padding="0.4dp">
 
     <TextView
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="12sp"
-        android:gravity="center"
-        android:background="@drawable/date_item_shape"/>
+        android:gravity="center"/>
 
 </LinearLayout>

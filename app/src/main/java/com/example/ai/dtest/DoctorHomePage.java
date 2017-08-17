@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -63,6 +65,21 @@ public class DoctorHomePage extends BaseActivity {
                     info= (DoctorCustom) bundle.getSerializable("result");
                     initData();
                     break;
+                case HttpUtils.PULLDATEFA:
+                    break;
+                case HttpUtils.PULLDATESU:
+                    Bundle bundle1= msg.getData();
+                    List<Integer> data= bundle1.getIntegerArrayList("result");
+                    for(int i=0;i<=6;i++){
+                        mList.set(i+9,data.get(i));
+                    }
+                    for(int i=7;i<data.size();i++){
+                        mList.set(i+10,data.get(i));
+                    }
+                    adapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -87,6 +104,20 @@ public class DoctorHomePage extends BaseActivity {
         doctorDesc= (TextView) findViewById(R.id.desc);
         doctorComment= (TextView) findViewById(R.id.docter_comment);
         doctorHosipital= (TextView) findViewById(R.id.hosipital);
+        ImageView returnFig= (ImageView) findViewById(R.id.design_back_fig);
+        TextView returnText= (TextView) findViewById(R.id.design_back_text);
+        returnFig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        returnText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         recyclerView= (RecyclerView) findViewById(R.id.date);
         initDate();
@@ -101,6 +132,7 @@ public class DoctorHomePage extends BaseActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
         HttpUtils.singleDocterUpdata(id,handler);
+        HttpUtils.pullDate(Integer.toString(id),handler);
         loadImage(doctorFig,id);
     }
 

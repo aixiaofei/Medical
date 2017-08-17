@@ -60,6 +60,8 @@ public class DoctorCustom implements Serializable{
 
     private String hosplevelname;
 
+    private Integer preordertype;
+
     public Integer getDocid() {
         return docid;
     }
@@ -254,6 +256,14 @@ public class DoctorCustom implements Serializable{
 
     public String getHosplevelname() {
         return hosplevelname;
+    }
+
+    public Integer getPreordertype() {
+        return preordertype;
+    }
+
+    public void setPreordertype(Integer preordertype) {
+        this.preordertype = preordertype;
     }
 
     public void setHosplevelname(String hosplevelname) {

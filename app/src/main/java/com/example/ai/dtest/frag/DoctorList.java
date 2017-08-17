@@ -67,8 +67,6 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
 
     private static final int PageItem=10;
 
-    private View loadView;
-
     private String dept;
 
     private loadDialog dialog;

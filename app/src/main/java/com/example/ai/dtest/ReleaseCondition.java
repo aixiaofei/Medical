@@ -1,5 +1,6 @@
 package com.example.ai.dtest;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -120,7 +121,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
                         file.delete();
                     }
                     Intent intent= new Intent(ReleaseCondition.this,MainActivity.class);
-                    startActivity(intent);
+                    setResult(RESULT_OK,intent);
                     finish();
                     break;
                 case HttpUtils.PULLONECONFA:
@@ -136,11 +137,11 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         }
     };
 
-    public static void actionStart(Context context,String startMode,String id){
-        Intent intent= new Intent(context,ReleaseCondition.class);
+    public static void actionStart(Activity activity, String startMode, String id){
+        Intent intent= new Intent(activity,ReleaseCondition.class);
         intent.putExtra("mode",startMode);
         intent.putExtra("id",id);
-        context.startActivity(intent);
+        activity.startActivityForResult(intent,MainActivity.RELEASE);
     }
 
     @Override

@@ -141,11 +141,13 @@
                 card_view:cardUseCompatPadding="true"
                 card_view:cardBackgroundColor="@android:color/white">
 
-                <TextView
+                <me.codeboy.android.aligntextview.AlignTextView
                     android:id="@+id/desc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:lineSpacingMultiplier="1.3" />
+
             </android.support.v7.widget.CardView>
 
 
@@ -178,7 +180,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="5dp">
 
                         <TextView
                             android:id="@+id/hosipital"
@@ -199,7 +201,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/date"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"/>
                 </LinearLayout>

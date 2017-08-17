@@ -23,6 +23,8 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final String[] date={"周一","周二","周三","周四","周五","周六","周日"};
 
+    private int currentDay;
+
     private List<String> week;
 
     private Context context;
@@ -68,6 +70,7 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int tag= mList.get(position);
         viewHolder holder1= (viewHolder) holder;
         if(isDefault(position)){
             if(position==0){
@@ -76,11 +79,25 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder1.desc.setText("上午");
             }else if(position==16) {
                 holder1.desc.setText("下午");
+            }else if(position==currentDay-1){
+                holder1.desc.setText(week.get(position - 1) + " " + date[position - 1]);
+                holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+                holder1.desc.setTextColor(context.getResources().getColor(R.color.white));
             }else {
                 holder1.desc.setText(week.get(position - 1) + " " + date[position - 1]);
             }
         }else {
-            holder1.desc.setText("点击预约");
+            if(tag==1){
+                if((position<currentDay+7 && position>=9) || (position<currentDay+15 && position>=17)){
+                    holder1.desc.setText("点击预约");
+//                    holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
+                    holder1.desc.setTextColor(context.getResources().getColor(R.color.colorBackground));
+                }else {
+                    holder1.desc.setText("点击预约");
+                    holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+                    holder1.desc.setTextColor(context.getResources().getColor(R.color.white));
+                }
+            }
         }
     }
 
@@ -110,6 +127,7 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         cal.setFirstDayOfWeek(Calendar.MONDAY);// 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一
         int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天
+        currentDay=day;
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         for(int i=0;i<7;i++) {
             week.add(sdf.format(cal.getTime()));

@@ -17,8 +17,7 @@
             android:layout_height="30dp"
             android:text="已发布病情:"
             android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_alignParentStart="true"/>
 
         <TextView
@@ -28,38 +27,25 @@
             android:text="添加病情"
             android:textSize="16sp"
             android:textColor="@color/colorPrimary"
-            android:gravity="center"
+            android:gravity="center|right"
             android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0.3dp"-->
-        <!--android:background="@color/colorBackground"-->
-        <!--android:layout_below="@+id/information_top"/>-->
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/condition_show"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:scrollbarStyle="outsideOverlay"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/information_top"
         android:layout_marginTop="10dp">
-    </android.support.v7.widget.RecyclerView>
 
-
-    <!--<TextView-->
-        <!--android:id="@+id/release"-->
-        <!--android:layout_width="300dp"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:layout_below="@+id/condition_show"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:text="发布新的病情"-->
-        <!--android:gravity="center"-->
-        <!--android:textColor="#FFFFFF"-->
-        <!--android:background="@drawable/rigster_login_background"/>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/condition_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="outsideOverlay">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

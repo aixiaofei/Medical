@@ -48,5 +48,6 @@ dependencies {
     compile 'liji.library.dev:citypickerview:1.1.0'
     compile 'com.gyf.barlibrary:barlibrary:2.2.6'
     compile 'com.android.support:design:26.0.0-alpha1'
+    compile 'me.codeboy.android:align-text-view:2.3.0'
     testCompile 'junit:junit:4.12'
 }

@@ -20,6 +20,7 @@ import com.example.ai.dtest.db.Province;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import okhttp3.Call;
@@ -59,6 +60,8 @@ public class HttpUtils {
     private static final String PULLONECONDITION= SOURCEIP +"/internetmedical/user/getonesick"; // 查询单个病情接口
     private static final String ADDCONDITION= SOURCEIP +"/internetmedical/user/addsick"; // 添加病情接口
     private static final String DECONDITION= SOURCEIP +"/internetmedical/user/deletesick"; // 删除病情接口
+    private static final String PULLDATE= SOURCEIP+ "/internetmedical/user/getschedule"; // 获取日程接口
+    private static final String PULLREDOCTOR= SOURCEIP+ "/internetmedical/user/getredoctor"; // 获取推荐医生接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
@@ -113,7 +116,11 @@ public class HttpUtils {
     public static final int DECONDITIONFA=45; // 删除病情失败
     public static final int DECONDITIONSU=46; // 删除病情成功
     public static final int SINGLEDOFA= 47; // 查询单个医生失败
-    public static final int SINGLEDOSU=48; // 查询耽搁意思成功
+    public static final int SINGLEDOSU=48; // 查询单个医生成功
+    public static final int PULLDATEFA=49; // 获取日程失败
+    public static final int PULLDATESU=50; // 获取日程成功
+    public static final int PULLREDOFA=51; // 获取推荐医生失败
+    public static final int PULLREDOSU=52; // 获取推荐医生成功
 
 
 
@@ -332,7 +339,7 @@ public class HttpUtils {
                 docterList docter = gson.fromJson(buf, docterList.class);
                 if (docter.state.equals("1")) {
                     Log.d("ai", "成功");
-                    String date = gson.toJson(docter.result);
+                    String date = gson.toJson(docter.data);
                     Bundle bundle = new Bundle();
                     bundle.putString("result", date);
                     Message message = new Message();
@@ -426,7 +433,7 @@ public class HttpUtils {
                 docterList docter = gson.fromJson(buf, docterList.class);
                 if (docter.state.equals("1")) {
                     Log.d("ai", "成功");
-                    String date = gson.toJson(docter.result);
+                    String date = gson.toJson(docter.data);
                     Bundle bundle = new Bundle();
                     bundle.putString("result", date);
                     Message message = new Message();
@@ -446,7 +453,7 @@ public class HttpUtils {
     //获取医生列表Gson解释类
     private class docterList{
         String state;
-        List<DoctorCustom> result;
+        List<DoctorCustom> data;
     }
 
     //用户上传头像
@@ -1098,4 +1105,81 @@ public class HttpUtils {
             }
         });
     }
+
+    //获取日程信息
+    public static void pullDate(String id,final Handler handler){
+        Gson gson =new Gson();
+        Id id1= new Id();
+        id1.id=id;
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PULLDATE).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PULLDATEFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                pullDate date= gson.fromJson(res,pullDate.class);
+                if(date.state.equals("1")) {
+                    Message message = new Message();
+                    message.what= PULLDATESU;
+                    Bundle bundle= new Bundle();
+                    bundle.putIntegerArrayList("result",(ArrayList<Integer>) date.data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PULLDATEFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class pullDate{
+        String state;
+        List<Integer> data;
+    }
+
+    //获取推荐医生信息
+    public static void pullReDoctor(String res,final Handler handler){
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PULLREDOCTOR).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PULLREDOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                docterList docter= gson.fromJson(res,docterList.class);
+                if(docter.state.equals("1")){
+                    Message message = new Message();
+                    message.what= PULLREDOSU;
+                    Bundle bundle= new Bundle();
+                    String data= gson.toJson(docter.data);
+                    bundle.putString("result",data);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PULLREDOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
 }

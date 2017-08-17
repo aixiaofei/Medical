@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.baidu.android.pushservice.BasicPushNotificationBuilder;
@@ -38,6 +39,7 @@ import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.frag.ConditionShow;
 import com.example.ai.dtest.frag.DoctorList;
 import com.example.ai.dtest.frag.Map;
+import com.example.ai.dtest.frag.RecommendDoctor;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
 import com.example.ai.dtest.util.MD5;
@@ -68,6 +70,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private TextView releaseConditionText;
 
+    private ImageButton recommendDoctorFig;
+
+    private TextView recommendDoctorText;
+
     private ImageView mapFig;
 
     private TextView mapText;
@@ -77,6 +83,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private static final String MAP="地图模式";
 
     private static final String LIST="列表模式";
+
+    public static final int RELEASE=100;
+
+    private DoctorList list;
+
+    private ConditionShow conditionShow;
+
+    private RecommendDoctor recommendDoctor;
 
     public Handler handler=new Handler(){
         @Override
@@ -124,10 +138,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_design);
 
+
         mapFig= (ImageView) findViewById(R.id.map_fig);
         mapText=(TextView) findViewById(R.id.map_text);
         mapFig.setOnClickListener(this);
         mapText.setOnClickListener(this);
+
+
+        RelativeLayout fragFirst= (RelativeLayout) findViewById(R.id.frag_first);
+        fragFirst.setOnClickListener(this);
 
         homePageFig= (ImageButton) findViewById(R.id.home_page_pic);
         Drawable srcHome = homePageFig.getBackground();
@@ -135,9 +154,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         startAnima(homePageFig);
         homePageFig.setOnClickListener(this);
 
-        homePageText= (TextView) findViewById(R.id.home_pag_text);
+        homePageText= (TextView) findViewById(R.id.home_page_text);
         homePageText.setOnClickListener(this);
         homePageText.setSelected(true);
+
+
+        RelativeLayout fragSecond= (RelativeLayout) findViewById(R.id.frag_second);
+        fragSecond.setOnClickListener(this);
 
         releaseConditionFig= (ImageButton) findViewById(R.id.search_doctor_page_pic);
         Drawable srcCondition = releaseConditionFig.getBackground();
@@ -147,8 +170,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         releaseConditionText= (TextView) findViewById(R.id.search_doctor_page_text);
         releaseConditionText.setOnClickListener(this);
 
-        Button myPage= (Button) findViewById(R.id.my_page_pic);
+
+        RelativeLayout fragThird= (RelativeLayout) findViewById(R.id.frag_third);
+        fragThird.setOnClickListener(this);
+
+        recommendDoctorFig= (ImageButton) findViewById(R.id.my_doctor_page_pic);
+        Drawable srcRecommend = recommendDoctorFig.getBackground();
+        ImgUtils.tintDrawable(srcRecommend, getResources().getColorStateList(R.color.button_selector));
+        recommendDoctorFig.setOnClickListener(this);
+
+        recommendDoctorText= (TextView) findViewById(R.id.my_doctor_page_text);
+        recommendDoctorText.setOnClickListener(this);
+
+
+        RelativeLayout myPage= (RelativeLayout) findViewById(R.id.my_page);
         myPage.setOnClickListener(this);
+
+        ImageButton myPageFig= (ImageButton) findViewById(R.id.my_page_pic);
+        myPageFig.setOnClickListener(this);
+
+        TextView myPageText= (TextView) findViewById(R.id.my_page_text);
+        myPageText.setOnClickListener(this);
+
 
         List<String> permissionList = new ArrayList<>();
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
@@ -201,21 +244,48 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             case R.id.map_text:
                 goMap();
                 break;
-            case R.id.my_page_pic:
+
+            case R.id.my_page:
                 Intent intent= new Intent(MainActivity.this,MyAccount.class);
                 startActivity(intent);
+                break;
+            case R.id.my_page_pic:
+                Intent intent1= new Intent(MainActivity.this,MyAccount.class);
+                startActivity(intent1);
+                break;
+            case R.id.my_page_text:
+                Intent intent2= new Intent(MainActivity.this,MyAccount.class);
+                startActivity(intent2);
+                break;
+
+            case R.id.frag_first:
+                goHomePage();
                 break;
             case R.id.home_page_pic:
                 goHomePage();
                 break;
-            case R.id.home_pag_text:
+            case R.id.home_page_text:
                 goHomePage();
+                break;
+
+            case R.id.frag_second:
+                goRelease();
                 break;
             case R.id.search_doctor_page_pic:
                 goRelease();
                 break;
             case R.id.search_doctor_page_text:
                 goRelease();
+                break;
+
+            case R.id.frag_third:
+                goRecommend();
+                break;
+            case R.id.my_doctor_page_pic:
+                goRecommend();
+                break;
+            case R.id.my_doctor_page_text:
+                goRecommend();
                 break;
             default:
                 break;
@@ -277,7 +347,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 client.start();
             }
         }
-        addFragment(new DoctorList());
+        list= new DoctorList();
+        addFragment(list);
     }
 
     public void addFragment(Fragment fragment){
@@ -300,13 +371,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }
         transaction.commit();
     }
-
-//    public void  addFragment(Fragment fragment){
-//        FragmentManager manager= getSupportFragmentManager();
-//        FragmentTransaction transaction= manager.beginTransaction();
-//        transaction.replace(R.id.main,fragment);
-//        transaction.commit();
-//    }
 
     private class LocationListener implements BDLocationListener {
         @Override
@@ -420,11 +484,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }else if(tag==2){
             stopAnima(releaseConditionFig);
             releaseConditionText.setSelected(false);
+        } else if(tag==3){
+            stopAnima(recommendDoctorFig);
+            recommendDoctorText.setSelected(false);
         }
 
         startAnima(homePageFig);
         homePageText.setSelected(true);
-        addFragment(new DoctorList());
+        addFragment(list);
         tag=0;
     }
 
@@ -436,6 +503,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }else if(tag==2){
                 stopAnima(releaseConditionFig);
                 releaseConditionText.setSelected(false);
+            } else if(tag==3){
+                stopAnima(recommendDoctorFig);
+                recommendDoctorText.setSelected(false);
             }
 
             mapFig.setVisibility(View.INVISIBLE);
@@ -456,12 +526,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }else if(tag==1){
             mapFig.setVisibility(View.VISIBLE);
             mapText.setText(MAP);
+        } else if(tag==3){
+            stopAnima(recommendDoctorFig);
+            recommendDoctorText.setSelected(false);
         }
-
         startAnima(releaseConditionFig);
         releaseConditionText.setSelected(true);
-        addFragment(new ConditionShow());
+        if(conditionShow==null) {
+            conditionShow = new ConditionShow();
+        }
+        addFragment(conditionShow);
         tag=2;
+    }
+
+    private void goRecommend(){
+        if(tag==0){
+            stopAnima(homePageFig);
+            homePageText.setSelected(false);
+        }else if(tag==1) {
+            mapFig.setVisibility(View.VISIBLE);
+            mapText.setText(MAP);
+        }else if(tag==2){
+            stopAnima(releaseConditionFig);
+            releaseConditionText.setSelected(false);
+        }
+
+        startAnima(recommendDoctorFig);
+        recommendDoctorText.setSelected(true);
+
+        if(recommendDoctor==null){
+            recommendDoctor= new RecommendDoctor();
+        }
+        addFragment(recommendDoctor);
+        tag=3;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case RELEASE:
+                if(resultCode==RESULT_OK){
+                    conditionShow.reflesh();
+                    if(recommendDoctor!=null){
+                        recommendDoctor.reflesh();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     private void startAnima(View view){
