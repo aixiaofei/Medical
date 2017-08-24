@@ -31,6 +31,8 @@ public class Usersick implements Serializable{
 
     private String usersicktime;
 
+    private int usersickstateid;
+
     public String getPhone() {
         return phone;
     }
@@ -118,6 +120,14 @@ public class Usersick implements Serializable{
 
     public void setUsersicktime(String usersicktime) {
         this.usersicktime = usersicktime;
+    }
+
+    public int getUsersickstateid() {
+        return usersickstateid;
+    }
+
+    public void setUsersickstateid(int usersickstateid) {
+        this.usersickstateid = usersickstateid;
     }
 
     public Object deepCopy() throws IOException, ClassNotFoundException {

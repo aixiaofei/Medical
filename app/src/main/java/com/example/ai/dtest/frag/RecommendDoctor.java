@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -42,6 +41,8 @@ public class RecommendDoctor extends BaseFragment {
 
     private List<DoctorCustom> acceptList;
 
+    private List<DoctorCustom> candidateList;
+
     private NestedScrollView scrollView;
 
     private DocterAdapter systemRecommendAdapter;
@@ -50,7 +51,9 @@ public class RecommendDoctor extends BaseFragment {
 
     private DocterAdapter acceptAdapter;
 
-    private int familyId;
+    private DocterAdapter candidateAdapter;
+
+    private int familyId=-1;
 
     private LocationClient client;
 
@@ -70,7 +73,9 @@ public class RecommendDoctor extends BaseFragment {
                     Bundle bundle1= msg.getData();
                     String res1= bundle1.getString("result");
                     List<Usersick> data1= gson.fromJson(res1,new TypeToken<List<Usersick>>(){}.getType());
-                    familyId=Integer.parseInt(data1.get(0).getUsersickid());
+                    if(!data1.isEmpty()) {
+                        familyId = Integer.parseInt(data1.get(0).getUsersickid());
+                    }
                     reflesh();
                     break;
                 case HttpUtils.PULLREDOFA:
@@ -79,6 +84,7 @@ public class RecommendDoctor extends BaseFragment {
                     systemRecommendList.clear();
                     recommendList.clear();
                     acceptList.clear();
+                    candidateList.clear();
                     Bundle bundle= msg.getData();
                     String res= bundle.getString("result");
                     List<DoctorCustom> data= gson.fromJson(res,new TypeToken<List<DoctorCustom>>(){}.getType());
@@ -86,6 +92,7 @@ public class RecommendDoctor extends BaseFragment {
                     systemRecommendAdapter.notifyDataSetChanged();
                     recommendAdapter.notifyDataSetChanged();
                     acceptAdapter.notifyDataSetChanged();
+                    candidateAdapter.notifyDataSetChanged();
                     if(refreshLayout.isRefreshing()){
                         refreshLayout.setRefreshing(false);
                         isRefresh=false;
@@ -107,18 +114,20 @@ public class RecommendDoctor extends BaseFragment {
         systemRecommendList= new ArrayList<>();
         recommendList=new ArrayList<>();
         acceptList= new ArrayList<>();
+        candidateList= new ArrayList<>();
         systemRecommendAdapter= new DocterAdapter(systemRecommendList);
         recommendAdapter= new DocterAdapter(recommendList);
         acceptAdapter= new DocterAdapter(acceptList);
-
+        candidateAdapter= new DocterAdapter(candidateList);
         initAdapter();
     }
+
 
     private void initAdapter(){
         systemRecommendAdapter.setListener(new DocterAdapter.returnUp() {
             @Override
             public void goDoctorHomePage(int position) {
-                DoctorHomePage.actionStart(getContext(),systemRecommendList.get(position).getDocloginid());
+                DoctorHomePage.actionStart(getActivity(),systemRecommendList.get(position).getDocloginid(),1);
             }
 
             @Override
@@ -130,7 +139,7 @@ public class RecommendDoctor extends BaseFragment {
         recommendAdapter.setListener(new DocterAdapter.returnUp() {
             @Override
             public void goDoctorHomePage(int position) {
-                DoctorHomePage.actionStart(getContext(),recommendList.get(position).getDocloginid());
+                DoctorHomePage.actionStart(getActivity(),recommendList.get(position).getDocloginid(),1);
             }
 
             @Override
@@ -142,7 +151,19 @@ public class RecommendDoctor extends BaseFragment {
         acceptAdapter.setListener(new DocterAdapter.returnUp() {
             @Override
             public void goDoctorHomePage(int position) {
-                DoctorHomePage.actionStart(getContext(),acceptList.get(position).getDocloginid());
+                DoctorHomePage.actionStart(getActivity(),acceptList.get(position).getDocloginid(),1);
+            }
+
+            @Override
+            public void goUp() {
+
+            }
+        });
+
+        candidateAdapter.setListener(new DocterAdapter.returnUp() {
+            @Override
+            public void goDoctorHomePage(int position) {
+                DoctorHomePage.actionStart(getActivity(),candidateList.get(position).getDocloginid(),1);
             }
 
             @Override
@@ -185,7 +206,7 @@ public class RecommendDoctor extends BaseFragment {
             public boolean canScrollVertically() {
                 return false;
             }
-        };;
+        };
         recommend.setLayoutManager(manager2);
         recommend.setAdapter(recommendAdapter);
 
@@ -195,9 +216,19 @@ public class RecommendDoctor extends BaseFragment {
             public boolean canScrollVertically() {
                 return false;
             }
-        };;
+        };
         accept.setLayoutManager(manager3);
         accept.setAdapter(acceptAdapter);
+
+        RecyclerView candidate= (RecyclerView) view.findViewById(R.id.candidate_doctor);
+        LinearLayoutManager manager4= new LinearLayoutManager(getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        candidate.setLayoutManager(manager4);
+        candidate.setAdapter(candidateAdapter);
 
         HttpUtils.pullCondition(MyApplication.getUserPhone(),handler);
 
@@ -259,8 +290,10 @@ public class RecommendDoctor extends BaseFragment {
                     systemRecommendList.add(buf);
                 }else if(i.getPreordertype()==2){
                     acceptList.add(buf);
-                }else {
+                }else if(i.getPreordertype()==3){
                     recommendList.add(buf);
+                }else {
+                    candidateList.add(buf);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

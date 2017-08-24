@@ -39,6 +39,7 @@ import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.frag.ConditionShow;
 import com.example.ai.dtest.frag.DoctorList;
 import com.example.ai.dtest.frag.Map;
+import com.example.ai.dtest.frag.OrderShow;
 import com.example.ai.dtest.frag.RecommendDoctor;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.util.ImgUtils;
@@ -74,6 +75,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private TextView recommendDoctorText;
 
+    private ImageButton orderFig;
+
+    private TextView orderText;
+
     private ImageView mapFig;
 
     private TextView mapText;
@@ -86,11 +91,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     public static final int RELEASE=100;
 
+    public static final int TOCANDIDATE=101;
+
+    public static final int ADDMENU=102;
+
     private DoctorList list;
 
     private ConditionShow conditionShow;
 
     private RecommendDoctor recommendDoctor;
+
+    private OrderShow orderShow;
 
     public Handler handler=new Handler(){
         @Override
@@ -181,6 +192,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         recommendDoctorText= (TextView) findViewById(R.id.my_doctor_page_text);
         recommendDoctorText.setOnClickListener(this);
+
+
+        RelativeLayout fragForth= (RelativeLayout) findViewById(R.id.frag_forth);
+        fragForth.setOnClickListener(this);
+
+        orderFig= (ImageButton) findViewById(R.id.search_menu_pic);
+        Drawable srcOrder = orderFig.getBackground();
+        ImgUtils.tintDrawable(srcOrder, getResources().getColorStateList(R.color.button_selector));
+        orderFig.setOnClickListener(this);
+
+        orderText= (TextView) findViewById(R.id.search_menu_text);
+        orderText.setOnClickListener(this);
 
 
         RelativeLayout myPage= (RelativeLayout) findViewById(R.id.my_page);
@@ -286,6 +309,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.my_doctor_page_text:
                 goRecommend();
+                break;
+
+            case R.id.frag_forth:
+                goOrder();
+                break;
+            case R.id.search_menu_pic:
+                goOrder();
+                break;
+            case R.id.search_menu_text:
+                goOrder();
                 break;
             default:
                 break;
@@ -487,6 +520,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         } else if(tag==3){
             stopAnima(recommendDoctorFig);
             recommendDoctorText.setSelected(false);
+        }else if(tag==4){
+            stopAnima(orderFig);
+            orderText.setSelected(false);
         }
 
         startAnima(homePageFig);
@@ -506,6 +542,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             } else if(tag==3){
                 stopAnima(recommendDoctorFig);
                 recommendDoctorText.setSelected(false);
+            }else if(tag==4){
+                stopAnima(orderFig);
+                orderText.setSelected(false);
             }
 
             mapFig.setVisibility(View.INVISIBLE);
@@ -529,7 +568,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         } else if(tag==3){
             stopAnima(recommendDoctorFig);
             recommendDoctorText.setSelected(false);
+        }else if(tag==4){
+            stopAnima(orderFig);
+            orderText.setSelected(false);
         }
+
         startAnima(releaseConditionFig);
         releaseConditionText.setSelected(true);
         if(conditionShow==null) {
@@ -549,6 +592,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         }else if(tag==2){
             stopAnima(releaseConditionFig);
             releaseConditionText.setSelected(false);
+        }else if(tag==4){
+            stopAnima(orderFig);
+            orderText.setSelected(false);
         }
 
         startAnima(recommendDoctorFig);
@@ -561,12 +607,41 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         tag=3;
     }
 
+    private void goOrder(){
+        if(tag==0){
+            stopAnima(homePageFig);
+            homePageText.setSelected(false);
+        }else if(tag==1) {
+            mapFig.setVisibility(View.VISIBLE);
+            mapText.setText(MAP);
+        }else if(tag==2){
+            stopAnima(releaseConditionFig);
+            releaseConditionText.setSelected(false);
+        }else if(tag==3) {
+            stopAnima(recommendDoctorFig);
+            recommendDoctorText.setSelected(false);
+        }
+
+        startAnima(orderFig);
+        orderText.setSelected(true);
+
+        if(orderShow==null){
+            orderShow= new OrderShow();
+        }
+        addFragment(orderShow);
+        tag=4;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case RELEASE:
                 if(resultCode==RESULT_OK){
                     conditionShow.reflesh();
+                }
+                break;
+            case TOCANDIDATE:
+                if(resultCode==RESULT_OK){
                     if(recommendDoctor!=null){
                         recommendDoctor.reflesh();
                     }
@@ -579,20 +654,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private void startAnima(View view){
         AnimatorSet set= new AnimatorSet();
-        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.5f,1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.5f,1f);
+        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.6f,1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.6f,1f);
         view.setSelected(true);
-        set.setDuration(300);
+        set.setDuration(400);
         set.playTogether(scaleX,scaleY);
         set.start();
     }
 
     private void stopAnima(View view){
         AnimatorSet set= new AnimatorSet();
-        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.5f,1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.5f,1f);
+        ObjectAnimator scaleX= ObjectAnimator.ofFloat(view,"scaleX",1f,0.6f,1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view,"scaleY",1f,0.6f,1f);
         view.setSelected(false);
-        set.setDuration(300);
+        set.setDuration(400);
         set.playTogether(scaleX,scaleY);
         set.start();
     }

@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.data.FamilyInfo;
+import com.example.ai.dtest.data.OrderInfo;
 import com.example.ai.dtest.data.UerInfo;
 import com.example.ai.dtest.data.Usersick;
 import com.example.ai.dtest.db.Province;
@@ -62,6 +63,11 @@ public class HttpUtils {
     private static final String DECONDITION= SOURCEIP +"/internetmedical/user/deletesick"; // 删除病情接口
     private static final String PULLDATE= SOURCEIP+ "/internetmedical/user/getschedule"; // 获取日程接口
     private static final String PULLREDOCTOR= SOURCEIP+ "/internetmedical/user/getredoctor"; // 获取推荐医生接口
+    private static final String PUSHCONDITION= SOURCEIP + "/internetmedical/user/publishsick"; // 发布病情接口
+    private static final String UNPUSHCONDITION= SOURCEIP + "/internetmedical/user/cancelsick"; // 取消发布病情接口
+    private static final String TOCANDIDATE = SOURCEIP + "/internetmedical/user/optdoctor"; // 选定医生为候选医生接口
+    private static final String CREATEORDER = SOURCEIP + "/internetmedical/user/createorder"; // 签订订单接口
+    private static final String PULLORDER = SOURCEIP + "/internetmedical/user/order"; // 同步订单接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
@@ -121,7 +127,16 @@ public class HttpUtils {
     public static final int PULLDATESU=50; // 获取日程成功
     public static final int PULLREDOFA=51; // 获取推荐医生失败
     public static final int PULLREDOSU=52; // 获取推荐医生成功
-
+    public static final int PUSHCOFA= 53; // 发布病情失败
+    public static final int PUSHCOSU= 54; // 发布病情成功
+    public static final int UNPUSHCOFA=55; // 取消发布病情失败
+    public static final int UNPUSHCOSU=56; // 取消发布病情成功
+    public static final int TOCANDIDATEFA=57; // 选定医生为候选医生失败
+    public static final int TOCANDIDATESU=58; // 选定医生为候选医生成功
+    public static final int CREATEORDERFA=59; // 生成订单失败
+    public static final int CREATEORDERSU=60; // 生成订单成功
+    public static final int PULLORDERFA=61; // 同步订单失败
+    public static final int PULLORDERSU=62; // 同步订单成功
 
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -1180,6 +1195,177 @@ public class HttpUtils {
                 }
             }
         });
+    }
+
+    //发布病情
+    public static void pushCondition(String id,final Handler handler){
+        Gson gson= new Gson();
+        Id id1= new Id();
+        id1.id=id;
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PUSHCONDITION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PUSHCOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State state= gson.fromJson(res,State.class);
+                if(state.state.equals("1")){
+                    Message message = new Message();
+                    message.what= PUSHCOSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PUSHCOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //取消发布病情
+    public static void unPushCondition(String id,final Handler handler){
+        Gson gson= new Gson();
+        Id id1= new Id();
+        id1.id=id;
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(UNPUSHCONDITION).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= UNPUSHCOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State state= gson.fromJson(res,State.class);
+                if(state.state.equals("1")){
+                    Message message = new Message();
+                    message.what= UNPUSHCOSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= UNPUSHCOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //选定医生为候选医生
+    public static void toCandidate(String res,final Handler handler){
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(TOCANDIDATE).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= TOCANDIDATEFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State state= gson.fromJson(res,State.class);
+                if(state.state.equals("1")){
+                    Message message = new Message();
+                    message.what= TOCANDIDATESU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= TOCANDIDATEFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //生成订单
+    public static void createOrder(String res,final Handler handler){
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(CREATEORDER).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= CREATEORDERFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State state= gson.fromJson(res,State.class);
+                if(state.state.equals("1")){
+                    Message message = new Message();
+                    message.what= CREATEORDERSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= CREATEORDERFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    //同步订单
+    public static void pullOrder(String phone,final Handler handler){
+        Phone phone1= new Phone();
+        phone1.phone=phone;
+        Gson gson= new Gson();
+        String res= gson.toJson(phone1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(PULLORDER).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= PULLORDERFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                orderInfo info= gson.fromJson(res,orderInfo.class);
+                if(info.state.equals("1")){
+                    String data= gson.toJson(info.data);
+                    Message message = new Message();
+                    Bundle bundle= new Bundle();
+                    bundle.putString("result",data);
+                    message.setData(bundle);
+                    message.what= PULLORDERSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= PULLORDERFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class orderInfo{
+        String state;
+        List<OrderInfo> data;
     }
 
 }

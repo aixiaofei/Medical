@@ -3,81 +3,88 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/first"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rec_first"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:scrollbarSize="@dimen/activity_vertical_margin"
-            android:layout_weight="1">
-        </android.support.v7.widget.RecyclerView>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rec_second"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            android:scrollbarSize="@dimen/activity_vertical_margin"
-            android:layout_weight="1">
-        </android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-
-
     <RelativeLayout
-        android:layout_below="@+id/first"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp">
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/des"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/department_second"
-            android:layout_marginStart="10dp"
-            android:text="你当前选择的科室为:"/>
+        <LinearLayout
+            android:id="@+id/first"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
 
-        <TextView
-            android:id="@+id/department_first"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_toRightOf="@+id/des"
-            android:layout_alignTop="@+id/department_second" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rec_first"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:scrollbarSize="@dimen/activity_vertical_margin"
+                android:layout_weight="1">
+            </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/department_second"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_toRightOf="@+id/department_first"
-            android:layout_centerVertical="true"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rec_second"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:scrollbarSize="@dimen/activity_vertical_margin"
+                android:layout_weight="1">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/select"
-            android:layout_width="wrap_content"
+
+        <RelativeLayout
+            android:layout_below="@+id/first"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/department_second"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginEnd="20dp"
-            android:text="确定"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/des"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/department_second"
+                android:layout_marginStart="10dp"
+                android:text="你当前选择的科室为:"/>
+
+            <TextView
+                android:id="@+id/department_first"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/des"
+                android:layout_alignTop="@+id/department_second" />
+
+            <TextView
+                android:id="@+id/department_second"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_toRightOf="@+id/department_first"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/department_second"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginEnd="20dp"
+                android:text="确定"/>
+
+        </RelativeLayout>
 
     </RelativeLayout>
+
 </RelativeLayout>

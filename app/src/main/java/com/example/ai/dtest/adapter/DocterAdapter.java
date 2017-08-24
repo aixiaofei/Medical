@@ -3,7 +3,6 @@ package com.example.ai.dtest.adapter;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +10,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.ai.dtest.R;
-import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.HttpUtils;
 import com.example.ai.dtest.view.complete;
 import com.example.ai.dtest.view.load;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import static com.example.ai.dtest.base.MyApplication.getContext;
 
-/**
- * Created by ai on 2017/7/9.
- */
+///**
+// * Created by ai on 2017/7/9.
+// */
 
 public class DocterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 

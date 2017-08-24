@@ -13,9 +13,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by ai on 2017/8/15.
- */
+///**
+// * Created by ai on 2017/8/15.
+// */
 
 public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -55,17 +55,7 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(context).inflate(resourceId,parent,false);
-        viewHolder holder= new viewHolder(view);
-        int position= holder.getAdapterPosition();
-        if(!isDefault(position)){
-            holder.desc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-        }
-        return holder;
+        return new viewHolder(view);
     }
 
     @Override
@@ -87,16 +77,10 @@ public class DateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 holder1.desc.setText(week.get(position - 1) + " " + date[position - 1]);
             }
         }else {
-            if(tag==1){
-                if((position<currentDay+7 && position>=9) || (position<currentDay+15 && position>=17)){
-                    holder1.desc.setText("点击预约");
-//                    holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
-                    holder1.desc.setTextColor(context.getResources().getColor(R.color.colorBackground));
-                }else {
-                    holder1.desc.setText("点击预约");
-                    holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
-                    holder1.desc.setTextColor(context.getResources().getColor(R.color.white));
-                }
+            if (tag == 1) {
+                holder1.desc.setText("可以接诊");
+                holder1.desc.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+                holder1.desc.setTextColor(context.getResources().getColor(R.color.white));
             }
         }
     }

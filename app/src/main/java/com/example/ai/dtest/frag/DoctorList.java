@@ -202,7 +202,7 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
         adapter.setListener(new DocterAdapter.returnUp() {
             @Override
             public void goDoctorHomePage(int position) {
-                DoctorHomePage.actionStart(getContext(),mList.get(position).getDocloginid());
+                DoctorHomePage.actionStart(getActivity(),mList.get(position).getDocloginid(),0);
             }
 
             @Override
@@ -307,10 +307,11 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
             case R.id.offices:
                 final View target= LayoutInflater.from(getContext()).inflate(R.layout.department,null);
                 final department selectDepart= new department(getContext());
-                int height= getResources().getDisplayMetrics().heightPixels/3*2;
+                int height= getResources().getDisplayMetrics().heightPixels/2;
                 selectDepart.setContentView(target);
                 selectDepart.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                 selectDepart.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+//                selectDepart.setHeight(height);
                 selectDepart.showAsDropDown(split);
                 selectDepart.setListener(new department.departmentListener() {
                     @Override

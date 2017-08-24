@@ -85,12 +85,13 @@
 
     </LinearLayout>
 
-    <Button
+    <TextView
         android:id="@+id/change"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:background="@drawable/rigster_login_background"
         android:text="修改"
         android:textColor="#FFFFFF"

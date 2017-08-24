@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.request.target.Target;
 import com.example.ai.dtest.base.BaseActivity;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.FamilyInfo;
@@ -218,6 +219,7 @@ public class ReleaseCondition extends BaseActivity implements View.OnClickListen
         Uri uri= Uri.parse(path);
         Glide.with(getContext())
                 .load(uri)
+                .override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
     }

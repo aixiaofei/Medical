@@ -41,14 +41,14 @@
     <LinearLayout
         android:id="@+id/selected"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/first">
 
         <TextView
             android:id="@+id/province"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="13sp"
             android:gravity="center"/>
@@ -57,14 +57,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="13sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"/>
         <TextView
             android:id="@+id/country"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="13sp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"/>
 
     </LinearLayout>
@@ -74,8 +74,7 @@
         android:layout_below="@+id/selected"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginTop="5dp">
 
         <TextView
             android:id="@+id/des"
@@ -85,7 +84,7 @@
             android:gravity="center"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/auto_location"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="15dp"
             android:text="当前定位城市为:"/>
 
         <TextView
@@ -95,7 +94,6 @@
             android:textSize="12sp"
             android:gravity="center"
             android:layout_toRightOf="@+id/des"
-            android:layout_marginLeft="5dp"
             android:layout_centerInParent="true"/>
 
         <TextView

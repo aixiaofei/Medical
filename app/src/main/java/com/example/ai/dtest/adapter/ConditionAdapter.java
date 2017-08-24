@@ -1,26 +1,37 @@
 package com.example.ai.dtest.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.ai.dtest.PatientInformation;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.data.Usersick;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.view.load;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,7 +51,13 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private int resourceId;
 
+    private ImageView fullImage;
+
     private conditionListener listener;
+
+    private Dialog dialog;
+
+    private load load;
 
     public void setListener(conditionListener listener){
         this.listener=listener;
@@ -60,8 +77,10 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView dec;
         List<ImageView> fig=new ArrayList<>();
         TextView have;
-        ImageView change;
-        ImageView delete;
+        TextView release;
+        TextView change;
+        TextView delete;
+        TextView state;
         TextView time;
 
         viewHolder(View itemView) {
@@ -76,16 +95,26 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             fig.add((ImageView) itemView.findViewById(R.id.info3));
             fig.add((ImageView) itemView.findViewById(R.id.info4));
             have= itemView.findViewById(R.id.have_fig);
+            release= itemView.findViewById(R.id.release);
             change=itemView.findViewById(R.id.change);
             delete=itemView.findViewById(R.id.delete);
+            state= itemView.findViewById(R.id.state);
             time= itemView.findViewById(R.id.release_time);
         }
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(context).inflate(resourceId,parent,false);
         final viewHolder holder=new viewHolder(view);
+
+        holder.release.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position= holder.getAdapterPosition();
+                listener.release(position);
+            }
+        });
 
         holder.change.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +132,51 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         });
 
+        for(int i=0;i<holder.fig.size();i++){
+            final int buf=i;
+            holder.fig.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position= holder.getAdapterPosition();
+                    String path=mList.get(position).getUsersickpic().split(",")[buf];
+                    if(holder.fig.get(buf).getDrawable()!=null){
+                        showFullDialog(path);
+                    }
+                }
+            });
+        }
+
         return holder;
+    }
+
+    private void showFullDialog(String path){
+        if(dialog==null) {
+            dialog = new Dialog(context,R.style.fullDialog);
+            dialog.show();
+            Window window= dialog.getWindow();
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            window.setBackgroundDrawableResource(android.R.color.black);
+            window.setWindowAnimations(R.style.fullWindowAnim);
+            View view = LayoutInflater.from(context).inflate(R.layout.full_screen_image, null);
+            fullImage = view.findViewById(R.id.full_image);
+            load= view.findViewById(R.id.load);
+            load.loadAnima();
+            loadFullImage(fullImage,IMAGEURI+path);
+            fullImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.setContentView(view);
+        }else {
+            fullImage.setVisibility(View.GONE);
+            load.setVisibility(View.VISIBLE);
+            load.loadAnima();
+            loadFullImage(fullImage,IMAGEURI+path);
+            dialog.show();
+        }
     }
 
     @Override
@@ -114,6 +187,24 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder1.male.setText(info.getFamilymale());
         holder1.age.setText(info.getFamilyage());
         holder1.dec.setText(info.getUsersickdesc());
+
+        if(info.getUsersickstateid()==1){
+            holder1.state.setText("已添加");
+            holder1.release.setText("发布");
+            holder1.change.setText("修改");
+            holder1.delete.setText("删除");
+        }else if(info.getUsersickstateid()==2){
+            holder1.state.setText("已发布");
+            holder1.release.setText("取消发布");
+            holder1.change.setText("不可修改");
+            holder1.delete.setText("不可删除");
+        }else {
+            holder1.state.setText("已签订订单");
+            holder1.release.setText("不可取消发布");
+            holder1.change.setText("不可修改");
+            holder1.delete.setText("不可删除");
+        }
+
         String[] imagePaths= info.getUsersickpic().split(",");
         int num= 0;
         for(int i=0;i<imagePaths.length;i++){
@@ -140,12 +231,36 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
 
-    private void loadImage(ImageView imageView,String path){
+    private void loadImage(ImageView imageView, String path){
         Uri uri= Uri.parse(path);
         Glide.with(getContext())
                 .load(uri)
+                .error(R.drawable.defaultuserimage)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
+    }
+
+    private void loadFullImage(final ImageView imageView, String path){
+        Uri uri = Uri.parse(path);
+        Glide.with(getContext())
+                .load(uri)
+                .error(R.drawable.defaultuserimage)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL)
+                .listener(new RequestListener<Uri, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, Uri model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, Uri model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        load.clearAnima();
+                        load.setVisibility(View.GONE);
+                        imageView.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                }).into(imageView);
     }
 
     @Override
@@ -154,6 +269,7 @@ public class ConditionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public interface conditionListener{
+        void release(int position);
         void change(int position);
         void delete(int position);
     }

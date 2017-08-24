@@ -1,5 +1,9 @@
 package com.example.ai.dtest.test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -8,6 +12,10 @@ import java.util.Scanner;
 
 public class test2 {
     public static void main(String[] args){
+
+        Map<Integer,Integer> a= new HashMap<>();
+        List<Integer> a1= new ArrayList<>();
+
         Scanner in= new Scanner(System.in);
         int num= in.nextInt();
         int sum=0;

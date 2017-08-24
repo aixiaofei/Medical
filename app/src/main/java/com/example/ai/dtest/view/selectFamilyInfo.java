@@ -39,6 +39,8 @@ public class selectFamilyInfo extends Dialog {
 
     private selectFamily listener;
 
+    private Context context;
+
     private Handler handler= new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -65,6 +67,7 @@ public class selectFamilyInfo extends Dialog {
 
     public selectFamilyInfo(@NonNull Context context) {
         super(context, R.style.myDialog);
+        this.context=context;
     }
 
     public selectFamilyInfo(@NonNull Context context, @StyleRes int themeResId) {
@@ -103,7 +106,11 @@ public class selectFamilyInfo extends Dialog {
         sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.select(mList.get(currentInfo));
+                if(currentInfo>=0) {
+                    listener.select(mList.get(currentInfo));
+                }else {
+                    Toast.makeText(context,"请选择病人信息",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
