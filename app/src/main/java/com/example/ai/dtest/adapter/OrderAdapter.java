@@ -1,7 +1,9 @@
 package com.example.ai.dtest.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.ai.dtest.OrderDetail;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.data.OrderInfo;
 import com.example.ai.dtest.util.HttpUtils;
@@ -37,6 +40,12 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private List<OrderInfo> mList;
 
     private int resourceId;
+
+    private orderShowListener listener;
+
+    public void setListener(orderShowListener listener){
+        this.listener=listener;
+    }
 
     public OrderAdapter(Context context,List<OrderInfo> mList,int resourceId) {
         this.context=context;
@@ -78,32 +87,37 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(resourceId,parent,false);
-        viewHolder holder= new viewHolder(view);
+        final viewHolder holder= new viewHolder(view);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int position= holder.getAdapterPosition();
+                OrderDetail.actionStart(context,mList.get(position).getDocloginid(),mList.get(position).getUserorderid(),mList.get(position).getUserorderstate());
             }
         });
 
         holder.sure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int position= holder.getAdapterPosition();
+                if(mList.get(position).getUserorderstate()==3){//确认信息
+                    listener.sureInfo(mList.get(position).getUserorderid());
+                }
             }
         });
 
         holder.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int position= holder.getAdapterPosition();
+                if(mList.get(position).getUserorderstate()==6){//付款
+                }
             }
         });
 
         return holder;
     }
-
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -113,28 +127,31 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         switch (info.getUserorderstate()){
             case 1:
                 holder1.state.setText("等待医生确认");
+                hideRela(holder1);
                 break;
             case 2:
                 holder1.state.setText("等待医生完善信息");
+                hideRela(holder1);
                 break;
             case 3:
                 holder1.state.setText("医生已完善信息，请确认");
-                holder1.process.setVisibility(View.VISIBLE);
+                showRela(holder1);
                 break;
             case 4:
                 holder1.state.setText("已被医生取消");
+                hideRela(holder1);
                 break;
             case 5:
                 holder1.state.setText("已取消");
+                hideRela(holder1);
                 break;
             case 6:
                 holder1.state.setText("代付款");
-                holder1.process.setVisibility(View.VISIBLE);
-                holder1.cancel.setVisibility(View.GONE);
-                holder1.sure.setText("确认付款");
+                showRelaPay(holder1);
                 break;
             case 7:
                 holder1.state.setText("订单已完成");
+                hideRela(holder1);
                 break;
             default:
                 break;
@@ -148,19 +165,42 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         holder1.hosipital.setText(info.getHospname());
 
-        holder1.rTime.setText(getTime(info.getUserorderptime())+" 提交");
-
-        if(TextUtils.isEmpty(info.getUserorderrtime())){
-            holder1.sTime.setVisibility(View.GONE);
-        }else {
-            holder1.sTime.setText(getTime(info.getUserorderrtime())+" 确认");
-        }
-
         if(TextUtils.isEmpty(info.getUserorderetime())){
-            holder1.sTime.setVisibility(View.GONE);
+            holder1.cTime.setVisibility(View.GONE);
+            if(TextUtils.isEmpty(info.getUserorderrtime())){
+                holder1.sTime.setVisibility(View.GONE);
+                holder1.rTime.setText(getTime(info.getUserorderptime())+" 提交");
+            }else {
+                holder1.rTime.setVisibility(View.GONE);
+                holder1.sTime.setVisibility(View.VISIBLE);
+                holder1.sTime.setText(getTime(info.getUserorderrtime())+" 确认");
+            }
         }else {
-            holder1.sTime.setText(getTime(info.getUserorderetime())+" 结束");
+            holder1.sTime.setVisibility(View.GONE);
+            holder1.rTime.setVisibility(View.GONE);
+            holder1.cTime.setVisibility(View.VISIBLE);
+            holder1.cTime.setText(getTime(info.getUserorderetime())+" 结束");
         }
+    }
+
+    private void showRela(viewHolder holder){
+        holder.process.setVisibility(View.VISIBLE);
+        holder.sure.setText("确定");
+        holder.sure.setVisibility(View.VISIBLE);
+        holder.cancel.setVisibility(View.VISIBLE);
+    }
+
+    private void showRelaPay(viewHolder holder){
+        holder.process.setVisibility(View.VISIBLE);
+        holder.cancel.setText("确认付款");
+        holder.sure.setVisibility(View.GONE);
+        holder.cancel.setVisibility(View.VISIBLE);
+    }
+
+    private void hideRela(viewHolder holder){
+        holder.process.setVisibility(View.GONE);
+        holder.sure.setVisibility(View.GONE);
+        holder.cancel.setVisibility(View.GONE);
     }
 
     private void loadImage(ImageView imageView, String path){
@@ -183,5 +223,11 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public interface orderShowListener{
+        void sureInfo(int id);
+        void surePay();
+        void cancel(int id);
     }
 }

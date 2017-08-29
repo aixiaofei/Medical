@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.data.FamilyInfo;
+import com.example.ai.dtest.data.OrderDetailInfo;
 import com.example.ai.dtest.data.OrderInfo;
 import com.example.ai.dtest.data.UerInfo;
 import com.example.ai.dtest.data.Usersick;
@@ -68,6 +69,8 @@ public class HttpUtils {
     private static final String TOCANDIDATE = SOURCEIP + "/internetmedical/user/optdoctor"; // 选定医生为候选医生接口
     private static final String CREATEORDER = SOURCEIP + "/internetmedical/user/createorder"; // 签订订单接口
     private static final String PULLORDER = SOURCEIP + "/internetmedical/user/order"; // 同步订单接口
+    private static final String ORDERDETAIL = SOURCEIP + "/internetmedical/user/orderdetail"; // 查看订单详情接口
+    private static final String SUREINFO = SOURCEIP + "/internetmedical/user/confirmorder"; // 病人确认接口
 
     private static final String APP_KEY = "69faeb15aa2238ed28ebfebfc52b23c5";//网易云信分配的账号
     private static final String APP_SECRET = "4f0a0a22be5d";//网易云信分配的密钥
@@ -135,8 +138,12 @@ public class HttpUtils {
     public static final int TOCANDIDATESU=58; // 选定医生为候选医生成功
     public static final int CREATEORDERFA=59; // 生成订单失败
     public static final int CREATEORDERSU=60; // 生成订单成功
-    public static final int PULLORDERFA=61; // 同步订单失败
+    private static final int PULLORDERFA=61; // 同步订单失败
     public static final int PULLORDERSU=62; // 同步订单成功
+    public static final int ORDERDETAILFA=63; //查看订单详情失败
+    public static final int ORDERDETAILSU=64; // 查看订单详情成功
+    public static final int SUREINFOFA=65; // 确认信息失败
+    public static final int SUREINFOSU=66; // 确认信息成功
 
 
     private static final OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -1366,6 +1373,82 @@ public class HttpUtils {
     private class orderInfo{
         String state;
         List<OrderInfo> data;
+    }
+
+    //查看订单详情
+    public static void orderDeatil(int id,final Handler handler){
+        Id id1=new Id();
+        id1.id=Integer.toString(id);
+        Gson gson= new Gson();
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(ORDERDETAIL).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= ORDERDETAILFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                orderDetailInfo info= gson.fromJson(res,orderDetailInfo.class);
+                if(info.state.equals("1")){
+                    Message message = new Message();
+                    Bundle bundle= new Bundle();
+                    bundle.putSerializable("result",info.data);
+                    message.setData(bundle);
+                    message.what= ORDERDETAILSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= ORDERDETAILFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+    }
+
+    private class orderDetailInfo{
+        String state;
+        OrderDetailInfo data;
+    }
+
+    //病人确认信息
+    public static void sureInfo(int id,final Handler handler){
+        Id id1=new Id();
+        id1.id=Integer.toString(id);
+        Gson gson= new Gson();
+        String res= gson.toJson(id1);
+        RequestBody requestBody = RequestBody.create(JSON,res);
+        Request request = new Request.Builder().url(SUREINFO).post(requestBody).build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what= SUREINFOFA;
+                handler.sendMessage(message);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson gson= new Gson();
+                String res= response.body().string();
+                State info= gson.fromJson(res,State.class);
+                if(info.state.equals("1")){
+                    Message message = new Message();
+                    message.what= SUREINFOSU;
+                    handler.sendMessage(message);
+                }else {
+                    Message message = new Message();
+                    message.what= SUREINFOFA;
+                    handler.sendMessage(message);
+                }
+            }
+        });
     }
 
 }

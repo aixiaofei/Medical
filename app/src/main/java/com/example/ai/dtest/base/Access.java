@@ -30,8 +30,7 @@ public class Access extends BaseActivity {
                     Login.actionStart(Access.this,isLastLogin.getUserPhone(),"");
                 }
             }
-        }
-        else {
+        }else {
             Intent intent= new Intent(Access.this,MainActivity.class);
             startActivity(intent);
         }

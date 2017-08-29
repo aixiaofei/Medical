@@ -1,13 +1,23 @@
 package com.example.ai.dtest.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import com.baidu.android.pushservice.PushManager;
 import com.baidu.android.pushservice.PushMessageReceiver;
+import com.example.ai.dtest.MainActivity;
+import com.example.ai.dtest.base.Access;
+import com.example.ai.dtest.base.ActivityCollector;
 import com.example.ai.dtest.base.MyApplication;
+import com.example.ai.dtest.frag.OrderShow;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -46,7 +56,11 @@ public class PushInfo extends PushMessageReceiver{
 //        Gson gson= new Gson();
 //        String res= gson.toJson(channel);
 //        HttpUtils.pushChannelId(res,handler);
-        PushManager.listTags(context);
+        if(i==0) {
+            PushManager.listTags(context);
+        }else {
+            Toast.makeText(context,"推送服务启动失败",Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -70,6 +84,7 @@ public class PushInfo extends PushMessageReceiver{
         PushManager.delTags(context,list);
         List<String> tags= new ArrayList<>();
         tags.add(MyApplication.getUserPhone());
+        tags.add("sick");
         PushManager.setTags(context,tags);
     }
 
@@ -80,31 +95,38 @@ public class PushInfo extends PushMessageReceiver{
 
     @Override
     public void onNotificationClicked(Context context, String s, String s1, String s2) {
-        String notifyString = "通知点击 title=\"" + s + "\" description=\""
-                + s1 + "\" customContent=" + s2;
-        Log.d("ai",notifyString);
+        Gson gson=new Gson();
+        State state= gson.fromJson(s2,State.class);
+        if("2".equals(state.state)){
+            returnOrder(context);
+        }else if("3".equals(state.state)){
+            returnOrder(context);
+        }
+    }
 
-//        // 自定义内容获取方式，mykey和myvalue对应通知推送时自定义内容中设置的键和值
-//        if (!TextUtils.isEmpty(customContentString)) {
-//            JSONObject customJson = null;
-//            try {
-//                customJson = new JSONObject(customContentString);
-//                String myvalue = null;
-//                if (customJson.isNull("mykey")) {
-//                    myvalue = customJson.getString("mykey");
-//                }
-//            } catch (JSONException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        // Demo更新界面展示代码，应用请在这里加入自己的处理逻辑
-//        updateContent(context, notifyString);
+    private void returnOrder(Context context){
+        MainActivity activity= (MainActivity) ActivityCollector.getMain();
+        if(activity!=null){
+            Intent intent= new Intent(context,MainActivity.class);
+            context.startActivity(intent);
+            activity.goOrder();
+            FragmentManager manager= activity.getSupportFragmentManager();
+            OrderShow target= (OrderShow) manager.findFragmentByTag(OrderShow.class.getName());
+            if(target!=null){
+                target.refleshOrder();
+            }
+        }else {
+            Intent intent= new Intent(context,Access.class);
+            context.startActivity(intent);
+        }
     }
 
     @Override
     public void onNotificationArrived(Context context, String s, String s1, String s2) {
 
+    }
+
+    private class State{
+        String state;
     }
 }

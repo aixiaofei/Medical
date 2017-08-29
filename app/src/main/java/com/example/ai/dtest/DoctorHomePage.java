@@ -142,6 +142,8 @@ public class DoctorHomePage extends BaseActivity {
             activity.startActivityForResult(intent,MainActivity.TOCANDIDATE);
         }else if(mode==1) {
             activity.startActivityForResult(intent, MainActivity.ADDMENU);
+        }else if(mode==2){
+            activity.startActivity(intent);
         }
     }
 
@@ -178,6 +180,8 @@ public class DoctorHomePage extends BaseActivity {
         select= (TextView) findViewById(R.id.select);
         if(mode==1){
             select.setText("确认与医生签订订单");
+        }else if(mode==2){
+            select.setVisibility(View.GONE);
         }
         select.setOnClickListener(new View.OnClickListener() {
             @Override

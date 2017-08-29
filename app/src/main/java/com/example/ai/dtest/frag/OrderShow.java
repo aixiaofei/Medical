@@ -1,16 +1,19 @@
 package com.example.ai.dtest.frag;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.adapter.OrderAdapter;
@@ -25,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.ai.dtest.base.MyApplication.getContext;
 
 public class OrderShow extends BaseFragment {
 
@@ -54,6 +59,14 @@ public class OrderShow extends BaseFragment {
                     }
                     adapter.notifyDataSetChanged();
                     break;
+                case HttpUtils.SUREINFOFA:
+                    break;
+                case HttpUtils.SUREINFOSU:
+                    Toast.makeText(getContext(),"确认信息成功，请尽快付款",Toast.LENGTH_SHORT).show();
+                    refleshOrder();
+                    break;
+                default:
+                    break;
             }
         }
     };
@@ -72,6 +85,23 @@ public class OrderShow extends BaseFragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
 
         adapter = new OrderAdapter(getContext(), mList, R.layout.order_show_item);
+        adapter.setListener(new OrderAdapter.orderShowListener() {
+            @Override
+            public void sureInfo(int id) {
+                showSureInfo(id);
+            }
+
+            @Override
+            public void surePay() {
+
+            }
+
+            @Override
+            public void cancel(int id) {
+
+            }
+        });
+
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(adapter);
 
@@ -86,6 +116,26 @@ public class OrderShow extends BaseFragment {
 
         refleshOrder();
         return view;
+    }
+
+    private void showSureInfo(final int id){
+        AlertDialog.Builder builder= new AlertDialog.Builder(getContext(),R.style.myDialog);
+        builder.setMessage("已确认订单信息")
+                .setTitle("提示")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        HttpUtils.sureInfo(id,handler);
+                    }
+                })
+                .setNegativeButton("再想想", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     public void refleshOrder(){

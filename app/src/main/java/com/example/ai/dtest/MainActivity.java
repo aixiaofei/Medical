@@ -110,7 +110,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             super.handleMessage(msg);
             switch (msg.what){
                 case HttpUtils.LOGINSUCESS:
-//                    addFragment(new DoctorList());
                     Bundle login_sucess_bundle= msg.getData();
                     String buf2= login_sucess_bundle.getString("user");
                     UserLoginInfo userlogininfo= gson.fromJson(buf2,UserLoginInfo.class);
@@ -148,7 +147,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.doctor_design);
-
+        Intent intent=getIntent();
 
         mapFig= (ImageView) findViewById(R.id.map_fig);
         mapText=(TextView) findViewById(R.id.map_text);
@@ -249,13 +248,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        ImgUtils.recycleBitmap(MyApplication.getBitmap());
-        ActivityCollector.finishAll();
     }
 
     @Override
@@ -607,7 +599,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         tag=3;
     }
 
-    private void goOrder(){
+    public void goOrder(){
         if(tag==0){
             stopAnima(homePageFig);
             homePageText.setSelected(false);
@@ -647,6 +639,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     }
                 }
                 break;
+            case ADDMENU:
+                if(resultCode==RESULT_OK){
+                    if(orderShow!=null){
+                        orderShow.refleshOrder();
+                    }
+                    if(conditionShow!=null){
+                        conditionShow.reflesh();
+                    }
+                }
             default:
                 break;
         }

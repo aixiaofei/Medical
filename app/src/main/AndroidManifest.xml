@@ -23,7 +23,7 @@
 
     <permission
         android:name="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.example.ai.dtest"
-        android:protectionLevel="signature"></permission>
+        android:protectionLevel="signature" />
 
     <application
         android:name=".base.MyApplication"
@@ -151,7 +151,8 @@
             android:protectionLevel="signature"
             android:writePermission="baidu.push.permission.WRITE_PUSHINFOPROVIDER.com.example.ai.dtest" />
 
-        <activity android:name=".DoctorHomePage"></activity>
+        <activity android:name=".DoctorHomePage" />
+        <activity android:name=".OrderDetail"></activity>
     </application>
 
 </manifest>

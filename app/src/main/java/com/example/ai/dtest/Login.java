@@ -236,7 +236,6 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login:
-                showLoad();
                 tryLogin();
                 break;
             case R.id.forget_password:
@@ -298,6 +297,7 @@ public class Login extends BaseActivity implements View.OnClickListener,Compound
             Toast.makeText(MyApplication.getContext(), "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
+        showLoad();
         //记录下尝试登陆用户名和密码
         saveUserPhone=user_phone.getText().toString();
         savePassword=user_password.getText().toString();

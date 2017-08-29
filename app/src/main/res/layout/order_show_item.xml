@@ -157,7 +157,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/hosipital_list"
-            android:layout_margin="10dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
 
             <TextView
                 android:id="@+id/release_time"
@@ -193,11 +195,11 @@
             android:layout_height="30dp"
             android:layout_below="@+id/release_time_desc"
             android:layout_margin="10dp"
-            android:visibility="gone">
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/sure"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/cancel"
                 android:layout_marginRight="20dp"
@@ -207,10 +209,9 @@
 
             <TextView
                 android:id="@+id/cancel"
-                android:layout_width="40dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="20dp"
                 android:text="取消"
                 android:gravity="center"
                 android:textSize="14sp"/>
