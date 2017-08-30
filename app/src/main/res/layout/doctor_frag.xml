@@ -12,7 +12,8 @@
 
         <TextView
             android:id="@+id/recommend_doctor"
-            android:layout_width="88dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="推荐医生"
             android:textSize="14sp"
@@ -23,7 +24,8 @@
 
         <TextView
             android:id="@+id/offices"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="科室"
@@ -35,7 +37,8 @@
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="日期"
             android:clickable="true"
@@ -46,7 +49,8 @@
             android:textColor="@color/default_text_seclector"/>
         <TextView
             android:id="@+id/city"
-            android:layout_width="60dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:layout_marginEnd="60dp"
             android:text="城市"

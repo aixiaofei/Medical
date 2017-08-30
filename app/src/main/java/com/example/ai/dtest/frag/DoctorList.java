@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.example.ai.dtest.base.BaseFragment;
 import com.example.ai.dtest.base.MyApplication;
 import com.example.ai.dtest.data.DoctorCustom;
 import com.example.ai.dtest.util.HttpUtils;
+import com.example.ai.dtest.view.DatePopwindow;
 import com.example.ai.dtest.view.cityPopwindow;
 import com.example.ai.dtest.view.department;
 import com.example.ai.dtest.view.loadDialog;
@@ -32,6 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -55,6 +58,8 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
 
     private TextView office;
 
+    private TextView date;
+
     private boolean isClick=false;
 
     private boolean isPull=false;
@@ -68,6 +73,10 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
     private static final int PageItem=10;
 
     private String dept;
+
+    private String currentCity;
+
+    private int currentDate;
 
     private loadDialog dialog;
 
@@ -88,6 +97,9 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                     isClick=false;
                     if(isRefresh) {
                         isRefresh = false;
+                    }
+                    if(dialog.isShowing()){
+                        dialog.dismiss();
                     }
                     break;
                 case HttpUtils.UPDATESUCCESS:
@@ -177,6 +189,9 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
 
         office= (TextView) view.findViewById(R.id.offices);
         office.setOnClickListener(this);
+
+        date= (TextView) view.findViewById(R.id.date);
+        date.setOnClickListener(this);
 
         recyclerView= (RecyclerView) view.findViewById(R.id.doctor_list);
 
@@ -274,6 +289,10 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                 info.page=Integer.toString(page);
                 if(tag==1){
                     info.dept=dept;
+                }else if(tag==2){
+                    info.loc=currentCity;
+                }else if(tag==3){
+                    info.date=currentDate;
                 }
                 Gson gson= new Gson();
                 String res= gson.toJson(info);
@@ -301,17 +320,17 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                     office.setSelected(false);
                     city.setText("城市");
                     city.setSelected(false);
+                    date.setText("日期");
+                    date.setSelected(false);
                     update();
                 }
                 break;
             case R.id.offices:
                 final View target= LayoutInflater.from(getContext()).inflate(R.layout.department,null);
                 final department selectDepart= new department(getContext());
-                int height= getResources().getDisplayMetrics().heightPixels/2;
                 selectDepart.setContentView(target);
                 selectDepart.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                 selectDepart.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-//                selectDepart.setHeight(height);
                 selectDepart.showAsDropDown(split);
                 selectDepart.setListener(new department.departmentListener() {
                     @Override
@@ -337,6 +356,8 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                         recommendDoctor.setSelected(false);
                         city.setText("城市");
                         city.setSelected(false);
+                        date.setText("日期");
+                        date.setSelected(false);
                     }
                 });
                 break;
@@ -353,14 +374,53 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                         if(cityPopwindowShow.isShowing()){
                             cityPopwindowShow.dismiss();
                         }
-
                         String[] bufLocation= location.split("-");
+                        StringBuilder builder= new StringBuilder();
+                        for(String i:bufLocation){
+                            builder.append(i);
+                        }
+                        currentCity=builder.toString();
                         city.setText(bufLocation[bufLocation.length-1]);
                         city.setSelected(true);
+                        isClick=true;
+                        page=1;
+                        tag=2;
+                        update();
 
                         recommendDoctor.setSelected(false);
                         office.setText("科室");
                         office.setSelected(false);
+                        date.setText("日期");
+                        date.setSelected(false);
+                    }
+                });
+                break;
+            case R.id.date:
+                final View dateView= LayoutInflater.from(getContext()).inflate(R.layout.date_popwindow,null);
+                final DatePopwindow datePopwindow= new DatePopwindow(getContext());
+                datePopwindow.setContentView(dateView);
+                int width= date.getWidth();
+//                datePopwindow.setWidth(width);
+                datePopwindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+                datePopwindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                datePopwindow.showAsDropDown(date,0,1);
+                datePopwindow.setListener(new DatePopwindow.dateListener() {
+                    @Override
+                    public void getResult(String cDate,int num) {
+                        currentDate=num;
+                        datePopwindow.dismiss();
+                        date.setText(cDate);
+                        date.setSelected(true);
+                        isClick=true;
+                        page=1;
+                        tag=3;
+                        update();
+
+                        recommendDoctor.setSelected(false);
+                        office.setText("科室");
+                        office.setSelected(false);
+                        city.setText("城市");
+                        city.setSelected(false);
                     }
                 });
                 break;
@@ -385,5 +445,7 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
         String lon;
         String page;
         String dept;
+        String loc;
+        int date;
     }
 }

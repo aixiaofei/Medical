@@ -19,10 +19,10 @@ import com.example.ai.dtest.base.MyApplication;
  * Created by ai on 2017/8/2.
  */
 
-public class basePopwindow extends PopupWindow {
+class basePopwindow extends PopupWindow {
 
     private Drawable mBackgroundDrawable;
-    private float mShowAlpha = 0f;
+    private float mShowAlpha = 0.95f;
     private Context mContext;
 
 
@@ -79,65 +79,65 @@ public class basePopwindow extends PopupWindow {
     @Override
     public void showAtLocation(View parent, int gravity, int x, int y) {
         super.showAtLocation(parent, gravity, x, y);
-//        showAnimator().start();
+        showAnimator().start();
     }
 
     @Override
     public void showAsDropDown(View anchor) {
         super.showAsDropDown(anchor);
-//        showAnimator().start();
+        showAnimator().start();
     }
 
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff) {
         super.showAsDropDown(anchor, xoff, yoff);
-//        showAnimator().start();
+        showAnimator().start();
     }
 
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff, int gravity) {
         super.showAsDropDown(anchor, xoff, yoff, gravity);
-//        showAnimator().start();
+        showAnimator().start();
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
-//        dismissAnimator().start();
+        dismissAnimator().start();
     }
 
-//    private ValueAnimator showAnimator() {
-////        ValueAnimator animator = ValueAnimator.ofFloat(1.0f, mShowAlpha);
-////        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-////
-////            @Override
-////            public void onAnimationUpdate(ValueAnimator animation) {
-////                float alpha = (float) animation.getAnimatedValue();
-//////                setWindowBackgroundAlpha(alpha);
-////            }
-////        });
-////        animator.setDuration(500);
-////        return animator;
-//    }
+    private ValueAnimator showAnimator() {
+        ValueAnimator animator = ValueAnimator.ofFloat(1.0f, mShowAlpha);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
-//    private ValueAnimator dismissAnimator() {
-//        ValueAnimator animator = ValueAnimator.ofFloat(mShowAlpha, 1.0f);
-//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                float alpha = (float) animation.getAnimatedValue();
-//                setWindowBackgroundAlpha(alpha);
-//            }
-//        });
-//        animator.setDuration(500);
-//        return animator;
-//    }
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                setWindowBackgroundAlpha(alpha);
+            }
+        });
+        animator.setDuration(500);
+        return animator;
+    }
 
-//    private void setWindowBackgroundAlpha(float alpha) {
-//        Window window = ((Activity) mContext).getWindow();
-//        WindowManager.LayoutParams layoutParams = window.getAttributes();
-//        layoutParams.alpha = alpha;
-//        window.setAttributes(layoutParams);
-//    }
+    private ValueAnimator dismissAnimator() {
+        ValueAnimator animator = ValueAnimator.ofFloat(mShowAlpha, 1.0f);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                setWindowBackgroundAlpha(alpha);
+            }
+        });
+        animator.setDuration(500);
+        return animator;
+    }
+
+    private void setWindowBackgroundAlpha(float alpha) {
+        Window window = ((Activity) mContext).getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.alpha = alpha;
+        window.setAttributes(layoutParams);
+    }
 }

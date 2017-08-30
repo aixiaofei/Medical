@@ -2,6 +2,9 @@ package com.example.ai.dtest.test;
 
 import android.util.ArraySet;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +14,13 @@ import java.util.Set;
 /**
  * Created by ai on 2017/8/10.
  */
+
+
+
+
+
+
+
 
 public class sum {
 
@@ -97,4 +107,5 @@ public class sum {
 
         System.out.println(sum);
     }
+
 }
