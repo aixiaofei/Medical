@@ -39,11 +39,13 @@ public class DatePopwindowAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static class viewHolder extends RecyclerView.ViewHolder{
         View view;
         TextView date;
+        View split;
 
         viewHolder(View itemView) {
             super(itemView);
             view= itemView;
             date= itemView.findViewById(R.id.info);
+            split= itemView.findViewById(R.id.split);
         }
     }
 
@@ -55,7 +57,7 @@ public class DatePopwindowAdapter extends RecyclerView.Adapter<RecyclerView.View
             @Override
             public void onClick(View view) {
                 int position= holder.getAdapterPosition();
-                listener.select(position+1);
+                listener.select(position);
             }
         });
         holder.date.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +75,7 @@ public class DatePopwindowAdapter extends RecyclerView.Adapter<RecyclerView.View
         String buf= mList.get(position);
         viewHolder holder1= (viewHolder) holder;
         holder1.date.setText(buf);
+        holder1.split.setVisibility(View.GONE);
     }
 
     @Override

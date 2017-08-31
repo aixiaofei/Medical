@@ -22,7 +22,7 @@ import com.example.ai.dtest.base.MyApplication;
 class basePopwindow extends PopupWindow {
 
     private Drawable mBackgroundDrawable;
-    private float mShowAlpha = 0.95f;
+    private float mShowAlpha = 0.96f;
     private Context mContext;
 
 

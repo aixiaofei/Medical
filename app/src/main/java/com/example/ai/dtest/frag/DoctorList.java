@@ -1,5 +1,6 @@
 package com.example.ai.dtest.frag;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.baidu.location.BDLocation;
@@ -308,6 +310,9 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        int sHeight= wm.getDefaultDisplay().getHeight()/2;
+        int hHeight= (int)(wm.getDefaultDisplay().getHeight()*0.6);
         switch (view.getId()){
             case R.id.recommend_doctor:
                 if(canUpdate){
@@ -330,7 +335,8 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                 final department selectDepart= new department(getContext());
                 selectDepart.setContentView(target);
                 selectDepart.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                selectDepart.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                selectDepart.setHeight(hHeight);
+//                selectDepart.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                 selectDepart.showAsDropDown(split);
                 selectDepart.setListener(new department.departmentListener() {
                     @Override
@@ -366,7 +372,8 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                 final cityPopwindow cityPopwindowShow = new cityPopwindow(getContext());
                 cityPopwindowShow.setContentView(cityView);
                 cityPopwindowShow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-                cityPopwindowShow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                cityPopwindowShow.setHeight(hHeight);
+//                cityPopwindowShow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                 cityPopwindowShow.showAsDropDown(split);
                 cityPopwindowShow.setListener(new locationDialog.selectLocationListener() {
                     @Override
@@ -399,10 +406,11 @@ public class DoctorList extends BaseFragment implements View.OnClickListener{
                 final View dateView= LayoutInflater.from(getContext()).inflate(R.layout.date_popwindow,null);
                 final DatePopwindow datePopwindow= new DatePopwindow(getContext());
                 datePopwindow.setContentView(dateView);
-                int width= date.getWidth();
-//                datePopwindow.setWidth(width);
-                datePopwindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-                datePopwindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+                int width= date.getWidth()+city.getWidth();
+                datePopwindow.setWidth(width);
+                datePopwindow.setHeight(sHeight);
+//                datePopwindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+//                datePopwindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
                 datePopwindow.showAsDropDown(date,0,1);
                 datePopwindow.setListener(new DatePopwindow.dateListener() {
                     @Override

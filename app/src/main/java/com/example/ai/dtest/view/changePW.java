@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.ai.dtest.R;
 import com.example.ai.dtest.util.FormatCheckUtils;
@@ -81,7 +82,7 @@ public class changePW extends Dialog implements View.OnClickListener{
         yanzhengma= (EditText) findViewById(R.id.user_yanzhengma);
         password= (EditText) findViewById(R.id.user_password);
         eye= findViewById(R.id.eye);
-        Button change = (Button) findViewById(R.id.change);
+        TextView change = (TextView) findViewById(R.id.change);
         sendMessage.setOnClickListener(this);
         change.setOnClickListener(this);
         initOnclick();

@@ -37,7 +37,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:text="发布病情"
+            android:text="添加病情"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"
             android:gravity="center"
@@ -228,7 +228,7 @@
         android:layout_marginTop="30dp"
         android:layout_below="@+id/show_fig"
         android:background="@drawable/button_shape"
-        android:text="提交"
+        android:text="添加"
         android:textColor="@color/colorWhite"
         android:gravity="center"
         android:layout_centerInParent="true"/>
